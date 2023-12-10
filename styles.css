@@ -1,8 +1,67 @@
-/*
+.contribution-graph {
+  margin-bottom: 6px;
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.contribution-graph .header {
+  font-size: 14px;
+  margin-bottom: 6px;
+  margin-bottom: 12px;
+}
 
-If your plugin does not need CSS, delete this file.
+.contribution-graph .main {}
 
-*/
+.contribution-graph .main .charts {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.contribution-graph .month-indicator {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-bottom: 3px;
+}
+
+.contribution-graph .month-indicator .text {
+  margin-bottom: 2px;
+  font-size: 10px;
+  min-width: 10px;
+  text-align: center;
+}
+
+.contribution-graph .weekday-indicator {}
+
+.contribution-graph .text-cell {
+  width: 42px;
+  height: 10px;
+  background-color: transparent;
+  margin-top: 2px;
+  margin-right: 2px;
+  font-size: 10px;
+  text-align: center;
+  cursor: default;
+}
+
+.contribution-graph .cell {
+  width: 10px;
+  height: 10px;
+  background-color: transparent;
+  border-radius: 2px;
+  margin-top: 2px;
+  margin-right: 2px;
+}
+
+.contribution-graph .cell.empty {
+  background-color: #ebedf0;
+}
+
+.contribution-graph .cell:hover {
+  opacity: 0.6;
+}
+
+.contribution-graph .transparent {
+  background-color: transparent;
+}
