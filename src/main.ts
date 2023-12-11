@@ -142,22 +142,33 @@ export default class ContributionGraph extends Plugin {
 					"Nov",
 					"Dec",
 				];
+
+				let preIsMonthTextCell = false
 				for (let i = 0; i < contributionData.length; i++) {
-					const monthCell = document.createElement("div");
-					monthCell.className = "cell";
-					monthIndicatorEl.appendChild(monthCell);
+					// month placeholder cell, month cell take two columns
+					let monthCell;
+					if (preIsMonthTextCell) {
+						preIsMonthTextCell = false
+					} else {
+						monthCell = document.createElement("div");
+						monthCell.className = "cell";
+						monthIndicatorEl.appendChild(monthCell);
+					}
 
 					const weekContribution = contributionData[i];
-
 					const columnEl = document.createElement("div");
 					columnEl.className = "column";
 					for (let j = 0; j < weekContribution.length; j++) {
-						if (weekContribution[j].monthDate == 1) {
+
+						// month text cell
+						if (monthCell && weekContribution[j].monthDate == 1) {
 							monthCell.className = "cell text";
 							monthCell.innerText =
 								monthMapping[weekContribution[j].month];
+							preIsMonthTextCell = true
 						}
 						
+						// contribution cell
 						const box = document.createElement("div");
 						if (weekContribution[j].value == 0) {
 							if (weekContribution[j].date != "$HOLE$") {

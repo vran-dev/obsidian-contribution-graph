@@ -8,7 +8,9 @@
   margin-bottom: 12px;
 }
 
-.contribution-graph .main {}
+.contribution-graph .main {
+
+}
 
 .contribution-graph .main .charts {
   width: 100%;
@@ -26,9 +28,10 @@
 }
 
 .contribution-graph .month-indicator .text {
-  margin-bottom: 2px;
+  margin-bottom: 0.65em;
   font-size: 10px;
-  min-width: 10px;
+  min-width: 20px;
+  margin-right: 4px;
   text-align: center;
 }
 
@@ -45,6 +48,13 @@
   cursor: default;
 }
 
+.contribution-graph .column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
 .contribution-graph .cell {
   width: 10px;
   height: 10px;
@@ -56,6 +66,10 @@
 
 .contribution-graph .cell.empty {
   background-color: #ebedf0;
+}
+
+.theme-dark .contribution-graph .cell.empty {
+  background: #333;
 }
 
 .contribution-graph .cell:hover {
