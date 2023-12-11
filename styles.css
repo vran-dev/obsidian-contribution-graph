@@ -1,81 +1,85 @@
 .contribution-graph {
-  margin-bottom: 6px;
-}
-
-.contribution-graph .header {
-  font-size: 14px;
-  margin-bottom: 6px;
-  margin-bottom: 12px;
+	margin-bottom: 6px;
 }
 
 .contribution-graph .main {
+  overflow-x: auto;
+  padding: 2px;
+}
 
+.contribution-graph .main .title {
+	font-size: 14px;
+	margin-bottom: 6px;
+	margin-bottom: 12px;
+	justify-content: flex-start;
 }
 
 .contribution-graph .main .charts {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
 }
 
 .contribution-graph .month-indicator {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  margin-bottom: 3px;
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	margin-bottom: 3px;
 }
 
 .contribution-graph .month-indicator .text {
-  margin-bottom: 0.65em;
-  font-size: 10px;
-  min-width: 20px;
-  margin-right: 4px;
-  text-align: center;
+	margin-bottom: 0.65em;
+	font-size: 10px;
+	min-width: 20px;
+	margin-right: 4px;
+	text-align: center;
 }
 
-.contribution-graph .weekday-indicator {}
+.contribution-graph .weekday-indicator {
+}
 
 .contribution-graph .text-cell {
-  width: 42px;
-  height: 10px;
-  background-color: transparent;
-  margin-top: 2px;
-  margin-right: 2px;
-  font-size: 10px;
-  text-align: center;
-  cursor: default;
+	width: 42px;
+	height: 10px;
+	background-color: transparent;
+	margin-top: 2px;
+	margin-right: 2px;
+	font-size: 10px;
+	text-align: center;
+	cursor: default;
 }
 
 .contribution-graph .column {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+	flex-grow: 1;
 }
 
 .contribution-graph .cell {
-  width: 10px;
-  height: 10px;
-  background-color: transparent;
-  border-radius: 2px;
-  margin-top: 2px;
-  margin-right: 2px;
+	min-width: 8px;
+	min-height: 8px;
+	width: auto;
+	height: auto;
+	background-color: transparent;
+	border-radius: 2px;
+	margin-top: 2px;
+	margin-right: 2px;
+	flex-grow: 1;
+	cursor: pointer;
+	position: relative;
 }
 
 .contribution-graph .cell.empty {
-  background-color: #ebedf0;
+	background-color: #ebedf0;
 }
 
 .theme-dark .contribution-graph .cell.empty {
-  background: #333;
+	background: #333;
 }
 
 .contribution-graph .cell:hover {
-  opacity: 0.6;
+	opacity: 0.6;
 }
 
 .contribution-graph .transparent {
-  background-color: transparent;
+	background-color: transparent;
 }

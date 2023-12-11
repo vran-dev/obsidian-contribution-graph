@@ -73,17 +73,18 @@ export default class ContributionGraph extends Plugin {
 					parent: root,
 				});
 
-				// header
-				const headerEl = createDiv({
-					cls: "header",
-					parent: graphEl,
-				});
-				headerEl.innerText = graphData.title;
 				// main
 				const main = createDiv({
 					cls: "main",
 					parent: graphEl,
 				});
+
+				// title
+				const titleEl = createDiv({
+					cls: "title",
+					parent: main,
+				});
+				titleEl.innerText = graphData.title;
 
 				// main -> month indicator
 				const monthIndicatorEl = createDiv({
@@ -94,6 +95,7 @@ export default class ContributionGraph extends Plugin {
 				createDiv({
 					cls: "text-cell",
 					parent: monthIndicatorEl,
+					text: ''
 				});
 
 				// main -> charts
@@ -144,6 +146,7 @@ export default class ContributionGraph extends Plugin {
 				];
 
 				let preIsMonthTextCell = false
+				const colors = graphData.colors && graphData.colors.length > 0 ? graphData.colors : DEFAULT_COLORS;
 				for (let i = 0; i < contributionData.length; i++) {
 					// month placeholder cell, month cell take two columns
 					let monthCell;
@@ -158,6 +161,7 @@ export default class ContributionGraph extends Plugin {
 					const weekContribution = contributionData[i];
 					const columnEl = document.createElement("div");
 					columnEl.className = "column";
+
 					for (let j = 0; j < weekContribution.length; j++) {
 
 						// month text cell
@@ -167,7 +171,7 @@ export default class ContributionGraph extends Plugin {
 								monthMapping[weekContribution[j].month];
 							preIsMonthTextCell = true
 						}
-						
+
 						// contribution cell
 						const box = document.createElement("div");
 						if (weekContribution[j].value == 0) {
@@ -180,20 +184,53 @@ export default class ContributionGraph extends Plugin {
 							box.className = "cell";
 							box.style.backgroundColor = getColor(
 								weekContribution[j].value,
-								DEFAULT_COLORS
+								colors
 							);
+							box.addEventListener("mouseenter", (event) => {
+								handleMouseEnter(
+									event,
+									`${weekContribution[j].value} contributions on ${weekContribution[j].date}.`
+								);
+							});
+							box.addEventListener("mouseleave", (event) => {
+								handleMouseLeave(event);
+							});
 						}
 						columnEl.appendChild(box);
 					}
 					chartsEl.appendChild(columnEl);
 				}
 			}
-
 			render(data, container);
 		};
 	}
 
-	onunload() {}
+	onunload() { }
+}
+
+// 鼠标移入事件处理程序
+function handleMouseEnter(event, text) {
+	// 创建并添加 tooltip 元素
+	const tooltip = createDiv({
+		cls: 'tooltip',
+		text: text,
+		parent: document.body
+	})
+	tooltip.style.minWidth = '140px';
+
+	// 调整 tooltip 元素的位置
+	const rect = event.target.getBoundingClientRect();
+	tooltip.style.top = rect.top - tooltip.offsetHeight - 5 + 'px';
+	tooltip.style.left = rect.left + 'px';
+}
+
+// 鼠标移出事件处理程序
+function handleMouseLeave(event) {
+	// 隐藏或删除 tooltip 元素
+	const tooltip = document.querySelector('.tooltip');
+	if (tooltip) {
+		document.body.removeChild(tooltip);
+	}
 }
 
 interface ContributionData {
@@ -222,7 +259,7 @@ function generateData(days: number, contributions?: Contribution[]) {
 				contributionMapByDate.set(
 					contributions[i].date,
 					contributionMapByDate.get(contributions[i].date) +
-						contributions[i].value
+					contributions[i].value
 				);
 			} else {
 				contributionMapByDate.set(
@@ -236,15 +273,13 @@ function generateData(days: number, contributions?: Contribution[]) {
 	const data = [];
 	let columns: ContributionData[] = [];
 	data.unshift(columns);
-
 	for (let i = 0; i < days; i++) {
 		const date = new Date();
 		date.setDate(date.getDate() - i);
-		const formattedDate = `${date.getFullYear()}-${
-			date.getMonth() < 9
-				? "0" + (date.getMonth() + 1)
-				: date.getMonth() + 1
-		}-${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}`;
+		const formattedDate = `${date.getFullYear()}-${date.getMonth() < 9
+			? "0" + (date.getMonth() + 1)
+			: date.getMonth() + 1
+			}-${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}`;
 
 		const value = contributionMapByDate.get(formattedDate);
 		columns.unshift({
