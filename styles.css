@@ -9,8 +9,7 @@
 
 .contribution-graph .main .title {
 	font-size: 14px;
-	margin-bottom: 6px;
-	margin-bottom: 12px;
+	margin-bottom: 36px;
 	justify-content: flex-start;
 }
 
@@ -21,42 +20,33 @@
 	align-items: flex-start;
 }
 
-.contribution-graph .month-indicator {
-	display: flex;
-	flex-direction: row;
-	width: 100%;
-	margin-bottom: 3px;
-}
-
-.contribution-graph .month-indicator .text {
-	margin-bottom: 0.65em;
-	font-size: 10px;
-	min-width: 20px;
-	margin-right: 4px;
-	text-align: center;
-}
-
-.contribution-graph .weekday-indicator {
-}
-
-.contribution-graph .text-cell {
-	width: 42px;
-	height: 10px;
+.contribution-graph .cell.weekday-indicator {
 	background-color: transparent;
-	margin-top: 2px;
-	margin-right: 2px;
 	font-size: 10px;
+	min-width: 18px;
+	height: 8px;
+	margin-right: 8px;
+	margin-top: 1.5px;
 	text-align: center;
-	cursor: default;
+	cursor: pointer;
 }
 
 .contribution-graph .column {
 	flex-grow: 1;
+	position: relative;
+}
+
+.contribution-graph .month-indicator {
+	position: absolute;
+	top: -24px;
+	font-size: 10px;
+	min-width: 20px;
+	cursor: pointer;
 }
 
 .contribution-graph .cell {
-	min-width: 8px;
-	min-height: 8px;
+	min-width: 10px;
+	min-height: 10px;
 	width: auto;
 	height: auto;
 	background-color: transparent;
@@ -82,4 +72,8 @@
 
 .contribution-graph .transparent {
 	background-color: transparent;
+}
+
+.highlight {
+	opacity: 0.5;
 }

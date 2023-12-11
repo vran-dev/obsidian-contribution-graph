@@ -1,4 +1,6 @@
 import { Plugin } from "obsidian";
+import { monthMapping } from "./constants";
+import { showTips, hideTips } from "./tooltips";
 
 interface ContributionGraphData {
 	title: string;
@@ -20,38 +22,26 @@ interface Color {
 
 const DEFAULT_COLORS: Color[] = [
 	{
-		color: "#ebedf0",
-		min: 0,
-		max: 0,
-	},
-	{
 		color: "#9be9a8",
 		min: 1,
-		max: 10,
+		max: 2,
 	},
 	{
 		color: "#40c463",
-		min: 11,
-		max: 15,
+		min: 3,
+		max: 5,
 	},
 	{
 		color: "#30a14e",
-		min: 16,
-		max: 20,
+		min: 6,
+		max: 10,
 	},
 	{
 		color: "#216e39",
-		min: 21,
+		min: 10,
 		max: 999,
 	},
 ];
-
-const DEFAULT_SETTINGS: ContributionGraphData = {
-	title: "Contributions",
-	days: 365,
-	contributions: [],
-	colors: [],
-};
 
 export default class ContributionGraph extends Plugin {
 	async onload() {
@@ -86,18 +76,6 @@ export default class ContributionGraph extends Plugin {
 				});
 				titleEl.innerText = graphData.title;
 
-				// main -> month indicator
-				const monthIndicatorEl = createDiv({
-					cls: "month-indicator",
-					parent: main,
-				});
-
-				createDiv({
-					cls: "text-cell",
-					parent: monthIndicatorEl,
-					text: ''
-				});
-
 				// main -> charts
 				const chartsEl = createDiv({
 					cls: "charts",
@@ -112,7 +90,7 @@ export default class ContributionGraph extends Plugin {
 
 				for (let i = 0; i < 7; i++) {
 					const weekdayCell = document.createElement("div");
-					weekdayCell.className = "text-cell";
+					weekdayCell.className = "cell weekday-indicator";
 					switch (i) {
 						case 1:
 							weekdayCell.innerText = "Mon";
@@ -129,47 +107,55 @@ export default class ContributionGraph extends Plugin {
 					weekTextColumns.appendChild(weekdayCell);
 				}
 
-				// generate color indicator(color cell)
-				const monthMapping = [
-					"Jan",
-					"Feb",
-					"Mar",
-					"Apr",
-					"May",
-					"Jun",
-					"Jul",
-					"Aug",
-					"Sep",
-					"Oct",
-					"Nov",
-					"Dec",
-				];
-
-				let preIsMonthTextCell = false
-				const colors = graphData.colors && graphData.colors.length > 0 ? graphData.colors : DEFAULT_COLORS;
+				const colors =
+					graphData.colors && graphData.colors.length > 0
+						? graphData.colors
+						: DEFAULT_COLORS;
 				for (let i = 0; i < contributionData.length; i++) {
-					// month placeholder cell, month cell take two columns
-					let monthCell;
-					if (preIsMonthTextCell) {
-						preIsMonthTextCell = false
-					} else {
-						monthCell = document.createElement("div");
-						monthCell.className = "cell";
-						monthIndicatorEl.appendChild(monthCell);
-					}
-
 					const weekContribution = contributionData[i];
 					const columnEl = document.createElement("div");
 					columnEl.className = "column";
 
 					for (let j = 0; j < weekContribution.length; j++) {
-
 						// month text cell
-						if (monthCell && weekContribution[j].monthDate == 1) {
-							monthCell.className = "cell text";
+						if (weekContribution[j].monthDate == 1) {
+							const monthCell = createDiv({
+								cls: "month-indicator",
+								parent: columnEl,
+								text: "",
+							});
 							monthCell.innerText =
 								monthMapping[weekContribution[j].month];
-							preIsMonthTextCell = true
+
+							monthCell.addEventListener(
+								"mouseenter",
+								(event) => {
+									const expectMonth =
+										weekContribution[j].month;
+									const expectYear = weekContribution[j].year;
+
+									const elements = document.querySelectorAll(
+										`.cell[data-year="${expectYear}"][data-month="${expectMonth}"]`
+									);
+									elements.forEach((element) => {
+										element.classList.add("highlight");
+									});
+								}
+							);
+							monthCell.addEventListener(
+								"mouseleave",
+								(event) => {
+									const expectMonth =
+										weekContribution[j].month;
+									const expectYear = weekContribution[j].year;
+									const elements = document.querySelectorAll(
+										`.cell[data-year="${expectYear}"][data-month="${expectMonth}"]`
+									);
+									elements.forEach((element) => {
+										element.classList.remove("highlight");
+									});
+								}
+							);
 						}
 
 						// contribution cell
@@ -186,14 +172,22 @@ export default class ContributionGraph extends Plugin {
 								weekContribution[j].value,
 								colors
 							);
+							box.setAttribute(
+								"data-year",
+								weekContribution[j].year.toString()
+							);
+							box.setAttribute(
+								"data-month",
+								weekContribution[j].month.toString()
+							);
 							box.addEventListener("mouseenter", (event) => {
-								handleMouseEnter(
+								showTips(
 									event,
 									`${weekContribution[j].value} contributions on ${weekContribution[j].date}.`
 								);
 							});
 							box.addEventListener("mouseleave", (event) => {
-								handleMouseLeave(event);
+								hideTips(event);
 							});
 						}
 						columnEl.appendChild(box);
@@ -205,39 +199,15 @@ export default class ContributionGraph extends Plugin {
 		};
 	}
 
-	onunload() { }
-}
-
-// 鼠标移入事件处理程序
-function handleMouseEnter(event, text) {
-	// 创建并添加 tooltip 元素
-	const tooltip = createDiv({
-		cls: 'tooltip',
-		text: text,
-		parent: document.body
-	})
-	tooltip.style.minWidth = '140px';
-
-	// 调整 tooltip 元素的位置
-	const rect = event.target.getBoundingClientRect();
-	tooltip.style.top = rect.top - tooltip.offsetHeight - 5 + 'px';
-	tooltip.style.left = rect.left + 'px';
-}
-
-// 鼠标移出事件处理程序
-function handleMouseLeave(event) {
-	// 隐藏或删除 tooltip 元素
-	const tooltip = document.querySelector('.tooltip');
-	if (tooltip) {
-		document.body.removeChild(tooltip);
-	}
+	onunload() {}
 }
 
 interface ContributionData {
 	date: string;
-	weekDay: number;
-	month: number;
-	monthDate: number;
+	weekDay: number; // 0 - 6
+	month: number; // 0 - 11
+	monthDate: number; // 1 - 31
+	year: number; // sample: 2020
 	value: number;
 }
 
@@ -250,7 +220,15 @@ function getColor(value: number, colors: Color[]) {
 	return colors[0].color;
 }
 
-function generateData(days: number, contributions?: Contribution[]) {
+/**
+ * generate two-dimensional matrix data
+ * - every column is week, from Sunday to Saturday
+ * - every cell is a day
+ */
+function generateData(
+	days: number,
+	contributions?: Contribution[]
+): ContributionData[][] {
 	// convert contributions to map
 	const contributionMapByDate = new Map<string, number>();
 	if (contributions) {
@@ -259,7 +237,7 @@ function generateData(days: number, contributions?: Contribution[]) {
 				contributionMapByDate.set(
 					contributions[i].date,
 					contributionMapByDate.get(contributions[i].date) +
-					contributions[i].value
+						contributions[i].value
 				);
 			} else {
 				contributionMapByDate.set(
@@ -270,16 +248,17 @@ function generateData(days: number, contributions?: Contribution[]) {
 		}
 	}
 
-	const data = [];
+	const data: ContributionData[][] = [];
 	let columns: ContributionData[] = [];
 	data.unshift(columns);
 	for (let i = 0; i < days; i++) {
 		const date = new Date();
 		date.setDate(date.getDate() - i);
-		const formattedDate = `${date.getFullYear()}-${date.getMonth() < 9
-			? "0" + (date.getMonth() + 1)
-			: date.getMonth() + 1
-			}-${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}`;
+		const formattedDate = `${date.getFullYear()}-${
+			date.getMonth() < 9
+				? "0" + (date.getMonth() + 1)
+				: date.getMonth() + 1
+		}-${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}`;
 
 		const value = contributionMapByDate.get(formattedDate);
 		columns.unshift({
@@ -287,6 +266,7 @@ function generateData(days: number, contributions?: Contribution[]) {
 			weekDay: date.getDay(),
 			month: date.getMonth(),
 			monthDate: date.getDate(),
+			year: date.getFullYear(),
 			value: value ? value : 0,
 		});
 
@@ -299,6 +279,7 @@ function generateData(days: number, contributions?: Contribution[]) {
 					weekDay: -1,
 					month: -1,
 					monthDate: -1,
+					year: -1,
 					value: 0,
 				});
 			}
