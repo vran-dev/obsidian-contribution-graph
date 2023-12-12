@@ -54,7 +54,7 @@ export default class ContributionGraph extends Plugin {
 				graphData: ContributionGraphData,
 				root: HTMLElement
 			) {
-				const contributionData = generateData(
+				const contributionData: ContributionData[][] = generateData(
 					graphData.days,
 					data.contributions
 				);
@@ -107,6 +107,24 @@ export default class ContributionGraph extends Plugin {
 					weekTextColumns.appendChild(weekdayCell);
 				}
 
+				// main -> charts
+				const valueMapByYearMonth: Map<string, number> = contributionData
+					.flatMap(item => item)
+					.filter(item => item.date != "$HOLE$")
+					.map(item => {
+						return {
+							yearMonth: `${item.year}-${item.month}`,
+							value: item.value
+						}
+					})
+					.reduce((acc, cur) => {
+						if (acc.has(cur.yearMonth)) {
+							acc.set(cur.yearMonth, acc.get(cur.yearMonth) + cur.value);
+						} else {
+							acc.set(cur.yearMonth, cur.value);
+						}
+						return acc;
+					}, new Map<string, number>())
 				const colors =
 					graphData.colors && graphData.colors.length > 0
 						? graphData.colors
@@ -126,36 +144,21 @@ export default class ContributionGraph extends Plugin {
 							});
 							monthCell.innerText =
 								monthMapping[weekContribution[j].month];
-
+							const yearMonth = `${weekContribution[j].year}-${weekContribution[j].month}`;
+							const yearMonthValue = valueMapByYearMonth.get(yearMonth);
 							monthCell.addEventListener(
 								"mouseenter",
 								(event) => {
-									const expectMonth =
-										weekContribution[j].month;
-									const expectYear = weekContribution[j].year;
-
-									const elements = document.querySelectorAll(
-										`.cell[data-year="${expectYear}"][data-month="${expectMonth}"]`
+									showTips(
+										event,
+										`${yearMonthValue ? yearMonthValue : 0} contributions on ${yearMonth}.`
 									);
-									elements.forEach((element) => {
-										element.classList.add("highlight");
-									});
-								}
-							);
+								});
 							monthCell.addEventListener(
 								"mouseleave",
 								(event) => {
-									const expectMonth =
-										weekContribution[j].month;
-									const expectYear = weekContribution[j].year;
-									const elements = document.querySelectorAll(
-										`.cell[data-year="${expectYear}"][data-month="${expectMonth}"]`
-									);
-									elements.forEach((element) => {
-										element.classList.remove("highlight");
-									});
-								}
-							);
+									hideTips(event)
+								});
 						}
 
 						// contribution cell
@@ -199,7 +202,7 @@ export default class ContributionGraph extends Plugin {
 		};
 	}
 
-	onunload() {}
+	onunload() { }
 }
 
 interface ContributionData {
@@ -237,7 +240,7 @@ function generateData(
 				contributionMapByDate.set(
 					contributions[i].date,
 					contributionMapByDate.get(contributions[i].date) +
-						contributions[i].value
+					contributions[i].value
 				);
 			} else {
 				contributionMapByDate.set(
@@ -254,11 +257,10 @@ function generateData(
 	for (let i = 0; i < days; i++) {
 		const date = new Date();
 		date.setDate(date.getDate() - i);
-		const formattedDate = `${date.getFullYear()}-${
-			date.getMonth() < 9
-				? "0" + (date.getMonth() + 1)
-				: date.getMonth() + 1
-		}-${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}`;
+		const formattedDate = `${date.getFullYear()}-${date.getMonth() < 9
+			? "0" + (date.getMonth() + 1)
+			: date.getMonth() + 1
+			}-${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}`;
 
 		const value = contributionMapByDate.get(formattedDate);
 		columns.unshift({
