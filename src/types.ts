@@ -3,8 +3,13 @@ export interface ContributionGraphConfig {
 	days: number | undefined;
 	fromDate: Date | string | undefined;
 	toDate: Date | string | undefined;
-	contributions: Contribution[];
+	data: Contribution[];
 	colors: Color[];
+	startOfWeek: number; // 0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
+	onCellClick: (
+		cellData: ContributionCellData,
+		event: MouseEvent | undefined
+	) => void | undefined;
 }
 
 export interface Contribution {
@@ -18,7 +23,7 @@ export interface Color {
 	max: number;
 }
 
-export interface ContributionCellData {
+export class ContributionCellData {
 	date: string; // yyyy-MM-dd
 	weekDay: number; // 0 - 6
 	month: number; // 0 - 11

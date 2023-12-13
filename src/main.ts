@@ -1,14 +1,13 @@
 import { Plugin } from "obsidian";
-import { DEFAULT_COLORS, monthMapping } from "./constants";
+import { DEFAULT_COLORS, monthMapping, weekDayMapping } from "./constants";
 import { showTips, hideTips } from "./tooltips";
 import { ContributionGraphConfig, ContributionCellData } from "./types";
 import {
 	generateByFixedDate,
 	generateByLatestDays,
-	getColorByValue,
-	mapBy,
-} from "./utils";
+} from "./matrixDataGenerator";
 import { parseDate } from "./date";
+import { getColorByValue, mapBy } from "./utils";
 
 export default class ContributionGraph extends Plugin {
 	async onload() {
@@ -23,13 +22,12 @@ export default class ContributionGraph extends Plugin {
 					weekdayCell.className = "cell weekday-indicator";
 					switch (i) {
 						case 1:
-							weekdayCell.innerText = "Mon";
-							break;
 						case 3:
-							weekdayCell.innerText = "Wed";
-							break;
 						case 5:
-							weekdayCell.innerText = "Fri";
+							weekdayCell.innerText =
+								weekDayMapping[
+									(i + (graphConfig.startOfWeek || 0)) % 7
+								];
 							break;
 						default:
 							break;
@@ -77,7 +75,8 @@ export default class ContributionGraph extends Plugin {
 				if (graphConfig.days) {
 					contributionData = generateByLatestDays(
 						graphConfig.days,
-						graphConfig.contributions
+						graphConfig.data,
+						graphConfig.startOfWeek || 0
 					);
 				} else if (graphConfig.fromDate && graphConfig.toDate) {
 					const fromDate = parseDate(graphConfig.fromDate);
@@ -85,7 +84,8 @@ export default class ContributionGraph extends Plugin {
 					contributionData = generateByFixedDate(
 						fromDate,
 						toDate,
-						graphConfig.contributions
+						graphConfig.data,
+						graphConfig.startOfWeek || 0
 					);
 				} else {
 					throw new Error("Miss days or fromDate and toDate.");
@@ -179,14 +179,22 @@ export default class ContributionGraph extends Plugin {
 						);
 
 						// tips event
+						cellEl.onclick = (event: MouseEvent) => {
+							if (graphConfig.onCellClick) {
+								graphConfig.onCellClick(
+									contributionItem,
+									event
+								);
+							}
+						};
 						cellEl.addEventListener("mouseenter", (event) => {
 							showTips(
 								event,
 								`${contributionItem.value} contributions on ${contributionItem.date}.`
 							);
-						});
-						cellEl.addEventListener("mouseleave", (event) => {
-							hideTips(event);
+							cellEl.addEventListener("mouseleave", (event) => {
+								hideTips(event);
+							});
 						});
 					}
 				}

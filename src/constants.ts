@@ -15,6 +15,7 @@ export const monthMapping = [
 	"Dec",
 ];
 
+export const weekDayMapping = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export const DEFAULT_COLORS: Color[] = [
 	{
