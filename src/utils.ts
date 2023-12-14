@@ -20,7 +20,7 @@ export function mapBy<T, R>(
 
 export function getColorByValue(value: number, colors: Color[]) {
 	for (let i = 0; i < colors.length; i++) {
-		if (value >= colors[i].min && value <= colors[i].max) {
+		if (value >= colors[i].min && value < colors[i].max) {
 			return colors[i].color;
 		}
 	}
