@@ -1,96 +1,314 @@
-# Obsidian Sample Plugin
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+![](release/README/1.png)
 
-This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.
+A interactive contribution graph like github to track your notes, habits, activity, history and so on.
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+## Features
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+- Render fixed date range chart
+- Render recent date range chart
+- Customize start of weekday
+- Customize cell colors
+- Interactive charts, you can customize cell click event, hover to show statistic data
+- Integrate with DataviewJS
 
-## First time developing plugins?
+## Sample
 
-Quick starting guide for new plugin devs:
+The following shows how to render charts using dataviewjs
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+### Create a chart for a fixed time period
 
-## Releasing new releases
+- for fixed year
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+```dataviewjs
+const from = '2022-01-01'
+const to = '2022-12-31'
+const data = [
+	{
+		date: '2022-01-01', // yyyy-MM-dd
+		value: 1
+	},
+	{
+		date: '2022-02-01', // yyyy-MM-dd
+		value: 2
+	},
+	{
+		date: '2022-03-01', // yyyy-MM-dd
+		value: 3
+	},
+	{
+		date: '2022-04-01', // yyyy-MM-dd
+		value: 4
+	},
+	{
+		date: '2022-05-01', // yyyy-MM-dd
+		value: 5
+	}
+]
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
-
-## Adding your plugin to the community plugin list
-
-- Check https://github.com/obsidianmd/obsidian-releases/blob/master/plugin-review.md
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
-
-## How to use
-
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
-
-## Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
-
-## Funding URL
-
-You can include funding URLs where people who use your plugin can financially support it.
-
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
-
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
+const calendarData = {
+    title:  `${from} to ${to}`, // graph title
+    data: data, // data
+    fromDate: from, // from date, yyyy-MM-dd
+    toDate: to // to date, yyyy-MM-dd
 }
+renderContributionGraph(this.container, calendarData)
 ```
 
-If you have multiple URLs, you can also do:
+![](./release/README/20231214103105075.png)
 
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
+
+- for current year
+
+```dataviewjs
+const currentYear = new Date().getFullYear()
+const from = currentYear + '-01-01'
+const to = currentYear + '-12-31'
+const data = dv.pages('#project')
+	.map(p => {
+		return {
+			date: p.createTime.toFormat('yyyy-MM-dd'),
+			value: p
+		}
+	})
+	.groupBy(p => p.date)
+	.map(entry =>{
+		return {
+			date: entry.key,
+			value: entry.rows.length
+		}
+	})
+
+const calendarData = {
+    title:  `${from} to ${to}`,
+    data: data,
+    fromDate: from,
+    toDate: to
 }
+renderContributionGraph(this.container, calendarData)
 ```
 
-## API Documentation
+![](./release/README/20231214102940657.png)
 
-See https://github.com/obsidianmd/obsidian-api
+- for current month
+
+```dataviewjs
+const currentYear = new Date().getFullYear()
+const month = new Date().getMonth()// 0~11
+const nextMonth = month + 1
+const lastDayOfCurrentMonth = new Date(currentYear, nextMonth, 0).getDate()
+const formattedLastDayOfCurrentMonth = lastDayOfCurrentMonth < 10 ? '0'+lastDayOfCurrentMonth:lastDayOfCurrentMonth
+const formattedMonth = month < 9 ? '0' + (month+1): '' + (month+1)
+const from = `${currentYear}-${formattedMonth}-01'`
+const to = `${currentYear}-${formattedMonth}-${formattedLastDayOfCurrentMonth}'`
+
+const data = []
+
+const calendarData = {
+    title:  `${from} to ${to}`,
+    data: data,
+    fromDate: from,
+    toDate: to
+}
+renderContributionGraph(this.container, calendarData)
+```
+
+![](./release/README/20231214102821580.png)
+
+- for current week
+
+```dataviewjs
+
+function formatDateString(date) {
+  var year = date.getFullYear();
+  var month = String(date.getMonth() + 1).padStart(2, '0');
+  var day = String(date.getDate()).padStart(2, '0');
+  return year + '-' + month + '-' + day;
+}
+
+function getStartAndEndOfWeek() {
+  var currentDate = new Date();
+  var currentDayOfWeek = currentDate.getDay();
+  var diffToStartOfWeek = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
+  var startOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - diffToStartOfWeek);
+  var endOfWeek = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 6);
+  
+  var formattedStart = formatDateString(startOfWeek);
+  var formattedEnd = formatDateString(endOfWeek);
+  
+  return {
+    start: formattedStart,
+    end: formattedEnd
+  };
+}
+
+const data = []
+const weekDate = getStartAndEndOfWeek()
+const from = weekDate.start
+const to = weekDate.end
+
+const calendarData = {
+    title:  `${from} to ${to}`,
+    data: data,
+    fromDate: from,
+    toDate: to
+}
+renderContributionGraph(this.container, calendarData)
+
+```
+
+![](./release/README/20231214102814024.png)
+### Create a chart of recent time periods
+
+fixed dates, you can also use the days attribute to generate a chart of recent dates
+
+- in the lastest 365 days
+
+```dataviewjs
+const data = dv.pages('#project')
+	.map(p => {
+		return {
+			date: p.createTime.toFormat('yyyy-MM-dd'),
+			value: p
+		}
+	})
+	.groupBy(p => p.date)
+	.map(entry =>{
+		return {
+			date: entry.key,
+			value: entry.rows.length
+		}
+	})
+const calendarData = {
+    days: 365,
+    title: 'Contributions in the last 365 days ',
+    data: data
+}
+renderContributionGraph(this.container, calendarData)
+```
+
+![](./release/README/20231214102807898.png)
+### Begin with Monday
+
+By default, the first row represents Sunday, you can change it by configuring `startOfWeek`, the allowable values is 0~6
+
+```dataviewjs
+const currentYear = new Date().getFullYear()
+const from = currentYear + '-01-01'
+const to = currentYear + '-12-31'
+const data = []
+
+const calendarData = {
+    title:  `${from} to ${to}`,
+    data: data,
+    fromDate: from,
+    toDate: to,
+    startOfWeek: 1 // set to 1 means start with monday
+}
+renderContributionGraph(this.container, calendarData)
+```
+
+![](./release/README/20231214102759579.png)
+### Customize cell click event
+
+By configuring the oncellclick attribute, you can set the cell click behavior you want.
+
+The following shows an example of automatically performing a keyword search after clicking on a cell.
+
+```dataviewjs
+const data = dv.pages('#project')
+	.map(p => {
+		return {
+			date: p.createTime.toFormat('yyyy-MM-dd'),
+			value: p
+		}
+	})
+	.groupBy(p => p.date)
+	.map(entry =>{
+		return {
+			date: entry.key,
+			value: entry.rows.length
+		}
+	})
+const calendarData = {
+    days: 365,
+    title: 'Contributions in the last 365 days ',
+    data: data,
+    onCellClick: (item) => {
+	    // generate search key
+	    const key = `["tags":project] ["createTime":${item.date}]`
+	    // use global-search plugin to search data
+		app.internalPlugins.plugins['global-search'].instance.openGlobalSearch(key)
+    },
+}
+renderContributionGraph(this.container, calendarData)
+```
+
+![](./release/README/20231214102752275.png)
+
+### Customize colors
+
+By configuring the colors attribute, you can customize the colors of the cells.
+
+if the number of contributions at  a specified date is  larger or equal to `min`, less than `max`, then the `color` will be matched
+
+> min <= {contributions} < max
+
+| name  | type   | description |
+| ----- | ------ | ----------- |
+| color | string | hex color   |
+| min   |  number      | the min contribution            |
+| max   |  number      | the max contribution            |
+
+
+```dataviewjs
+const data = dv.pages('#project')
+	.map(p => {
+		return {
+			date: p.createTime.toFormat('yyyy-MM-dd'),
+			value: p
+		}
+	})
+	.groupBy(p => p.date)
+	.map(entry =>{
+		return {
+			date: entry.key,
+			value: entry.rows.length
+		}
+	})
+const calendarData = {
+    days: 365,
+    title: 'Contributions in the last 365 days ',
+    data: data,
+    onCellClick: (item) => {
+	    const key = `["tags":project] ["createTime":${item.date}]`
+		app.internalPlugins.plugins['global-search'].instance.openGlobalSearch(key)
+    },
+    colors: [
+		{
+			color: "#FFF8DC",
+			min: 1,
+			max: 2,
+		},
+		{
+			color: "#FFECB3",
+			min: 2,
+			max: 3,
+		},
+		{
+			color: "#FFD700",
+			min: 3,
+			max: 4,
+		},
+		{
+			color: "#FFC200",
+			min: 4,
+			max: 999,
+		},
+	]
+}
+renderContributionGraph(this.container, calendarData)
+
+```
+
+![](./release/README/20231214102737916.png)

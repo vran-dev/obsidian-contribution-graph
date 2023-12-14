@@ -1,8 +1,8 @@
 {
-	"name": "obsidian-sample-plugin",
-	"version": "1.0.0",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
-	"main": "main.js",
+	"name": "obsidian-contribution-graph",
+	"version": "0.1.0",
+	"description": "generate gitxxx style contribution graph for obsidian, use it to track your goals, habits, or anything else you want to track.",
+	"main": "main.ts",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",

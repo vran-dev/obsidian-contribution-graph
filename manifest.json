@@ -1,11 +1,11 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
-	"version": "1.0.0",
-	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
+	"id": "obsidian-contribution-graph",
+	"name": "contribution graph",
+	"version": "0.1.0",
+	"minAppVersion": "1.3.0",
+	"description": "generate gitxxx style contribution graph for obsidian, use it to track your goals, habits, or anything else you want to track.",
+	"author": "vran",
+	"authorUrl": "https://github.com/vran-dev/obsidian-contribution-graph",
 	"fundingUrl": "https://obsidian.md/pricing",
 	"isDesktopOnly": false
 }
