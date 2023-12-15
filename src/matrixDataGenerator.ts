@@ -32,14 +32,15 @@ export function generateByFixedDate(
 		const currentDateAtIndex = new Date(to);
 		currentDateAtIndex.setDate(currentDateAtIndex.getDate() - i);
 		const formattedDate = toFormattedDate(currentDateAtIndex);
-		const value = contributionMapByDate.get(formattedDate);
+		const contribution = contributionMapByDate.get(formattedDate);
 		cellData.unshift({
 			date: formattedDate,
 			weekDay: currentDateAtIndex.getDay(),
 			month: currentDateAtIndex.getMonth(),
 			monthDate: currentDateAtIndex.getDate(),
 			year: currentDateAtIndex.getFullYear(),
-			value: value ? value : 0,
+			value: contribution ? contribution.value : 0,
+			summary: contribution ? contribution.summary : undefined,
 		});
 	}
 
@@ -81,12 +82,17 @@ export function generateByLatestDays(
 }
 
 function contributionToMap(data: Contribution[]) {
-	const map = new Map<string, number>();
+	const map = new Map<string, Contribution>();
 	for (const item of data) {
 		if (map.has(item.date)) {
-			map.set(item.date, map.get(item.date) + item.value);
+			const newItem = {
+				...item,
+				// @ts-ignore
+				value: map.get(item.date) + item.value,
+			}
+			map.set(item.date, newItem);
 		} else {
-			map.set(item.date, item.value);
+			map.set(item.date, item);
 		}
 	}
 	return map;

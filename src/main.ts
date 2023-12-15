@@ -26,7 +26,7 @@ export default class ContributionGraph extends Plugin {
 						case 5:
 							weekdayCell.innerText =
 								weekDayMapping[
-									(i + (graphConfig.startOfWeek || 0)) % 7
+								(i + (graphConfig.startOfWeek || 0)) % 7
 								];
 							break;
 						default:
@@ -125,9 +125,8 @@ export default class ContributionGraph extends Plugin {
 						});
 						monthCell.innerText =
 							monthMapping[contributionItem.month];
-						const yearMonth = `${contributionItem.year}-${
-							contributionItem.month + 1
-						}`;
+						const yearMonth = `${contributionItem.year}-${contributionItem.month + 1
+							}`;
 						const yearMonthValue =
 							contributionMapByYearMonth.get(yearMonth) || 0;
 						// tips event
@@ -188,10 +187,8 @@ export default class ContributionGraph extends Plugin {
 							}
 						};
 						cellEl.addEventListener("mouseenter", (event) => {
-							showTips(
-								event,
-								`${contributionItem.value} contributions on ${contributionItem.date}.`
-							);
+							const summary = contributionItem.summary ? contributionItem.summary : `${contributionItem.value} contributions on ${contributionItem.date}.`
+							showTips(event, summary);
 							cellEl.addEventListener("mouseleave", (event) => {
 								hideTips(event);
 							});
@@ -203,5 +200,5 @@ export default class ContributionGraph extends Plugin {
 		};
 	}
 
-	onunload() {}
+	onunload() { }
 }

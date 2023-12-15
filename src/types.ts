@@ -15,6 +15,7 @@ export interface ContributionGraphConfig {
 export interface Contribution {
 	date: string;
 	value: number;
+	summary: string | undefined;
 }
 
 export interface Color {
@@ -30,4 +31,5 @@ export class ContributionCellData {
 	monthDate: number; // 1 - 31
 	year: number; // sample: 2020
 	value: number;
+	summary?: string;
 }
