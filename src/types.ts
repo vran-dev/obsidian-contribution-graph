@@ -4,7 +4,7 @@ export interface ContributionGraphConfig {
 	fromDate: Date | string | undefined;
 	toDate: Date | string | undefined;
 	data: Contribution[];
-	colors: Color[];
+	cellStyleRules: CellStyleRule[];
 	startOfWeek: number; // 0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
 	onCellClick: (
 		cellData: ContributionCellData,
@@ -18,9 +18,14 @@ export interface Contribution {
 	summary: string | undefined;
 }
 
-export interface Color {
+export interface CellStyleRule {
+	// the background color for the cell
 	color: string;
+	// the text in the cell
+	text: string | undefined;
+	// the inlusive min value 
 	min: number;
+	// the exclusive max value   
 	max: number;
 }
 

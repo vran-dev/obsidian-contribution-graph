@@ -1,4 +1,4 @@
-import { Color } from "./types";
+import { CellStyleRule } from "./types";
 
 export function mapBy<T, R>(
 	arr: T[],
@@ -18,11 +18,11 @@ export function mapBy<T, R>(
 	return map;
 }
 
-export function getColorByValue(value: number, colors: Color[]) {
-	for (let i = 0; i < colors.length; i++) {
-		if (value >= colors[i].min && value < colors[i].max) {
-			return colors[i].color;
+export function matchCellStyleRule(value: number, rules: CellStyleRule[]): CellStyleRule {
+	for (let i = 0; i < rules.length; i++) {
+		if (value >= rules[i].min && value < rules[i].max) {
+			return rules[i];
 		}
 	}
-	return colors[0].color;
+	return rules[0];
 }

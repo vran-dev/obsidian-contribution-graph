@@ -8,7 +8,7 @@ A interactive contribution graph like github to track your notes, habits, activi
 - Render fixed date range chart
 - Render recent date range chart
 - Customize start of weekday
-- Customize cell colors
+- Customize cell style
 - Interactive charts, you can customize cell click event, hover to show statistic data
 - Integrate with DataviewJS
 
@@ -246,11 +246,11 @@ renderContributionGraph(this.container, calendarData)
 
 ![](./release/README/20231214102752275.png)
 
-### Customize colors
+### Customize Cells
 
-By configuring the colors attribute, you can customize the colors of the cells.
+By configuring the cellStyleRules attribute, you can customize the cell's background color or inner text
 
-if the number of contributions at  a specified date is  larger or equal to `min`, less than `max`, then the `color` will be matched
+if the number of contributions at a specified date is larger or equal to `min`, less than `max`, then the `rule` will be matched
 
 > min <= {contributions} < max
 
@@ -260,6 +260,7 @@ if the number of contributions at  a specified date is  larger or equal to `min`
 | min   |  number      | the min contribution            |
 | max   |  number      | the max contribution            |
 
+- customize background color
 
 ```dataviewjs
 const data = dv.pages('#project')
@@ -284,7 +285,7 @@ const calendarData = {
 	    const key = `["tags":project] ["createTime":${item.date}]`
 		app.internalPlugins.plugins['global-search'].instance.openGlobalSearch(key)
     },
-    colors: [
+    cellStyleRules: [
 		{
 			color: "#FFF8DC",
 			min: 1,
@@ -312,3 +313,75 @@ renderContributionGraph(this.container, calendarData)
 ```
 
 ![](./release/README/20231214102737916.png)
+
+
+- customize inner text
+
+```dataviewjs
+const data = dv.pages('#project')
+	.flatMap(p => {
+		const arr = []
+		if (p.doneTime) {
+			arr.push({
+				date: p.doneTime.toFormat('yyyy-MM-dd'),
+				value: p,
+				group: 'done'
+			})
+		} 
+		if (p.createTime) {
+			arr.push({
+				date: p.createTime.toFormat('yyyy-MM-dd'),
+				value: p,
+				group: 'created'
+			})
+		}
+		if(!p.createTime && !p.doneTime) {
+			console.warn(`project ${p.file.name} missing createTime or doneTime field`)
+		}
+		return arr
+	})
+	.groupBy(p => p.date)
+	.map(entry =>{
+		const doneGroupCount = entry.rows.filter(i => i.group == 'done').length
+		const createdGroupCount = entry.rows.filter(i => i.group == 'created').length
+		return {
+			date: entry.key,
+			value: entry.rows.length,
+			summary: `create ${createdGroupCount} and done ${doneGroupCount} projects at ${entry.key}`
+		}
+	})
+const calendarData = {
+    days: 365,
+    title: 'Contributions in the last 365 days ',
+    data: data,
+    onCellClick: (item) => {
+	    const key = `["tags":project] ["createTime":${item.date}]`
+		app.internalPlugins.plugins['global-search'].instance.openGlobalSearch(key)
+    },
+    cellStyleRules: [
+	    {
+		    min: 1,
+		    max: 2,
+		    text: '🌲'
+	    },
+	    {
+		    min: 2,
+		    max: 3,
+		    text: '😥'
+	    },
+	    {
+		    min: 3,
+		    max: 4,
+		    text: '✈'
+	    },
+	    {
+		    min: 4,
+		    max: 99,
+		    text: '✈'
+	    }
+    ]
+}
+renderContributionGraph(this.container, calendarData)
+```
+
+![Alt text](release/README/2.png)

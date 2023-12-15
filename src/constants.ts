@@ -1,4 +1,4 @@
-import { Color } from "./types";
+import { CellStyleRule } from "./types";
 
 export const monthMapping = [
 	"Jan",
@@ -17,7 +17,7 @@ export const monthMapping = [
 
 export const weekDayMapping = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-export const DEFAULT_COLORS: Color[] = [
+export const DEFAULT_COLORS: CellStyleRule[] = [
 	{
 		color: "#9be9a8",
 		min: 1,

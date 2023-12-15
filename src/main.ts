@@ -7,7 +7,7 @@ import {
 	generateByLatestDays,
 } from "./matrixDataGenerator";
 import { parseDate } from "./date";
-import { getColorByValue, mapBy } from "./utils";
+import { matchCellStyleRule, mapBy } from "./utils";
 
 export default class ContributionGraph extends Plugin {
 	async onload() {
@@ -101,9 +101,9 @@ export default class ContributionGraph extends Plugin {
 				);
 
 				// main -> charts contributionData
-				const colors =
-					graphData.colors && graphData.colors.length > 0
-						? graphData.colors
+				const cellRules =
+					graphData.cellStyleRules && graphData.cellStyleRules.length > 0
+						? graphData.cellStyleRules
 						: DEFAULT_COLORS;
 
 				let columnEl;
@@ -162,10 +162,12 @@ export default class ContributionGraph extends Plugin {
 						}
 					} else {
 						cellEl.className = "cell";
-						cellEl.style.backgroundColor = getColorByValue(
+						const cellStyleRule =  matchCellStyleRule(
 							contributionItem.value,
-							colors
+							cellRules
 						);
+						cellEl.style.backgroundColor = cellStyleRule.color;
+						cellEl.innerText = cellStyleRule.text || ''
 
 						// data attribute
 						cellEl.setAttribute(

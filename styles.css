@@ -47,8 +47,9 @@
 .contribution-graph .cell {
 	min-width: 10px;
 	min-height: 10px;
+	font-size: 8px;;
 	width: auto;
-	height: auto;
+	height: 10px;
 	background-color: transparent;
 	border-radius: 2px;
 	margin-top: 2px;
