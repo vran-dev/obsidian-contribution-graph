@@ -1,9 +1,9 @@
 {
 	"id": "obsidian-contribution-graph",
-	"name": "contribution graph",
+	"name": "Contribution Graph",
 	"version": "0.1.0",
 	"minAppVersion": "1.3.0",
-	"description": "generate gitxxx style contribution graph for obsidian, use it to track your goals, habits, or anything else you want to track.",
+	"description": "generate interactive gitxxx style contribution graph for obsidian, use it to track your goals, habits, or anything else you want to track.",
 	"author": "vran",
 	"authorUrl": "https://github.com/vran-dev",
 	"fundingUrl": "https://obsidian.md/pricing",
