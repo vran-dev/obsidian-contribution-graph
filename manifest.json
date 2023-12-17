@@ -6,5 +6,6 @@
 	"description": "generate interactive gitxxx style contribution graph for obsidian, use it to track your goals, habits, or anything else you want to track.",
 	"author": "vran",
 	"authorUrl": "https://github.com/vran-dev",
-	"isDesktopOnly": false
+	"isDesktopOnly": false,
+	"fundingUrl": "https://www.buymeacoffee.com/vran"
 }

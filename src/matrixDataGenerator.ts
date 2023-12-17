@@ -1,11 +1,11 @@
-import { diffDays, toFormattedDate } from "./date";
+import { diffDays, toFormattedDate } from "./dateUtils";
 import { Contribution, ContributionCellData } from "./types";
 
 export function generateByFixedDate(
 	from: Date,
 	to: Date,
 	data: Contribution[],
-	startOfWeek = 0 // 0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
+	startOfWeek = 0
 ) {
 	const days = diffDays(from, to) + 1;
 	// convert contributions to map: date(yyyy-MM-dd) -> value(sum)
@@ -69,16 +69,11 @@ export function generateByFixedDate(
 export function generateByLatestDays(
 	days: number,
 	data: Contribution[] = [],
-	startOfWeek = 0 // 0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
+	startOfWeek = 0
 ): ContributionCellData[] {
 	const fromDate = new Date();
 	fromDate.setDate(fromDate.getDate() - days + 1);
-	return generateByFixedDate(
-		fromDate,
-		new Date(),
-		data,
-		startOfWeek
-	);
+	return generateByFixedDate(fromDate, new Date(), data, startOfWeek);
 }
 
 function contributionToMap(data: Contribution[]) {
@@ -89,7 +84,7 @@ function contributionToMap(data: Contribution[]) {
 				...item,
 				// @ts-ignore
 				value: map.get(item.date) + item.value,
-			}
+			};
 			map.set(item.date, newItem);
 		} else {
 			map.set(item.date, item);
