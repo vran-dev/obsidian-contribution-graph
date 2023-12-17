@@ -25,12 +25,12 @@ export const DEFAULT_RULES: CellStyleRule[] = [
 	},
 	{
 		color: "#40c463",
-		min: 3,
+		min: 2,
 		max: 5,
 	},
 	{
 		color: "#30a14e",
-		min: 6,
+		min: 5,
 		max: 10,
 	},
 	{
