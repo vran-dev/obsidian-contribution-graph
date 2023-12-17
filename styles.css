@@ -3,8 +3,8 @@
 }
 
 .contribution-graph .main {
-  overflow-x: auto;
-  padding: 2px;
+	overflow-x: auto;
+	padding: 2px;
 }
 
 .contribution-graph .main .title {
@@ -16,11 +16,33 @@
 .contribution-graph .main .charts {
 	width: 100%;
 	display: flex;
+}
+
+.contribution-graph .main .charts .column {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.contribution-graph .main .charts .row {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	flex-grow: 1;
+	align-items: flex-start;
+	margin-bottom: 6px;
+}
+
+/**
+*  default charts
+*/
+.contribution-graph .main .charts.default {
 	flex-direction: row;
 	align-items: flex-start;
 }
 
-.contribution-graph .cell.weekday-indicator {
+.contribution-graph .default .week-indicator {
 	background-color: transparent;
 	font-size: 10px;
 	min-width: 18px;
@@ -31,12 +53,7 @@
 	cursor: pointer;
 }
 
-.contribution-graph .column {
-	flex-grow: 1;
-	position: relative;
-}
-
-.contribution-graph .month-indicator {
+.contribution-graph .default .month-indicator {
 	position: absolute;
 	top: -24px;
 	font-size: 10px;
@@ -44,19 +61,62 @@
 	cursor: pointer;
 }
 
+/**
+* month-track charts
+*/
+.contribution-graph .main .charts.month-track {
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.contribution-graph .month-track .date-indicator {
+	min-width: 15px;
+	min-height: 15px;
+	font-size: 8px;
+	width: auto;
+	border-radius: 2px;
+	margin-right: 2px;
+	flex-grow: 1;
+}
+
+.contribution-graph .month-track .cell {
+	min-width: 15px;
+	min-height: 15px;
+	font-size: 10px;
+	width: auto;
+	border-radius: 3px;
+}
+
+.contribution-graph .month-track .month-indicator {
+	background-color: transparent;
+	font-size: 10px;
+	min-width: 40px;
+	height: 15px;
+	margin-right: 8px;
+	text-align: right;
+	cursor: pointer;
+	top: auto;
+}
+
+/* cell*/
 .contribution-graph .cell {
 	min-width: 10px;
 	min-height: 10px;
-	font-size: 8px;;
+	font-size: 8px;
 	width: auto;
 	height: 10px;
-	background-color: transparent;
 	border-radius: 2px;
+	background-color: transparent;
 	margin-top: 2px;
 	margin-right: 2px;
 	flex-grow: 1;
 	cursor: pointer;
 	position: relative;
+	text-align: center;
+}
+
+.contribution-graph .cell:hover {
+	opacity: 0.6;
 }
 
 .contribution-graph .cell.empty {
@@ -65,16 +125,4 @@
 
 .theme-dark .contribution-graph .cell.empty {
 	background: #333;
-}
-
-.contribution-graph .cell:hover {
-	opacity: 0.6;
-}
-
-.contribution-graph .transparent {
-	background-color: transparent;
-}
-
-.highlight {
-	opacity: 0.5;
 }

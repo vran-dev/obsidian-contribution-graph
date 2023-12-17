@@ -21,3 +21,8 @@ export function toFormattedDate(date: Date) {
 export function toFormattedYearMonth(year: number, month: number) {
 	return `${year}-${month < 10 ? "0" + month : month}`;
 }
+
+
+export function getLastDayOfMonth(year: number, month: number) {
+	return new Date(year, month, 0).getDate();
+}

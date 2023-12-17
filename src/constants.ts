@@ -17,7 +17,7 @@ export const monthMapping = [
 
 export const weekDayMapping = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-export const DEFAULT_COLORS: CellStyleRule[] = [
+export const DEFAULT_RULES: CellStyleRule[] = [
 	{
 		color: "#9be9a8",
 		min: 1,
