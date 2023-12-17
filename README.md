@@ -10,15 +10,60 @@ A interactive contribution graph like github to track your notes, habits, activi
 - Customize start of weekday
 - Customize cell style
 - Interactive charts, you can customize cell click event, hover to show statistic data
+- support week track graph(default) and month track graph
 - Integrate with DataviewJS
 
-## Sample
+## Quick start
+
+Currently, the contribution graph needs to be integrated with dataview (make sure you have the dataview plugin installed).
+
+1. create `dataviewjs` codeblock
+
+\`\`\`dataview
+
+// to render chart here
+
+\`\`\`
+
+2. just use `renderContributionGraph` to render charts in `dataviewjs` codeblock
+
+
+```markdown
+
+const data = [
+	{
+		date: '2023-12-01' // format as yyyy-MM-dd
+		value: 1 // count value
+	},
+	{
+		date: '2023-12-02'
+		value: 2
+	},
+	{
+		date: '2023-12-03'
+		value: 3
+	}
+]
+
+const options = {
+    title:  `${from} to ${to}`, // graph title
+    data: data, // graph data
+    fromDate: "2023-01-01", // chart from date, yyyy-MM-dd
+    toDate: "2023-12-31" // chart to date, yyyy-MM-dd
+		startOfWeek: 0 // valid from 0~6,represents sunday to saturday, this field only work when graphType is `default`
+		graphType: "default" // `default` to render week-track graph, `month-track` to render month-track graph
+}
+renderContributionGraph(this.container, options)
+```
+
+
+## The Sample of Week Track Graph 
 
 The following shows how to render charts using dataviewjs
 
-### Create a chart for a fixed time period
+### Create a week track graph for a fixed time period
 
-- for fixed year
+- week track graph for fixed year
 
 ```dataviewjs
 const from = '2022-01-01'
@@ -58,7 +103,7 @@ renderContributionGraph(this.container, calendarData)
 ![](./release/README/20231214103105075.png)
 
 
-- for current year
+- week track graph for current year
 
 ```dataviewjs
 const currentYear = new Date().getFullYear()
@@ -90,7 +135,7 @@ renderContributionGraph(this.container, calendarData)
 
 ![](./release/README/20231214102940657.png)
 
-- for current month
+- week track graph for current month
 
 ```dataviewjs
 const currentYear = new Date().getFullYear()
@@ -115,7 +160,7 @@ renderContributionGraph(this.container, calendarData)
 
 ![](./release/README/20231214102821580.png)
 
-- for current week
+- week track graph for current week
 
 ```dataviewjs
 
@@ -158,11 +203,12 @@ renderContributionGraph(this.container, calendarData)
 ```
 
 ![](./release/README/20231214102814024.png)
-### Create a chart of recent time periods
+
+### Create a week track graph at recent time periods
 
 fixed dates, you can also use the days attribute to generate a chart of recent dates
 
-- in the lastest 365 days
+- week track graph in the lastest 365 days
 
 ```dataviewjs
 const data = dv.pages('#project')
@@ -188,6 +234,7 @@ renderContributionGraph(this.container, calendarData)
 ```
 
 ![](./release/README/20231214102807898.png)
+
 ### Begin with Monday
 
 By default, the first row represents Sunday, you can change it by configuring `startOfWeek`, the allowable values is 0~6
@@ -209,6 +256,7 @@ renderContributionGraph(this.container, calendarData)
 ```
 
 ![](./release/README/20231214102759579.png)
+
 ### Customize cell click event
 
 By configuring the oncellclick attribute, you can set the cell click behavior you want.
@@ -385,3 +433,110 @@ renderContributionGraph(this.container, calendarData)
 ```
 
 ![Alt text](release/README/2.png)
+
+
+## Use Month Track Graph 
+
+In addition to the weekly tracking chart (the default), you can also generate a monthly tracking chart.
+
+In a monthly tracking chart, each row represents the date of an entire month, like this
+
+![Alt text](release/README/week-track.png)
+
+Configuration is very simple, just set the graphType to month-track and you're good to go!
+
+```dataviewjs
+const from = '2022-01-01'
+const to = '2022-12-31'
+const fromDate = new Date(from)
+const toDate = new Date(to)
+const data = []
+
+const calendarData = {
+    title:  `Contributions from ${from} to ${to}`,
+    data: data,
+    days: 365,
+    fromDate: from,
+    toDate: to,
+    graphType: "month-track" // set this field value as 'month-track'
+}
+renderContributionGraph(this.container, calendarData)
+```
+
+## Full Render Configuration
+
+```js
+export class ContributionGraphConfig {
+	/**
+	 * the title of the graph
+	 */
+	title = "Contribution Graph";
+	/**
+	 * recent days to show
+	 */
+	days?: number | undefined;
+	/**
+	 * the start date of the graph，if `days` is set, this value will be ignored
+	 */
+	fromDate?: Date | string | undefined;
+	/**
+	 * the end date of the graph，if `days` is set, this value will be ignored
+	 */
+	toDate?: Date | string | undefined;
+	/**
+	 * the data to show at cell
+	 */
+	data: Contribution[];
+	/**
+	 * the rules to style the cell
+	 */
+	cellStyleRules: CellStyleRule[] = DEFAULT_RULES;
+	/**
+	 * `default`: every column is a week day from top to bottom
+	 * `month-track`: every row is a month from left to right
+	 *
+	 * default value: `default`
+	 */
+	graphType: "default" | "month-track" = "default";
+	/**
+	 * value range: 0->Sunday, 1->Monday, 2->Tuesday, 3->Wednesday, 4->Thursday, 5->Friday, 6->Saturday
+	 * default value: 0
+	 * notice: it's only work when `graphType` is `Weekday`
+	 */
+	startOfWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0;
+	/**
+	 * callback when cell is clicked
+	 */
+	onCellClick?: (
+		cellData: ContributionCellData,
+		event: MouseEvent | undefined
+	) => void | undefined;
+}
+
+export interface Contribution {
+	/**
+	 * the date of the contribution, format: yyyy-MM-dd
+	 */
+	date: string;
+	/**
+	 * the value of the contribution
+	 */
+	value: number;
+	/**
+	 * the summary of the contribution, will be shown when hover on the cell
+	 */
+	summary: string | undefined;
+}
+
+export interface CellStyleRule {
+	// the background color for the cell
+	color: string;
+	// the text in the cell
+	text?: string | undefined;
+	// the inlusive min value
+	min: number;
+	// the exclusive max value
+	max: number;
+}
+
+```

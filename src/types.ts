@@ -1,11 +1,29 @@
 import { DEFAULT_RULES } from "./constants";
 
 export class ContributionGraphConfig {
+	/**
+	 * the title of the graph
+	 */
 	title = "Contribution Graph";
+	/**
+	 * recent days to show
+	 */
 	days?: number | undefined;
+	/**
+	 * the start date of the graph，if `days` is set, this value will be ignored
+	 */
 	fromDate?: Date | string | undefined;
+	/**
+	 * the end date of the graph，if `days` is set, this value will be ignored
+	 */
 	toDate?: Date | string | undefined;
+	/**
+	 * the data to show at cell
+	 */
 	data: Contribution[];
+	/**
+	 * the rules to style the cell
+	 */
 	cellStyleRules: CellStyleRule[] = DEFAULT_RULES;
 	/**
 	 * `default`: every column is a week day from top to bottom
@@ -20,6 +38,9 @@ export class ContributionGraphConfig {
 	 * notice: it's only work when `graphType` is `Weekday`
 	 */
 	startOfWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0;
+	/**
+	 * callback when cell is clicked
+	 */
 	onCellClick?: (
 		cellData: ContributionCellData,
 		event: MouseEvent | undefined
@@ -27,8 +48,17 @@ export class ContributionGraphConfig {
 }
 
 export interface Contribution {
+	/**
+	 * the date of the contribution, format: yyyy-MM-dd
+	 */
 	date: string;
+	/**
+	 * the value of the contribution
+	 */
 	value: number;
+	/**
+	 * the summary of the contribution, will be shown when hover on the cell
+	 */
 	summary: string | undefined;
 }
 
