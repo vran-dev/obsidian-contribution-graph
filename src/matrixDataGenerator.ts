@@ -83,7 +83,7 @@ function contributionToMap(data: Contribution[]) {
 			const newItem = {
 				...item,
 				// @ts-ignore
-				value: map.get(item.date) + item.value,
+				value: map.get(item.date).value + item.value,
 			};
 			map.set(item.date, newItem);
 		} else {
