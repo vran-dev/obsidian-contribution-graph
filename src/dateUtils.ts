@@ -22,7 +22,20 @@ export function toFormattedYearMonth(year: number, month: number) {
 	return `${year}-${month < 10 ? "0" + month : month}`;
 }
 
-
 export function getLastDayOfMonth(year: number, month: number) {
-	return new Date(year, month, 0).getDate();
+	return new Date(year, month + 1, 0).getDate();
+}
+
+export function distanceBeforeTheStartOfWeek(
+	startOfWeek: number,
+	weekDate: number
+) {
+	return (weekDate - startOfWeek + 7) % 7;
+}
+
+export function distanceBeforeTheEndOfWeek(
+	startOfWeek: number,
+	weekDate: number
+) {
+	return (startOfWeek - weekDate + 6) % 7;
 }

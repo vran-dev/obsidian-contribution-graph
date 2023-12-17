@@ -1,5 +1,11 @@
 import { DEFAULT_RULES, monthMapping, weekDayMapping } from "./constants";
-import { parseDate } from "./dateUtils";
+import {
+	distanceBeforeTheEndOfWeek,
+	distanceBeforeTheStartOfWeek,
+	getLastDayOfMonth,
+	parseDate,
+	toFormattedDate,
+} from "./dateUtils";
 import {
 	generateByLatestDays,
 	generateByFixedDate,
@@ -9,7 +15,6 @@ import { ContributionCellData, ContributionGraphConfig } from "./types";
 import { mapBy, matchCellStyleRule } from "./utils";
 
 export class GraphRender {
-	
 	renderMonthTrack(graphConfig: ContributionGraphConfig, root: HTMLElement) {
 		const graphEl = createDiv({
 			cls: "contribution-graph",
@@ -40,6 +45,7 @@ export class GraphRender {
 			cls: "row",
 			parent: chartsEl,
 		});
+
 		dateIndicatorRow.appendChild(
 			createDiv({
 				cls: "cell month-indicator",
@@ -65,6 +71,18 @@ export class GraphRender {
 			const contributionItem = contributionData[i];
 			const yearMonth = `${contributionItem.year}-${contributionItem.month}`;
 			if (yearMonth != currentYearMonth) {
+				// if prev month's last date < 31, fill placeholder cell
+				if (i > 0) {
+					const prev = contributionData[i - 1];
+					const fillMax = 31 - prev.monthDate;
+					for (let j = 0; j < fillMax; j++) {
+						const cellEl = document.createElement("div");
+						cellEl.className = "cell";
+						monthDataRowEl?.appendChild(cellEl);
+					}
+				}
+				
+				// new month data row
 				monthDataRowEl = document.createElement("div");
 				monthDataRowEl.className = "row";
 				chartsEl.appendChild(monthDataRowEl);
@@ -92,7 +110,7 @@ export class GraphRender {
 				const fillMax = startDate - 1;
 				for (let j = 0; j < fillMax; j++) {
 					const cellEl = document.createElement("div");
-					cellEl.className = "cell hole";
+					cellEl.className = "cell";
 					cellEl.innerText = "···";
 					monthDataRowEl?.appendChild(cellEl);
 				}
@@ -116,6 +134,17 @@ export class GraphRender {
 				this.bindCellAttribute(cellEl, contributionItem);
 				this.bindCellClickEvent(cellEl, contributionItem, graphConfig);
 				this.bindCellTips(cellEl, contributionItem);
+			}
+		}
+
+		// fill last month, if last month date is not 31
+		if (contributionData.length > 0) {
+			const last = contributionData[contributionData.length - 1];
+			const fillMax = 31 - last.monthDate;
+			for (let j = 0; j < fillMax; j++) {
+				const cellEl = document.createElement("div");
+				cellEl.className = "cell";
+				monthDataRowEl?.appendChild(cellEl);
 			}
 		}
 	}
@@ -218,6 +247,186 @@ export class GraphRender {
 		}
 	}
 
+	renderCalendar(graphConfig: ContributionGraphConfig, root: HTMLElement) {
+		const graphEl = createDiv({
+			cls: "contribution-graph",
+			parent: root,
+		});
+
+		// main
+		const main = createDiv({
+			cls: "main",
+			parent: graphEl,
+		});
+
+		// title
+		const titleEl = createDiv({
+			cls: "title",
+			parent: main,
+		});
+		titleEl.innerText = graphConfig.title;
+
+		// main -> charts
+		const chartsEl = createDiv({
+			cls: ["charts", "calendar"],
+			parent: main,
+		});
+		const contributionData = this.generateContributionData(
+			graphConfig
+		).filter((item) => item.date != "$HOLE$");
+
+		// fill first month distance
+		if (contributionData.length > 0) {
+			const first = contributionData[0];
+			const distanceBeforeTheStartOfMonth = first.monthDate - 1;
+			const firstDate = new Date(first.date);
+			for (let j = 0; j < distanceBeforeTheStartOfMonth; j++) {
+				firstDate.setDate(firstDate.getDate() - 1);
+				contributionData.unshift({
+					date: "$HOLE$",
+					weekDay: firstDate.getDay(),
+					month: firstDate.getMonth(),
+					monthDate: firstDate.getDate(),
+					year: firstDate.getFullYear(),
+					value: 0,
+				});
+			}
+		}
+
+		// fill last month distance
+		if (contributionData.length > 0) {
+			const last = contributionData[contributionData.length - 1];
+			const lastDay = getLastDayOfMonth(last.year, last.month);
+			const distanceBeforeTheEndOfMonth = lastDay - last.monthDate;
+			const lastDate = new Date(last.date);
+			for (let j = 0; j < distanceBeforeTheEndOfMonth; j++) {
+				lastDate.setDate(lastDate.getDate() + 1);
+				contributionData.push({
+					date: toFormattedDate(lastDate),
+					weekDay: lastDate.getDay(),
+					month: lastDate.getMonth(),
+					monthDate: lastDate.getDate(),
+					year: lastDate.getFullYear(),
+					value: 0,
+				});
+			}
+		}
+
+		const contributionMapByYearMonth = mapBy(
+			contributionData,
+			(item) => `${item.year}-${item.month + 1}`,
+			(item) => item.value,
+			(a, b) => a + b
+		);
+		const cellRules = this.getCellRules(graphConfig);
+		let currentYearMonth = "";
+		let monthContainer;
+		let rowContainer = null;
+		for (let i = 0; i < contributionData.length; i++) {
+			const item = contributionData[i];
+			const yearMonth = `${item.year}-${item.month + 1}`;
+			if (yearMonth != currentYearMonth) {
+				currentYearMonth = yearMonth;
+
+				monthContainer = document.createElement("div");
+				monthContainer.className = "month-container";
+				chartsEl.appendChild(monthContainer);
+
+				const monthIndicator = document.createElement("div");
+				monthIndicator.className = "month-indicator";
+				if (item.month == 0) {
+					monthIndicator.innerText = `${monthMapping[item.month]} ${item.year}`;
+				} else {
+					monthIndicator.innerText = monthMapping[item.month];
+				}
+				monthContainer.appendChild(monthIndicator);
+				this.bindMonthTips(monthIndicator, item, contributionMapByYearMonth);
+
+				const weekDateIndicators = createDiv({
+					cls: ["row", "week-indicator-container"],
+					parent: monthContainer,
+				})
+				for (let i = 0; i < 7; i++) {
+					const dateIndicatorCell = document.createElement("div");
+					dateIndicatorCell.className = "cell week-indicator";
+					const weekText = weekDayMapping[((graphConfig.startOfWeek || 0) + 7 + i) % 7].substring(0, 2)
+					dateIndicatorCell.innerText = weekText;
+					weekDateIndicators.appendChild(dateIndicatorCell);
+				}
+
+				rowContainer = document.createElement("div");
+				rowContainer.className = "row";
+				monthContainer?.appendChild(rowContainer);
+
+				// fill start month, if start month date is not 1
+				const distance = distanceBeforeTheStartOfWeek(
+					graphConfig.startOfWeek || 0,
+					item.weekDay
+				);
+				for (let j = 0; j < distance; j++) {
+					const cellEl = document.createElement("div");
+					cellEl.className = "cell";
+					rowContainer?.appendChild(cellEl);
+				}
+			}
+
+			if (
+				rowContainer == null ||
+				item.weekDay == (graphConfig.startOfWeek || 0)
+			) {
+				rowContainer = document.createElement("div");
+				rowContainer.className = "row";
+				monthContainer?.appendChild(rowContainer);
+			}
+
+			// render cell
+			const cellEl = document.createElement("div");
+			rowContainer?.appendChild(cellEl);
+			cellEl.className = "cell";
+			if (item.date == "$HOLE$") {
+				cellEl.innerText = "···";
+				cellEl.className = "cell";
+			} else if (item.value == 0) {
+				cellEl.className = "cell empty";
+				this.bindCellAttribute(cellEl, item);
+			} else {
+				cellEl.className = "cell";
+				const cellStyleRule = matchCellStyleRule(item.value, cellRules);
+				cellEl.style.backgroundColor = cellStyleRule.color;
+				cellEl.innerText = cellStyleRule.text || "";
+
+				this.bindCellAttribute(cellEl, item);
+				this.bindCellClickEvent(cellEl, item, graphConfig);
+				this.bindCellTips(cellEl, item);
+			}
+
+			if (i + 1 < contributionData.length) {
+				const next = contributionData[i + 1];
+				if (next.month != item.month) {
+					const distance = distanceBeforeTheEndOfWeek(
+						graphConfig.startOfWeek || 0,
+						item.weekDay
+					);
+					for (let j = 0; j < distance; j++) {
+						const cellEl = document.createElement("div");
+						cellEl.className = "cell";
+						rowContainer?.appendChild(cellEl);
+					}
+				}
+			} else if ((i + 1) == contributionData.length) {
+				const distance = distanceBeforeTheEndOfWeek(
+					graphConfig.startOfWeek || 0,
+					item.weekDay
+				);
+				for (let j = 0; j < distance; j++) {
+					const cellEl = document.createElement("div");
+					cellEl.className = "cell";
+					rowContainer?.appendChild(cellEl);
+				}
+			}
+		}
+	}
+
 	renderMonthDateIndicator(dateIndicatorRow: HTMLDivElement) {
 		for (let i = 0; i < 31; i++) {
 			const dateIndicatorCell = document.createElement("div");
@@ -278,9 +487,8 @@ export class GraphRender {
 		contributionItem: ContributionCellData,
 		contributionMapByYearMonth: Map<string, number>
 	) {
-		const yearMonth = `${contributionItem.year}-${
-			contributionItem.month + 1
-		}`;
+		const yearMonth = `${contributionItem.year}-${contributionItem.month + 1
+			}`;
 		const yearMonthValue = contributionMapByYearMonth.get(yearMonth) || 0;
 		// tips event
 		monthCell.addEventListener("mouseenter", (event) => {
