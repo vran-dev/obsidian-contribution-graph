@@ -12,6 +12,8 @@ export default class ContributionGraph extends Plugin {
 			const render = new GraphRender();
 			if (graphConfig.graphType === "month-track") {
 				render.renderMonthTrack(graphConfig, container);
+			} else if (graphConfig.graphType === "calendar") {
+				render.renderCalendar(graphConfig, container);
 			} else if (
 				graphConfig.graphType === "default" ||
 				!graphConfig.graphType

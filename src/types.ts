@@ -31,7 +31,7 @@ export class ContributionGraphConfig {
 	 *
 	 * default value: `default`
 	 */
-	graphType: "default" | "month-track" = "default";
+	graphType: "default" | "month-track" | "calendar" = "default";
 	/**
 	 * value range: 0->Sunday, 1->Monday, 2->Tuesday, 3->Wednesday, 4->Thursday, 5->Friday, 6->Saturday
 	 * default value: 0
