@@ -1,5 +1,5 @@
 
-![](release/README/1.png)
+![Alt text](release/README/cover.png)
 
 A interactive contribution graph like github to track your notes, habits, activity, history and so on.
 
@@ -10,7 +10,7 @@ A interactive contribution graph like github to track your notes, habits, activi
 - Customize start of weekday
 - Customize cell style
 - Interactive charts, you can customize cell click event, hover to show statistic data
-- support week track graph(default) and month track graph
+- support week track graph(default), month track graph and calendar graph
 - Integrate with DataviewJS
 
 ## Quick start
@@ -463,6 +463,30 @@ const calendarData = {
 renderContributionGraph(this.container, calendarData)
 ```
 
+## Use Calendar Graph
+
+Same as the previous example, it's only need to set the graphType to calendar and you will get a calendar graph
+
+![Alt text](./release/README/calendar.png)
+
+```dataviewjs
+const from = '2023-01-01'
+const to = '2023-12-31'
+const fromDate = new Date(from)
+const toDate = new Date(to)
+const data = []
+
+const calendarData = {
+    title:  `Contributions from ${from} to ${to}`,
+    data: data,
+    days: 365,
+    fromDate: from,
+    toDate: to,
+    graphType: "calendar" 
+}
+renderContributionGraph(this.container, calendarData)
+```
+
 ## Full Render Configuration
 
 ```js
@@ -497,11 +521,11 @@ export class ContributionGraphConfig {
 	 *
 	 * default value: `default`
 	 */
-	graphType: "default" | "month-track" = "default";
+	graphType: "default" | "month-track" | "calendar"  = "default";
 	/**
 	 * value range: 0->Sunday, 1->Monday, 2->Tuesday, 3->Wednesday, 4->Thursday, 5->Friday, 6->Saturday
 	 * default value: 0
-	 * notice: it's only work when `graphType` is `Weekday`
+	 * notice: it's  not work in `default` graph type
 	 */
 	startOfWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0;
 	/**
