@@ -5,26 +5,37 @@ export class ContributionGraphConfig {
 	 * the title of the graph
 	 */
 	title = "Contribution Graph";
+
 	/**
 	 * recent days to show
 	 */
 	days?: number | undefined;
+
 	/**
 	 * the start date of the graph，if `days` is set, this value will be ignored
 	 */
 	fromDate?: Date | string | undefined;
+
 	/**
 	 * the end date of the graph，if `days` is set, this value will be ignored
 	 */
 	toDate?: Date | string | undefined;
+
 	/**
 	 * the data to show at cell
 	 */
 	data: Contribution[];
+
 	/**
 	 * the rules to style the cell
 	 */
 	cellStyleRules: CellStyleRule[] = DEFAULT_RULES;
+
+	/**
+	 * set false to hide rule indicators
+	 */
+	showCellRuleIndicators = true;
+
 	/**
 	 * `default`: every column is a week day from top to bottom
 	 * `month-track`: every row is a month from left to right
@@ -32,12 +43,14 @@ export class ContributionGraphConfig {
 	 * default value: `default`
 	 */
 	graphType: "default" | "month-track" | "calendar" = "default";
+
 	/**
 	 * value range: 0->Sunday, 1->Monday, 2->Tuesday, 3->Wednesday, 4->Thursday, 5->Friday, 6->Saturday
 	 * default value: 0
-	 * notice: it's only work when `graphType` is `Weekday`
+	 * notice: it's not work when `graphType` is `month-track`
 	 */
 	startOfWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0;
+
 	/**
 	 * callback when cell is clicked
 	 */

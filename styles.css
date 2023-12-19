@@ -173,11 +173,7 @@
 	margin-top: 12px;
 }
 
-.contribution-graph
-	.calendar
-	.month-container
-	.week-indicator-container
-	.week-indicator {
+.contribution-graph .calendar .month-container .week-indicator-container .week-indicator {
 	font-size: 10px;
 	line-height: 1.5;
 	text-align: center;
@@ -219,4 +215,30 @@
 
 .theme-dark .contribution-graph .cell.empty {
 	background: #333;
+}
+
+/* default cell rule indicator */
+.contribution-graph .cell-rule-indicator-container {
+	position: relative;
+	width: calc(100% - 12px);
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+	margin-top: 12px;
+	margin-bottom: 6px;
+}
+
+.contribution-graph .cell-rule-indicator-container .cell {
+	max-width: 8px;
+	height: 8px;
+}
+
+.contribution-graph .cell-rule-indicator-container .cell.text {
+	height: 8px;
+	width: auto;
+	min-width: 20px;
+	margin-left: 6px;
+	margin-right: 6px;
+	color: var(--text-muted);
 }
