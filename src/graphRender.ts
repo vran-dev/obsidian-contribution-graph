@@ -40,6 +40,8 @@ export class GraphRender {
 			parent: main,
 		});
 
+		this.renderCellRuleIndicator(graphConfig, main)
+
 		// main ->  month date indicator(text cell)
 		const dateIndicatorRow = createDiv({
 			cls: "row",
@@ -174,6 +176,8 @@ export class GraphRender {
 			parent: main,
 		});
 
+		this.renderCellRuleIndicator(graphConfig, main)
+
 		// main ->  week day indicator(text cell)
 		const weekTextColumns = createDiv({
 			cls: "column",
@@ -271,6 +275,9 @@ export class GraphRender {
 			cls: ["charts", "calendar"],
 			parent: main,
 		});
+
+		this.renderCellRuleIndicator(graphConfig, main)
+
 		const contributionData = this.generateContributionData(
 			graphConfig
 		).filter((item) => item.date != "$HOLE$");
@@ -425,6 +432,47 @@ export class GraphRender {
 				}
 			}
 		}
+	}
+
+	renderCellRuleIndicator(graphConfig: ContributionGraphConfig, parent: HTMLElement) {
+		if (graphConfig.showCellRuleIndicators === false) {
+			console.debug("hide cell rule indicators cause `showCellRuleIndicators` is false")
+			return
+		}
+
+		const cellRuleIndicatorContainer = createDiv({
+			cls: "cell-rule-indicator-container",
+			parent: parent,
+		})
+		const cellRules = this.getCellRules(graphConfig);
+		createDiv({
+			cls: "cell text",
+			text: "less",
+			parent: cellRuleIndicatorContainer,
+		})
+		cellRules.sort((a, b) => a.min - b.min).forEach((rule) => {
+				const cellEl = createDiv({
+					cls: ['cell'],
+					parent: cellRuleIndicatorContainer,
+				})
+				cellEl.className = "cell";
+				cellEl.style.backgroundColor = rule.color;
+				cellEl.innerText = rule.text || "";
+
+				// bind tips event
+				cellEl.addEventListener("mouseenter", (event) => {
+					const summary = `${rule.min} ≤ contributions ＜ ${rule.max}`;
+					showTips(event, summary);
+					cellEl.addEventListener("mouseleave", (event) => {
+						hideTips(event);
+					});
+				});
+		})
+		createDiv({
+			cls: "cell text",
+			text: "more",
+			parent: cellRuleIndicatorContainer,
+		})
 	}
 
 	renderMonthDateIndicator(dateIndicatorRow: HTMLDivElement) {
