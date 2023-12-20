@@ -190,7 +190,7 @@
 
 /* default cell */
 .contribution-graph .cell {
-	min-width: 10px;
+	min-width: 8px;
 	min-height: 10px;
 	font-size: 8px;
 	width: auto;
