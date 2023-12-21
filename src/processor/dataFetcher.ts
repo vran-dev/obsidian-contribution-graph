@@ -1,6 +1,7 @@
 import { App } from "obsidian";
 import { Contribution } from "../types";
 import { getAPI } from "obsidian-dataview";
+import { GraphProcessError } from "./graphProcessError";
 
 export class DataviewDataFetcher {
 	fetch(query: string, dateField?: string, app?: App): Contribution[] {
@@ -9,7 +10,7 @@ export class DataviewDataFetcher {
 		}
 		const dv = getAPI(app);
 		if (!dv) {
-			throw new Error("Dataview plugin not installed");
+			throw new GraphProcessError("Dataview query not available");
 		}
 		const result = dv.pages(query);
 		if (dateField) {

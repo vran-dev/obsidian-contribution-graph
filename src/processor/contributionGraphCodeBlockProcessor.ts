@@ -15,6 +15,7 @@ import {
 	MISS_DAYS_OR_RANGE_DATE,
 	MISS_QUERY_OR_DATA,
 } from "./errorTips";
+import { GraphProcessError } from "./graphProcessError";
 
 export class ContributionGraphCodeBlockProcessor {
 	process(
@@ -23,61 +24,57 @@ export class ContributionGraphCodeBlockProcessor {
 		ctx: MarkdownPostProcessorContext,
 		app: App
 	) {
-		// validation
-		const graphConfig: YamlGraphConfig | null = this.loadYamlConfig(
-			el,
-			code
-		);
-		if (!graphConfig) {
-			return;
-		}
-		const res = YamlGraphConfig.validation(graphConfig);
-		if (!res.valid) {
-			Renders.renderErrorTips(
-				el,
-				res.message || "unknown error, please check at console"
+		try {
+			// validate
+			const graphConfig: YamlGraphConfig = this.loadYamlConfig(el, code);
+			YamlGraphConfig.validate(graphConfig);
+
+			// fetch data
+			const data = new DataviewDataFetcher().fetch(
+				graphConfig.query,
+				graphConfig.dateField,
+				app
 			);
-			return;
-		}
+			const aggregatedData = [];
+			if (graphConfig.data) {
+				aggregatedData.push(...graphConfig.data);
+			}
+			aggregatedData.push(...data);
+			graphConfig.data = aggregatedData;
 
-		// fetch data
-		const data = new DataviewDataFetcher().fetch(
-			graphConfig.query,
-			graphConfig.dateField,
-			app
-		);
-		const aggregatedData = [];
-		if (graphConfig.data) {
-			aggregatedData.push(...graphConfig.data);
+			// render
+			Renders.render(
+				el,
+				YamlGraphConfig.toContributionGraphConfig(graphConfig)
+			);
+		} catch (e) {
+			if (e instanceof GraphProcessError) {
+				el.innerHTML = e.reason;
+			} else {
+				el.innerHTML = "unexpected error: <pre>" + e.message + "</pre>";
+			}
 		}
-		aggregatedData.push(...data);
-		graphConfig.data = aggregatedData;
-
-		// render
-		Renders.render(
-			el,
-			YamlGraphConfig.toContributionGraphConfig(graphConfig)
-		);
 	}
 
-	loadYamlConfig(el: HTMLElement, code: string): YamlGraphConfig | null {
+	loadYamlConfig(el: HTMLElement, code: string): YamlGraphConfig {
 		if (code == null || code.trim() == "") {
-			Renders.renderErrorTips(el, MISS_CONFIG());
-			return null;
+			throw new GraphProcessError(MISS_CONFIG());
 		}
 
 		try {
 			return load(code);
 		} catch (e) {
 			if (e.mark?.line) {
-				Renders.renderErrorTips(
-					el,
+				throw new GraphProcessError(
 					"yaml parse error at line " +
 						(e.mark.line + 1) +
 						", please check the format"
 				);
+			} else {
+				throw new GraphProcessError(
+					"content parse error, please check the format(such as blank, indent)"
+				);
 			}
-			return null;
 		}
 	}
 }
@@ -120,36 +117,26 @@ export class YamlGraphConfig {
 		};
 	}
 
-	static validation(config: YamlGraphConfig): ValidationResult {
+	static validate(config: YamlGraphConfig): void {
 		if (!config) {
-			return {
-				valid: false,
-				message: MISS_CONFIG(),
-			};
+			throw new GraphProcessError(MISS_CONFIG());
 		}
 		if (!config.query && !config.data) {
-			return {
-				valid: false,
-				message: MISS_QUERY_OR_DATA(),
-			};
+			throw new GraphProcessError(MISS_QUERY_OR_DATA());
 		}
 
 		if (config.graphType) {
 			const graphTypes = ["default", "month-track", "calendar"];
 			if (!graphTypes.includes(config.graphType)) {
-				return {
-					valid: false,
-					message: INVALID_GRAPH_TYPE(config.graphType),
-				};
+				throw new GraphProcessError(
+					INVALID_GRAPH_TYPE(config.graphType)
+				);
 			}
 		}
 
 		if (!config.days) {
 			if (!config.fromDate || !config.toDate) {
-				return {
-					valid: false,
-					message: MISS_DAYS_OR_RANGE_DATE(),
-				};
+				throw new GraphProcessError(MISS_DAYS_OR_RANGE_DATE());
 			}
 		}
 
@@ -157,33 +144,24 @@ export class YamlGraphConfig {
 			// yyyy-MM-dd
 			const dateReg = /^\d{4}-\d{2}-\d{2}$/;
 			if (config.fromDate && !dateReg.test(config.fromDate)) {
-				return {
-					valid: false,
-					message: INVALID_DATE_FORMAT(config.fromDate),
-				};
+				throw new GraphProcessError(
+					INVALID_DATE_FORMAT(config.fromDate)
+				);
 			}
 
 			if (config.toDate && !dateReg.test(config.toDate)) {
-				return {
-					valid: false,
-					message: INVALID_DATE_FORMAT(config.toDate),
-				};
+				throw new GraphProcessError(INVALID_DATE_FORMAT(config.toDate));
 			}
 		}
 
 		if (config.startOfWeek) {
 			const statOfWeeks = [0, 1, 2, 3, 4, 5, 6];
 			if (!statOfWeeks.includes(config.startOfWeek)) {
-				return {
-					valid: false,
-					message: INVALID_START_OF_WEEK(config.startOfWeek),
-				};
+				throw new GraphProcessError(
+					INVALID_START_OF_WEEK(config.startOfWeek)
+				);
 			}
 		}
-
-		return {
-			valid: true,
-		};
 	}
 }
 
