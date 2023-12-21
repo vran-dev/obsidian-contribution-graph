@@ -54,7 +54,6 @@ export class ContributionGraphCodeBlockProcessor {
 		graphConfig.data = aggregatedData;
 
 		// render
-		console.log(YamlGraphConfig.toContributionGraphConfig(graphConfig));
 		Renders.render(
 			el,
 			YamlGraphConfig.toContributionGraphConfig(graphConfig)
