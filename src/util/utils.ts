@@ -1,4 +1,4 @@
-import { CellStyleRule } from "./types";
+import { CellStyleRule } from "../types";
 
 export function mapBy<T, R>(
 	arr: T[],

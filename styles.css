@@ -242,3 +242,16 @@
 	margin-right: 6px;
 	color: var(--text-muted);
 }
+
+/* default error tips */
+.contribution-graph-render-error-container {
+  background-color: var(--background-secondary);
+	text-align: center;
+	padding: 6px;
+	min-height: 12px;
+	border-radius: 6px;
+}
+
+.contribution-graph-render-error-container pre {
+  text-align: left;
+}

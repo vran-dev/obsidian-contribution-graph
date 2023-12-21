@@ -64,7 +64,7 @@ export interface Contribution {
 	/**
 	 * the date of the contribution, format: yyyy-MM-dd
 	 */
-	date: string;
+	date: string | Date;
 	/**
 	 * the value of the contribution
 	 */
