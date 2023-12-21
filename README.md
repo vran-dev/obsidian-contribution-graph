@@ -1,493 +1,251 @@
 
-![Alt text](release/README/cover.png)
+![](attachment/d20ba90e31c16a3c4d79cba9298577de.png)
 
-A interactive contribution graph like github to track your notes, habits, activity, history and so on.
+## What
+
+Contribution Graph is a plugin for [obsidin.md](https://obsidian.md/)which could generate interactive contribution graphs like GitHub to track your notes, habits, activity, history, and so on.
+
+
+[![Buy me a coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://www.buymeacoffee.com/vran)
+
+
+## Quick Start
+
+Simply create a `contributionGrph` codeblock, then paste the following code into it
+
+```yaml
+title: "Contributions on the latest 365 days"
+days: 365
+query: '""' # dataview query, "" means query all files in obsidian
+```
+
+![](attachment/75cbb797dc58593b204e3e1b47d7146e.png)
+Then you'll see magic happened
+
+![Alt text](attachment/quick-start.png)
 
 ## Features
 
-- Render fixed date range chart
-- Render recent date range chart
-- Customize start of weekday
-- Customize cell style
-- Interactive charts, you can customize cell click event, hover to show statistic data
-- support week track graph(default), month track graph and calendar graph
-- Integrate with DataviewJS
+- diverse views, support week-track(default), month-track, and calendar view.
+- personalized style, you can configure different cell colors and fill cells with emojis.
+- use fixed date range or latest date to generate graph
+- interactive charts, you can customize cell click event, hover to show statistic data
+- simply integrate with DataviewJS, use contribution graph's api to dynamically render charts 
 
-## Quick start
+![](attachment/74103317de5336b5283338c56171f268.png)
 
-Currently, the contribution graph needs to be integrated with dataview (make sure you have the dataview plugin installed).
+## Showcase
 
-1. create `dataviewjs` codeblock
+> if you are interested in dataviewJS integration, see [here](README_ADVANCE.md)
 
-\`\`\`dataview
+Please note two points
 
-// to render chart here
+- All configuration is placed within the `contributionGraph` **codeblock**
+- Configuration is essentially using the [yaml](https://yaml.org/) format
 
-\`\`\`
+![](attachment/75cbb797dc58593b204e3e1b47d7146e.png)
 
-2. just use `renderContributionGraph` to render charts in `dataviewjs` codeblock
+### Simple usage
 
+Generate a chart based on files containing the `project` tag created in the last 365 days
 
-```markdown
+![Alt text](attachment/simple-usage.png)
 
-const data = [
-	{
-		date: '2023-12-01' // format as yyyy-MM-dd
-		value: 1 // count value
-	},
-	{
-		date: '2023-12-02'
-		value: 2
-	},
-	{
-		date: '2023-12-03'
-		value: 3
-	}
-]
-
-const options = {
-    title:  `${from} to ${to}`, // graph title
-    data: data, // graph data
-    fromDate: "2023-01-01", // chart from date, yyyy-MM-dd
-    toDate: "2023-12-31" // chart to date, yyyy-MM-dd
-		startOfWeek: 0 // valid from 0~6,represents sunday to saturday, this field only work when graphType is `default`
-		graphType: "default" // `default` to render week-track graph, `month-track` to render month-track graph
-}
-renderContributionGraph(this.container, options)
+```yaml
+title: 'Contributions'  # the title of the contribution
+days: 365
+query: '#project' # list all fils which contains `project` tag
 ```
 
+Some specific cases of **query**
 
-## The Sample of Week Track Graph 
+- `'archive'`:  all files in `archive` folder
+- `'#food and !#fastfood'`: pages that contain `#food` but does not contain `#fastfood`.
+- `'#tag and "folder"'`: pages in `folder` and with `#tag`.
 
-The following shows how to render charts using dataviewjs
+see [dataview document](https://blacksmithgu.github.io/obsidian-dataview/reference/sources/#combining-sources)  to learn more.
 
-### Create a week track graph for a fixed time period
+### Fixed date range
 
-- week track graph for fixed year
+according to configure `fromDate` and `toDate`, you can generate fixed date range charts
 
-```dataviewjs
-const from = '2022-01-01'
-const to = '2022-12-31'
-const data = [
-	{
-		date: '2022-01-01', // yyyy-MM-dd
-		value: 1
-	},
-	{
-		date: '2022-02-01', // yyyy-MM-dd
-		value: 2
-	},
-	{
-		date: '2022-03-01', // yyyy-MM-dd
-		value: 3
-	},
-	{
-		date: '2022-04-01', // yyyy-MM-dd
-		value: 4
-	},
-	{
-		date: '2022-05-01', // yyyy-MM-dd
-		value: 5
-	}
-]
+![Alt text](attachment/fixed-date-range.png)
 
-const calendarData = {
-    title:  `${from} to ${to}`, // graph title
-    data: data, // data
-    fromDate: from, // from date, yyyy-MM-dd
-    toDate: to // to date, yyyy-MM-dd
-}
-renderContributionGraph(this.container, calendarData)
+
+```yaml
+title: 'Contributions'  # the title of the contribution
+fromDate: '2023-01-01' # date format must be yyyy-MM-dd
+toDate: '2023-12-01'
+query: '#project' # list all fils which contains `project` tag
 ```
 
-![](./release/README/20231214103105075.png)
+### Customize Date Field
+
+By default, contribution charts are generated based on the creation time of the file (`file.ctime`).
+
+But many times you will want to generate charts based on the custom date attributes of the file, such as `createTime` or `doneTime` in the **fonrtmatter**.
+
+faced with this requirement, Just set the dateField to the value you want
+
+![Alt text](attachment/customized-date-field.png)
+
+```yaml
+title: 'Contributions'  # the title of the contribution
+fromDate: '2023-01-01' # date format must be yyyy-MM-dd
+toDate: '2023-12-01'
+dateField: 'createTime' # use customized field to genrate charts
+query: '#project' # list all fils which contains `project` tag
+```
+### Start Of Week
+
+default, charts start with sunday at first row, You can change this by setting `startOfWeek`(only work in week-track and calendar view).
+
+Supported values are 0~6, representing Sunday, Monday to Saturday respectively.
+
+![Alt text](attachment/start-of-week.png)
 
 
-- week track graph for current year
-
-```dataviewjs
-const currentYear = new Date().getFullYear()
-const from = currentYear + '-01-01'
-const to = currentYear + '-12-31'
-const data = dv.pages('#project')
-	.map(p => {
-		return {
-			date: p.createTime.toFormat('yyyy-MM-dd'),
-			value: p
-		}
-	})
-	.groupBy(p => p.date)
-	.map(entry =>{
-		return {
-			date: entry.key,
-			value: entry.rows.length
-		}
-	})
-
-const calendarData = {
-    title:  `${from} to ${to}`,
-    data: data,
-    fromDate: from,
-    toDate: to
-}
-renderContributionGraph(this.container, calendarData)
+```yaml
+title: 'Contributions'  # the title of the contribution
+fromDate: '2023-01-01' # date format must be yyyy-MM-dd
+toDate: '2023-12-01'
+startOfWeek: 1 # start with monday 
+dateField: 'createTime' # use customized field to genrate charts
+query: '#project' # list all fils which contains `project` tag
 ```
 
-![](./release/README/20231214102940657.png)
+### Month Track View and Calendar View
 
-- week track graph for current month
+default view type is week-track, github style charts. You can change this by setting `graphType`
 
-```dataviewjs
-const currentYear = new Date().getFullYear()
-const month = new Date().getMonth()// 0~11
-const nextMonth = month + 1
-const lastDayOfCurrentMonth = new Date(currentYear, nextMonth, 0).getDate()
-const formattedLastDayOfCurrentMonth = lastDayOfCurrentMonth < 10 ? '0'+lastDayOfCurrentMonth:lastDayOfCurrentMonth
-const formattedMonth = month < 9 ? '0' + (month+1): '' + (month+1)
-const from = `${currentYear}-${formattedMonth}-01'`
-const to = `${currentYear}-${formattedMonth}-${formattedLastDayOfCurrentMonth}'`
+- change it to **month-track** view
 
-const data = []
+![Alt text](attachment/month-track.png)
 
-const calendarData = {
-    title:  `${from} to ${to}`,
-    data: data,
-    fromDate: from,
-    toDate: to
-}
-renderContributionGraph(this.container, calendarData)
+```yaml
+title: 'Contributions'  # the title of the contribution
+fromDate: '2023-01-01' # date format must be yyyy-MM-dd
+toDate: '2023-12-01'
+startOfWeek: 1 # start with monday 
+dateField: 'createTime' # use customized field to genrate charts
+query: '#project' # list all fils which contains `project` tag
+graphType: 'month-track'
 ```
 
-![](./release/README/20231214102821580.png)
+- change it to **calendar** view
 
-- week track graph for current week
+![Alt text](attachment/calendar.png)
 
-```dataviewjs
 
-function formatDateString(date) {
-  var year = date.getFullYear();
-  var month = String(date.getMonth() + 1).padStart(2, '0');
-  var day = String(date.getDate()).padStart(2, '0');
-  return year + '-' + month + '-' + day;
-}
+```yaml
+title: 'Contributions'  # the title of the contribution
+fromDate: '2023-01-01' # date format must be yyyy-MM-dd
+toDate: '2023-12-01'
+startOfWeek: 1 # start with monday 
+dateField: 'createTime' # use customized field to genrate charts
+query: '#project' # list all fils which contains `project` tag
+graphType: 'calendar'
+```
+### Personized cell color
 
-function getStartAndEndOfWeek() {
-  var currentDate = new Date();
-  var currentDayOfWeek = currentDate.getDay();
-  var diffToStartOfWeek = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
-  var startOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - diffToStartOfWeek);
-  var endOfWeek = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 6);
-  
-  var formattedStart = formatDateString(startOfWeek);
-  var formattedEnd = formatDateString(endOfWeek);
-  
-  return {
-    start: formattedStart,
-    end: formattedEnd
-  };
-}
+You can customize your contribution graph by setting cellStyleRules, like this
 
-const data = []
-const weekDate = getStartAndEndOfWeek()
-const from = weekDate.start
-const to = weekDate.end
+![Alt text](attachment/personized-cell-color.png)
 
-const calendarData = {
-    title:  `${from} to ${to}`,
-    data: data,
-    fromDate: from,
-    toDate: to
-}
-renderContributionGraph(this.container, calendarData)
-
+```yaml
+title: 'Contributions'  # the title of the contribution
+fromDate: '2023-01-01' # date format must be yyyy-MM-dd
+toDate: '2023-12-01'
+startOfWeek: 1 # start with monday 
+dateField: 'createTime' # use customized field to genrate charts
+query: '#project' # list all fils which contains `project` tag
+graphType: 'calendar'
+cellStyleRules: # personized your graph style
+  - color: '#f1d0b4'
+    min: 1
+    max: 2
+  - color: '#e6a875'
+    min: 2
+    max: 3
+  - color: '#d97d31'
+    min: 3
+    max: 4
+  - color: '#b75d13'
+    min: 4
+    max: 999
 ```
 
-![](./release/README/20231214102814024.png)
+### Personized cell text
 
-### Create a week track graph at recent time periods
+In addition to colors, you can also personalize your charts using emoji or text
 
-fixed dates, you can also use the days attribute to generate a chart of recent dates
+![Alt text](attachment/personizezd-cell-text.png)
 
-- week track graph in the lastest 365 days
-
-```dataviewjs
-const data = dv.pages('#project')
-	.map(p => {
-		return {
-			date: p.createTime.toFormat('yyyy-MM-dd'),
-			value: p
-		}
-	})
-	.groupBy(p => p.date)
-	.map(entry =>{
-		return {
-			date: entry.key,
-			value: entry.rows.length
-		}
-	})
-const calendarData = {
-    days: 365,
-    title: 'Contributions in the last 365 days ',
-    data: data
-}
-renderContributionGraph(this.container, calendarData)
+```yaml
+title: 'Contributions'  # the title of the contribution
+fromDate: '2023-01-01' # date format must be yyyy-MM-dd
+toDate: '2023-12-01'
+startOfWeek: 1 # start with monday 
+dateField: 'createTime' # use customized field to genrate charts
+query: '#project' # list all fils which contains `project` tag
+graphType: 'default'
+cellStyleRules: # personized your graph style
+  - text: '✅'
+    min: 1
+    max: 2
+  - text: '🌳'
+    min: 2
+    max: 3
+  - text: '🚩'
+    min: 3
+    max: 4
+  - text: '🚀'
+    min: 4
+    max: 999
 ```
 
-![](./release/README/20231214102807898.png)
+### Hide cell rule indicators
 
-### Begin with Monday
+If you don't like the cell indicators in the lower right corner, you can set `showCellRuleIndicators` to false to hide it.
 
-By default, the first row represents Sunday, you can change it by configuring `startOfWeek`, the allowable values is 0~6
+![Alt text](attachment/hide-rule-indicators.png)
 
-```dataviewjs
-const currentYear = new Date().getFullYear()
-const from = currentYear + '-01-01'
-const to = currentYear + '-12-31'
-const data = []
-
-const calendarData = {
-    title:  `${from} to ${to}`,
-    data: data,
-    fromDate: from,
-    toDate: to,
-    startOfWeek: 1 // set to 1 means start with monday
-}
-renderContributionGraph(this.container, calendarData)
+```yaml
+title: 'Contributions'  # the title of the contribution
+fromDate: '2023-01-01' # date format must be yyyy-MM-dd
+toDate: '2023-12-01'
+startOfWeek: 1 # start with monday 
+dateField: 'createTime' # use customized field to genrate charts
+query: '#project' # list all fils which contains `project` tag
+graphType: 'default'
+showCellRuleIndicators: false
 ```
 
-![](./release/README/20231214102759579.png)
+## Full Codeblock Configuration
 
-### Customize cell click event
+| name                   | description                                                           | type                    | default    | sample     | required                                 |
+| ---------------------- | --------------------------------------------------------------------- | ----------------------- | ---------- | ---------- | ---------------------------------------- |
+| title                  | the title of the graph                                                | string                  | ''         |            | false                                    |
+| days                   | Maximum number of days for the chart to display (starting from today) | number                  |            | 365        | true if miss **fromDate** and **toDate** |
+| fromDate               | The start date of the chart                                           | date, format yyyy-MM-dd |            | 2023-01-01 | true if miss **days**                    |
+| toDate                 | The end date of the chart                                             | date, format yyyy-MM-dd |            | 2023-12-31 | true if miss **days**                    |
+| query                  | dataview query syntax, contribution graph will use it to count files  | string                  |            |            | true                                     |
+| dateField              | Date attributes of files used for data distribution                   | string                  | file.ctime | createTime | false                                    |
+| startOfWeek            | start of week                                                         | number                  | 0          |            | false                                    |
+| showCellRuleIndicators | Control the display and hiding of cell rule indicator elements        | boolean                 | true       |            | false                                    |
+| cellStyleRules         | cell style rule                                                       | array                   |            |            | false                                    |
 
-By configuring the oncellclick attribute, you can set the cell click behavior you want.
+## Integrate with Dataview
 
-The following shows an example of automatically performing a keyword search after clicking on a cell.
+If you are familiar with javascript, you can use the contribution Graph API through dataviewJS, To access more advanced features.
 
-```dataviewjs
-const data = dv.pages('#project')
-	.map(p => {
-		return {
-			date: p.createTime.toFormat('yyyy-MM-dd'),
-			value: p
-		}
-	})
-	.groupBy(p => p.date)
-	.map(entry =>{
-		return {
-			date: entry.key,
-			value: entry.rows.length
-		}
-	})
-const calendarData = {
-    days: 365,
-    title: 'Contributions in the last 365 days ',
-    data: data,
-    onCellClick: (item) => {
-	    // generate search key
-	    const key = `["tags":project] ["createTime":${item.date}]`
-	    // use global-search plugin to search data
-		app.internalPlugins.plugins['global-search'].instance.openGlobalSearch(key)
-    },
-}
-renderContributionGraph(this.container, calendarData)
+contribution Graph Exposed a global function named `renderContributionGraph`, It is defined as follows.
+
+> if you want to see more api's usage case, see [adanced](README_ADVANCE.md) page. 
+
+```js
+function renderContributionGraph(container: HTMLElement, config: ContributionGraphConfig): void
 ```
-
-![](./release/README/20231214102752275.png)
-
-### Customize Cells
-
-By configuring the cellStyleRules attribute, you can customize the cell's background color or inner text
-
-if the number of contributions at a specified date is larger or equal to `min`, less than `max`, then the `rule` will be matched
-
-> min <= {contributions} < max
-
-| name  | type   | description |
-| ----- | ------ | ----------- |
-| color | string | hex color   |
-| min   |  number      | the min contribution            |
-| max   |  number      | the max contribution            |
-
-- customize background color
-
-```dataviewjs
-const data = dv.pages('#project')
-	.map(p => {
-		return {
-			date: p.createTime.toFormat('yyyy-MM-dd'),
-			value: p
-		}
-	})
-	.groupBy(p => p.date)
-	.map(entry =>{
-		return {
-			date: entry.key,
-			value: entry.rows.length
-		}
-	})
-const calendarData = {
-    days: 365,
-    title: 'Contributions in the last 365 days ',
-    data: data,
-    onCellClick: (item) => {
-	    const key = `["tags":project] ["createTime":${item.date}]`
-		app.internalPlugins.plugins['global-search'].instance.openGlobalSearch(key)
-    },
-    cellStyleRules: [
-		{
-			color: "#FFF8DC",
-			min: 1,
-			max: 2,
-		},
-		{
-			color: "#FFECB3",
-			min: 2,
-			max: 3,
-		},
-		{
-			color: "#FFD700",
-			min: 3,
-			max: 4,
-		},
-		{
-			color: "#FFC200",
-			min: 4,
-			max: 999,
-		},
-	]
-}
-renderContributionGraph(this.container, calendarData)
-
-```
-
-![](./release/README/20231214102737916.png)
-
-
-- customize inner text
-
-```dataviewjs
-const data = dv.pages('#project')
-	.flatMap(p => {
-		const arr = []
-		if (p.doneTime) {
-			arr.push({
-				date: p.doneTime.toFormat('yyyy-MM-dd'),
-				value: p,
-				group: 'done'
-			})
-		} 
-		if (p.createTime) {
-			arr.push({
-				date: p.createTime.toFormat('yyyy-MM-dd'),
-				value: p,
-				group: 'created'
-			})
-		}
-		if(!p.createTime && !p.doneTime) {
-			console.warn(`project ${p.file.name} missing createTime or doneTime field`)
-		}
-		return arr
-	})
-	.groupBy(p => p.date)
-	.map(entry =>{
-		const doneGroupCount = entry.rows.filter(i => i.group == 'done').length
-		const createdGroupCount = entry.rows.filter(i => i.group == 'created').length
-		return {
-			date: entry.key,
-			value: entry.rows.length,
-			summary: `create ${createdGroupCount} and done ${doneGroupCount} projects at ${entry.key}`
-		}
-	})
-const calendarData = {
-    days: 365,
-    title: 'Contributions in the last 365 days ',
-    data: data,
-    onCellClick: (item) => {
-	    const key = `["tags":project] ["createTime":${item.date}]`
-		app.internalPlugins.plugins['global-search'].instance.openGlobalSearch(key)
-    },
-    cellStyleRules: [
-	    {
-		    min: 1,
-		    max: 2,
-		    text: '🌲'
-	    },
-	    {
-		    min: 2,
-		    max: 3,
-		    text: '😥'
-	    },
-	    {
-		    min: 3,
-		    max: 4,
-		    text: '✈'
-	    },
-	    {
-		    min: 4,
-		    max: 99,
-		    text: '✈'
-	    }
-    ]
-}
-renderContributionGraph(this.container, calendarData)
-```
-
-![Alt text](release/README/2.png)
-
-
-## Use Month Track Graph 
-
-In addition to the weekly tracking chart (the default), you can also generate a monthly tracking chart.
-
-In a monthly tracking chart, each row represents the date of an entire month, like this
-
-![Alt text](release/README/week-track.png)
-
-Configuration is very simple, just set the graphType to month-track and you're good to go!
-
-```dataviewjs
-const from = '2022-01-01'
-const to = '2022-12-31'
-const fromDate = new Date(from)
-const toDate = new Date(to)
-const data = []
-
-const calendarData = {
-    title:  `Contributions from ${from} to ${to}`,
-    data: data,
-    days: 365,
-    fromDate: from,
-    toDate: to,
-    graphType: "month-track" // set this field value as 'month-track'
-}
-renderContributionGraph(this.container, calendarData)
-```
-
-## Use Calendar Graph
-
-Same as the previous example, it's only need to set the graphType to calendar and you will get a calendar graph
-
-![Alt text](./release/README/calendar.png)
-
-```dataviewjs
-const from = '2023-01-01'
-const to = '2023-12-31'
-const fromDate = new Date(from)
-const toDate = new Date(to)
-const data = []
-
-const calendarData = {
-    title:  `Contributions from ${from} to ${to}`,
-    data: data,
-    days: 365,
-    fromDate: from,
-    toDate: to,
-    graphType: "calendar" 
-}
-renderContributionGraph(this.container, calendarData)
-```
-
-## Full Render Configuration
 
 ```js
 export class ContributionGraphConfig {
@@ -554,7 +312,7 @@ export interface Contribution {
 	/**
 	 * the date of the contribution, format: yyyy-MM-dd
 	 */
-	date: string;
+	date: string | Date;
 	/**
 	 * the value of the contribution
 	 */
@@ -575,5 +333,4 @@ export interface CellStyleRule {
 	// the exclusive max value
 	max: number;
 }
-
 ```
