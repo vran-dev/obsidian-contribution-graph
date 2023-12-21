@@ -1,5 +1,9 @@
-import { diffDays, distanceBeforeTheStartOfWeek, toFormattedDate } from "./dateUtils";
-import { Contribution, ContributionCellData } from "./types";
+import {
+	diffDays,
+	distanceBeforeTheStartOfWeek,
+	toFormattedDate,
+} from "../util/dateUtils";
+import { Contribution, ContributionCellData } from "../types";
 
 export function generateByFixedDate(
 	from: Date,
@@ -48,7 +52,10 @@ export function generateByFixedDate(
 	// fill HOLE cell at the left most column if start date is not sunday
 	// TODO remove this logic, it's should be process by the caller
 	const weekDayOfFromDate = from.getDay();
-	const firstHoleCount = distanceBeforeTheStartOfWeek(startOfWeek, weekDayOfFromDate);
+	const firstHoleCount = distanceBeforeTheStartOfWeek(
+		startOfWeek,
+		weekDayOfFromDate
+	);
 	for (let i = 0; i < firstHoleCount; i++) {
 		cellData.unshift({
 			date: "$HOLE$",
@@ -81,15 +88,21 @@ export function generateByLatestDays(
 function contributionToMap(data: Contribution[]) {
 	const map = new Map<string, Contribution>();
 	for (const item of data) {
-		if (map.has(item.date)) {
+		let key;
+		if (typeof item.date === "string") {
+			key = item.date;
+		} else {
+			key = toFormattedDate(item.date);
+		}
+		if (map.has(key)) {
 			const newItem = {
 				...item,
 				// @ts-ignore
-				value: map.get(item.date).value + item.value,
+				value: map.get(key).value + item.value,
 			};
-			map.set(item.date, newItem);
+			map.set(key, newItem);
 		} else {
-			map.set(item.date, item);
+			map.set(key, item);
 		}
 	}
 	return map;
