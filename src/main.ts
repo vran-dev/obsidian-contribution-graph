@@ -9,7 +9,7 @@ export default class ContributionGraph extends Plugin {
 		this.registerCodeblockProcessor();
 	}
 
-	onunload() {}
+	onunload() { }
 
 	registerGlobalRenderApi() {
 		//@ts-ignore

@@ -378,11 +378,17 @@ Same as the previous example, it's only need to set the graphType to calendar an
 ## Full Render Configuration
 
 ```js
+
 export class ContributionGraphConfig {
 	/**
 	 * the title of the graph
 	 */
 	title = "Contribution Graph";
+
+	/**
+	 * the style of the titleo
+	 */
+	titleStyle: Partial<CSSStyleDeclaration> = {};
 
 	/**
 	 * recent days to show

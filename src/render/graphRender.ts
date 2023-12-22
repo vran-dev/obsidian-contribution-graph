@@ -14,13 +14,26 @@ export interface GraphRender {
 }
 
 export abstract class BaseGraphRender implements GraphRender {
-	constructor() {}
+	constructor() { }
 
 	render(container: HTMLElement, graphConfig: ContributionGraphConfig): void {
 		throw new Error("Method not implemented.");
 	}
 
 	abstract graphType(): string;
+
+	renderTitle(graphConfig: ContributionGraphConfig, parent: HTMLElement): HTMLElement {
+		const titleEl = document.createElement("div");
+		titleEl.className = "title";
+		if (graphConfig.title) {
+			titleEl.innerText = graphConfig.title;
+		}
+		if (graphConfig.titleStyle) {
+			Object.assign(titleEl.style, graphConfig.titleStyle);
+		}
+		parent.appendChild(titleEl);
+		return titleEl
+	}
 
 	renderCellRuleIndicator(
 		graphConfig: ContributionGraphConfig,
@@ -103,9 +116,8 @@ export abstract class BaseGraphRender implements GraphRender {
 		contributionItem: ContributionCellData,
 		contributionMapByYearMonth: Map<string, number>
 	) {
-		const yearMonth = `${contributionItem.year}-${
-			contributionItem.month + 1
-		}`;
+		const yearMonth = `${contributionItem.year}-${contributionItem.month + 1
+			}`;
 		const yearMonthValue = contributionMapByYearMonth.get(yearMonth) || 0;
 		// tips event
 		monthCell.addEventListener("mouseenter", (event) => {

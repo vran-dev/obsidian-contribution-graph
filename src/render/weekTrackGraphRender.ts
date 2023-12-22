@@ -25,13 +25,7 @@ export class WeekTrackGraphRender extends BaseGraphRender {
 		});
 
 		// title
-		const titleEl = createDiv({
-			cls: "title",
-			parent: main,
-		});
-		if (graphConfig.title) {
-			titleEl.innerText = graphConfig.title;
-		}
+		this.renderTitle(graphConfig, main);
 
 		// main -> charts
 		const chartsEl = createDiv({

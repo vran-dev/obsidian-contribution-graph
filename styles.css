@@ -173,7 +173,11 @@
 	margin-top: 12px;
 }
 
-.contribution-graph .calendar .month-container .week-indicator-container .week-indicator {
+.contribution-graph
+	.calendar
+	.month-container
+	.week-indicator-container
+	.week-indicator {
 	font-size: 10px;
 	line-height: 1.5;
 	text-align: center;
@@ -245,7 +249,7 @@
 
 /* default error tips */
 .contribution-graph-render-error-container {
-  background-color: var(--background-secondary);
+	background-color: var(--background-secondary);
 	text-align: center;
 	padding: 6px;
 	min-height: 12px;
@@ -253,5 +257,5 @@
 }
 
 .contribution-graph-render-error-container pre {
-  text-align: left;
+	text-align: left;
 }
