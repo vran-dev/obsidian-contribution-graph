@@ -3,11 +3,9 @@
 
 ## What
 
-Contribution Graph is a plugin for [obsidin.md](https://obsidian.md/)which could generate interactive contribution graphs like GitHub to track your notes, habits, activity, history, and so on.
-
+Contribution Graph is a plugin for [obsidin.md](https://obsidian.md/) which could generate interactive contribution graphs like GitHub to track your notes, habits, activity, history, and so on.
 
 [![Buy me a coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://www.buymeacoffee.com/vran)
-
 
 ## Quick Start
 
@@ -221,11 +219,40 @@ graphType: 'default'
 showCellRuleIndicators: false
 ```
 
+### Change title style 
+
+you can customize your favorite title style by set `titleStyle` field, it's support almost all css properties, such as
+
+- textAlign
+- backgroundColor
+- color
+- fontSize
+
+![Alt text](attachment/title-style.png)
+
+```yaml
+title: 'Customized Title Style'  # the title of the contribution
+titleStyle:
+  textAlign: 'center' # change to center, you can set left, right
+  backgroundColor: 'transparent' 
+  fontSize: '24px'
+  color: 'Green' # font color
+fromDate: '2023-01-01' # date format must be yyyy-MM-dd
+toDate: '2023-12-01'
+startOfWeek: 1 # start with monday 
+dateField: 'createTime' # use customized field to genrate charts
+query: '#project' # list all fils which contains `project` tag
+graphType: 'default'
+showCellRuleIndicators: false
+```
+
+
 ## Full Codeblock Configuration
 
 | name                   | description                                                           | type                    | default    | sample     | required                                 |
 | ---------------------- | --------------------------------------------------------------------- | ----------------------- | ---------- | ---------- | ---------------------------------------- |
 | title                  | the title of the graph                                                | string                  | ''         |            | false                                    |
+| titleStyle             | the style of the title                                                | object                  |          |            |   false                                       |
 | days                   | Maximum number of days for the chart to display (starting from today) | number                  |            | 365        | true if miss **fromDate** and **toDate** |
 | fromDate               | The start date of the chart                                           | date, format yyyy-MM-dd |            | 2023-01-01 | true if miss **days**                    |
 | toDate                 | The end date of the chart                                             | date, format yyyy-MM-dd |            | 2023-12-31 | true if miss **days**                    |
@@ -235,102 +262,16 @@ showCellRuleIndicators: false
 | showCellRuleIndicators | Control the display and hiding of cell rule indicator elements        | boolean                 | true       |            | false                                    |
 | cellStyleRules         | cell style rule                                                       | array                   |            |            | false                                    |
 
+
 ## Integrate with Dataview
 
 If you are familiar with javascript, you can use the contribution Graph API through dataviewJS, To access more advanced features.
 
 contribution Graph Exposed a global function named `renderContributionGraph`, It is defined as follows.
 
-> if you want to see more api's usage case, see [adanced](README_ADVANCE.md) page. 
 
 ```js
 function renderContributionGraph(container: HTMLElement, config: ContributionGraphConfig): void
 ```
 
-```js
-export class ContributionGraphConfig {
-	/**
-	 * the title of the graph
-	 */
-	title = "Contribution Graph";
-
-	/**
-	 * recent days to show
-	 */
-	days?: number | undefined;
-
-	/**
-	 * the start date of the graph，if `days` is set, this value will be ignored
-	 */
-	fromDate?: Date | string | undefined;
-
-	/**
-	 * the end date of the graph，if `days` is set, this value will be ignored
-	 */
-	toDate?: Date | string | undefined;
-
-	/**
-	 * the data to show at cell
-	 */
-	data: Contribution[];
-
-	/**
-	 * the rules to style the cell
-	 */
-	cellStyleRules: CellStyleRule[] = DEFAULT_RULES;
-
-	/**
-	 * set false to hide rule indicators
-	 */
-	showCellRuleIndicators = true;
-
-	/**
-	 * `default`: every column is a week day from top to bottom
-	 * `month-track`: every row is a month from left to right
-	 *
-	 * default value: `default`
-	 */
-	graphType: "default" | "month-track" | "calendar" = "default";
-
-	/**
-	 * value range: 0->Sunday, 1->Monday, 2->Tuesday, 3->Wednesday, 4->Thursday, 5->Friday, 6->Saturday
-	 * default value: 0
-	 * notice: it's not work when `graphType` is `month-track`
-	 */
-	startOfWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0;
-
-	/**
-	 * callback when cell is clicked
-	 */
-	onCellClick?: (
-		cellData: ContributionCellData,
-		event: MouseEvent | undefined
-	) => void | undefined;
-}
-
-export interface Contribution {
-	/**
-	 * the date of the contribution, format: yyyy-MM-dd
-	 */
-	date: string | Date;
-	/**
-	 * the value of the contribution
-	 */
-	value: number;
-	/**
-	 * the summary of the contribution, will be shown when hover on the cell
-	 */
-	summary: string | undefined;
-}
-
-export interface CellStyleRule {
-	// the background color for the cell
-	color: string;
-	// the text in the cell
-	text?: string | undefined;
-	// the inlusive min value
-	min: number;
-	// the exclusive max value
-	max: number;
-}
-```
+if you want to see more api's usage case, see [adanced](README_ADVANCE.md) page. 

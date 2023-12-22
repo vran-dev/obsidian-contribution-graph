@@ -67,8 +67,8 @@ export class ContributionGraphCodeBlockProcessor {
 			if (e.mark?.line) {
 				throw new GraphProcessError(
 					"yaml parse error at line " +
-						(e.mark.line + 1) +
-						", please check the format"
+					(e.mark.line + 1) +
+					", please check the format"
 				);
 			} else {
 				throw new GraphProcessError(
@@ -81,6 +81,7 @@ export class ContributionGraphCodeBlockProcessor {
 
 export class YamlGraphConfig {
 	title: string;
+	titleStyle: Partial<CSSStyleDeclaration>;
 	graphType: string;
 	query: string;
 	days: number;
@@ -95,6 +96,7 @@ export class YamlGraphConfig {
 	constructor() {
 		this.title = "Contributions";
 		this.graphType = "default";
+		this.titleStyle = {};
 		this.query = "";
 		this.showCellRuleIndicators = true;
 		this.cellStyleRules = [];
@@ -104,17 +106,10 @@ export class YamlGraphConfig {
 	static toContributionGraphConfig(
 		config: YamlGraphConfig
 	): ContributionGraphConfig {
-		return {
-			title: config.title,
-			data: config.data,
-			days: config.days,
-			fromDate: config.fromDate,
-			toDate: config.toDate,
-			cellStyleRules: config.cellStyleRules,
-			showCellRuleIndicators: config.showCellRuleIndicators,
-			graphType: config.graphType,
-			startOfWeek: config.startOfWeek,
-		};
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { query, dateField, ...rest } = config;
+		const graphConfig = rest as ContributionGraphConfig;
+		return graphConfig
 	}
 
 	static validate(config: YamlGraphConfig): void {

@@ -31,13 +31,7 @@ export class CalendarGraphRender extends BaseGraphRender {
 		});
 
 		// title
-		const titleEl = createDiv({
-			cls: "title",
-			parent: main,
-		});
-		if (graphConfig.title) {
-			titleEl.innerText = graphConfig.title;
-		}
+		this.renderTitle(graphConfig, main);
 
 		// main -> charts
 		const chartsEl = createDiv({
@@ -111,9 +105,8 @@ export class CalendarGraphRender extends BaseGraphRender {
 				const monthIndicator = document.createElement("div");
 				monthIndicator.className = "month-indicator";
 				if (item.month == 0) {
-					monthIndicator.innerText = `${monthMapping[item.month]} ${
-						item.year
-					}`;
+					monthIndicator.innerText = `${monthMapping[item.month]} ${item.year
+						}`;
 				} else {
 					monthIndicator.innerText = monthMapping[item.month];
 				}

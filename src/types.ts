@@ -7,6 +7,11 @@ export class ContributionGraphConfig {
 	title = "Contribution Graph";
 
 	/**
+	 * the style of the title
+	 */
+	titleStyle: Partial<CSSStyleDeclaration> = {};
+
+	/**
 	 * recent days to show
 	 */
 	days?: number | undefined;
