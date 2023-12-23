@@ -17,8 +17,8 @@ import {
 } from "./errorTips";
 import { GraphProcessError } from "./graphProcessError";
 
-export class ContributionGraphCodeBlockProcessor {
-	process(
+export class ContributionGraphRawProcessor {
+	processCodeblock(
 		code: string,
 		el: HTMLElement,
 		ctx: MarkdownPostProcessorContext,
@@ -27,6 +27,19 @@ export class ContributionGraphCodeBlockProcessor {
 		try {
 			// validate
 			const graphConfig: YamlGraphConfig = this.loadYamlConfig(el, code);
+			this.processYamlGraphConfig(graphConfig, el);
+		} catch (e) {
+			if (e instanceof GraphProcessError) {
+				el.innerHTML = e.reason;
+			} else {
+				el.innerHTML = "unexpected error: <pre>" + e.message + "</pre>";
+			}
+		}
+	}
+
+	processYamlGraphConfig(graphConfig: YamlGraphConfig, el: HTMLElement) {
+		try {
+			// validate
 			YamlGraphConfig.validate(graphConfig);
 
 			// fetch data
@@ -67,8 +80,8 @@ export class ContributionGraphCodeBlockProcessor {
 			if (e.mark?.line) {
 				throw new GraphProcessError(
 					"yaml parse error at line " +
-					(e.mark.line + 1) +
-					", please check the format"
+						(e.mark.line + 1) +
+						", please check the format"
 				);
 			} else {
 				throw new GraphProcessError(
@@ -80,27 +93,31 @@ export class ContributionGraphCodeBlockProcessor {
 }
 
 export class YamlGraphConfig {
-	title: string;
+	title?: string;
 	titleStyle: Partial<CSSStyleDeclaration>;
 	graphType: string;
 	query: string;
-	days: number;
+	days?: number;
 	fromDate?: string;
 	toDate?: string;
 	dateField?: string;
 	data: Contribution[];
 	startOfWeek: number;
-	cellStyleRules: CellStyleRule[];
+	cellStyleRules?: CellStyleRule[];
 	showCellRuleIndicators: boolean;
 
 	constructor() {
 		this.title = "Contributions";
 		this.graphType = "default";
-		this.titleStyle = {};
-		this.query = "";
-		this.showCellRuleIndicators = true;
-		this.cellStyleRules = [];
+		this.query = '""';
+		this.days = 180;
 		this.startOfWeek = 0;
+		this.showCellRuleIndicators = true;
+		this.titleStyle = {
+			textAlign: "left",
+			fontSize: "1.5em",
+			fontWeight: "normal",
+		};
 	}
 
 	static toContributionGraphConfig(
@@ -109,7 +126,7 @@ export class YamlGraphConfig {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { query, dateField, ...rest } = config;
 		const graphConfig = rest as ContributionGraphConfig;
-		return graphConfig
+		return graphConfig;
 	}
 
 	static validate(config: YamlGraphConfig): void {
@@ -151,6 +168,15 @@ export class YamlGraphConfig {
 
 		if (config.startOfWeek) {
 			const statOfWeeks = [0, 1, 2, 3, 4, 5, 6];
+			if (typeof config.startOfWeek !== "number") {
+				try {
+					config.startOfWeek = parseInt(config.startOfWeek);
+				} catch (e) {
+					throw new GraphProcessError(
+						INVALID_START_OF_WEEK(config.startOfWeek)
+					);
+				}
+			}
 			if (!statOfWeeks.includes(config.startOfWeek)) {
 				throw new GraphProcessError(
 					INVALID_START_OF_WEEK(config.startOfWeek)
