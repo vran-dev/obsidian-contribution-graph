@@ -1,5 +1,6 @@
 .contribution-graph {
 	margin-bottom: 6px;
+	position: relative;
 }
 
 .contribution-graph .main {
@@ -155,7 +156,12 @@
 
 .contribution-graph .calendar .month-container:hover {
 	border: 1px solid var(--background-modifier-border-hover);
-	background-color: var(--background-modifier-hover);
+	background-color: rgba(244, 244, 244, 0.6);
+}
+
+.theme-dark .contribution-graph .calendar .month-container:hover {
+	border: 1px solid var(--background-modifier-border-hover);
+	background-color: rgba(37, 35, 35, 0.3);
 }
 
 .contribution-graph .calendar .month-container .month-indicator {
@@ -173,11 +179,7 @@
 	margin-top: 12px;
 }
 
-.contribution-graph
-	.calendar
-	.month-container
-	.week-indicator-container
-	.week-indicator {
+.contribution-graph .calendar .month-container .week-indicator-container .week-indicator {
 	font-size: 10px;
 	line-height: 1.5;
 	text-align: center;
@@ -234,8 +236,10 @@
 }
 
 .contribution-graph .cell-rule-indicator-container .cell {
-	max-width: 8px;
-	height: 8px;
+	max-width: 12px;
+	width: 10px;
+	height: 10px;
+	text-align: center;
 }
 
 .contribution-graph .cell-rule-indicator-container .cell.text {
@@ -258,4 +262,192 @@
 
 .contribution-graph-render-error-container pre {
 	text-align: left;
+}
+
+/* graph modal */
+.contribution-graph-modal {
+	display: flex;
+	flex-direction: column;
+}
+
+.contribution-graph-modal-form {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.contribution-graph-modal-form .form-item {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 12px;
+	gap: 6px;
+}
+
+.contribution-graph-modal-form .form-item .label {
+	display: inline-flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+	flex: 0 0 auto;
+	line-height: 32px;
+	font-size: 14px;
+	padding: 0 12px 0 0;
+	box-sizing: border-box;
+	width: 150px;
+}
+
+.contribution-graph-modal-form .form-item .form-content {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	flex: 1;
+}
+
+.contribution-graph-modal-form .form-item .form-vertical-content {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	flex: 1;
+	gap: 8px
+}
+
+.contribution-graph-modal-form .form-item .form-content input {
+	flex-grow: 1;
+	border-width: 0px 0px 1px 0px;
+	padding: 6px;
+	border-color: var(--background-modifier-border);
+}
+
+.contribution-graph-modal-form .form-item .form-content .checkbox {
+	border: 1px solid var(--background-modifier-border);
+	padding: 0px;
+	flex-grow: 0;
+}
+
+.contribution-graph-modal-form .form-item .form-content .color-picker {
+	height: 32px;
+	width: 32px;
+	clip-path: circle(50%);
+	inline-size: 32px;
+	block-size: 0px;
+	flex-grow: 0;
+	border-width: 0px;
+	padding: 0;
+}
+
+.contribution-graph-modal-form .form-item .form-content .color-picker:hover {
+	opacity: 0.5;
+}
+
+.contribution-graph-modal-form .form-item .form-content .number-input {
+	text-align: center;
+	box-shadow: none;
+	border-width: 0px 0px 1px 0px;
+	border-radius: 0px;
+}
+
+.contribution-graph-modal-form .form-item .form-content .number-input:focus {
+	box-shadow: none;
+}
+
+
+.contribution-graph-modal-form .form-item .form-content .button {
+	flex-grow: 1;
+	margin-right: 12px;
+	background-color: var(--interactive-normal);
+}
+
+.contribution-graph-modal-form .form-item .form-content .button:hover {
+	background-color: var(--interactive-accent);
+}
+
+/* cell rule form */
+
+.contribution-graph-modal-form .form-item .cell-rule-remove-button {
+	border: none;
+	border-width: 0px;
+	box-shadow: none;
+}
+
+.contribution-graph-modal-form .form-item .cell-rule-add-button {
+	border: none;
+	border-width: 0px;
+	box-shadow: none;
+}
+
+.contribution-graph-modal-form .form-item .cell-rule-value {
+	text-align: center;
+	width: 48px;
+	border-radius: 0;
+}
+
+.contribution-graph-modal-form .form-item .cell-rule-color {
+	width: 16px;
+	height: 16px;
+	border-radius: 0;
+	inline-size: inherit;
+	block-size: inherit;
+}
+
+.contribution-graph-modal-form .form-item .cell-rule-text {
+	width: 48px;
+	background-color: transparent;
+	border: none;
+}
+
+/* edit button */
+.contribution-graph-codeblock-edit-button {
+	padding: var(--size-2-2) var(--size-2-3);
+	position: absolute;
+	top: var(--size-2-2);
+	right: calc(var(--size-2-2) + 40px);
+	display: flex;
+	opacity: 0;
+	color: var(--text-muted);
+	border-radius: var(--radius-s);
+	cursor: var(--cursor);
+}
+
+.contribution-graph-codeblock-edit-button:hover {
+	background-color: var(--background-modifier-hover);
+}
+
+/* contribution-graph-choose */
+
+.contribution-graph-choose {
+	display: flex;
+	flex-direction: row;
+	margin-left: 12px;
+	border-radius: 6px;
+	border: 1px solid var(--background-modifier-border);
+}
+
+.contribution-graph-choose:first-child {
+	margin-left: 2px;
+}
+
+.contribution-graph-choose .item {
+	display: flex;
+	flex-direction: row;
+	border-radius: 4px;
+	margin-right: 2px;
+}
+
+.contribution-graph-choose .item:hover {
+	background-color: var(--interactive-accent-hover);
+	color: var(--text-on-accent)
+}
+
+.contribution-graph-choose .item.choosed {
+	background-color: var(--interactive-accent);
+	color: var(--text-on-accent)
+}
+
+.contribution-graph-choose .item .icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
 }
