@@ -23,6 +23,7 @@ export class DataviewDataFetcher {
 	groupByCustomField(result: any, dateFieldName: string) {
 		const convertFailedPages: ConvertFail[] = [];
 		const data = result
+			// @ts-ignore
 			.filter((page) => {
 				if (page[dateFieldName]) {
 					try {
@@ -45,9 +46,11 @@ export class DataviewDataFetcher {
 				});
 				return false;
 			})
+			// @ts-ignore
 			.groupBy((page) => {
 				return page[dateFieldName].toFormat("yyyy-MM-dd");
 			})
+			// @ts-ignore
 			.map((entry) => {
 				return {
 					date: entry.key,
@@ -61,14 +64,18 @@ export class DataviewDataFetcher {
 	}
 
 	groupByFileCTime(data: any) {
-		return data
-			.groupBy((p) => p.file.ctime.toFormat("yyyy-MM-dd"))
-			.map((entry) => {
-				return {
-					date: entry.key,
-					value: entry.rows.length,
-				};
-			});
+		return (
+			data
+				// @ts-ignore
+				.groupBy((p) => p.file.ctime.toFormat("yyyy-MM-dd"))
+				// @ts-ignore
+				.map((entry) => {
+					return {
+						date: entry.key,
+						value: entry.rows.length,
+					};
+				})
+		);
 	}
 }
 

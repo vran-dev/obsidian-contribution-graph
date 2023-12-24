@@ -10,6 +10,7 @@ export function showTips(event: MouseEvent, text: string) {
 
 	// 调整 tooltip 元素的位置
 	if (event.target) {
+		//@ts-ignore
 		const rect = event.target.getBoundingClientRect();
 		tooltip.style.top = rect.top - tooltip.offsetHeight - 5 + "px";
 		tooltip.style.left = rect.left + "px";

@@ -17,6 +17,7 @@ export function CellRuleItem(props: {
 		<div className="form-item">
 			<button
 				className="cell-rule-remove-button"
+				//@ts-ignore
 				onClick={() => props.onRemove(props.rule.id)}
 			>
 				x

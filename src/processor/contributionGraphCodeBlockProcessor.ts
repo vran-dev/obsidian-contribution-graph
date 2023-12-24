@@ -75,6 +75,7 @@ export class ContributionGraphRawProcessor {
 		}
 
 		try {
+			// @ts-ignore
 			return load(code);
 		} catch (e) {
 			if (e.mark?.line) {

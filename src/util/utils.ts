@@ -10,6 +10,7 @@ export function mapBy<T, R>(
 	for (const item of arr) {
 		const key = keyMapping(item);
 		if (map.has(key)) {
+			//@ts-ignore
 			map.set(key, aggregator(map.get(key), valueMapping(item)));
 		} else {
 			map.set(key, valueMapping(item));
