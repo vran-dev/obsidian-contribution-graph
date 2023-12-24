@@ -333,6 +333,11 @@
 	border-width: 0px 0px 1px 0px;
 	padding: 6px;
 	border-color: var(--background-modifier-border);
+	color: var(--text-normal);
+}
+
+.contribution-graph-modal-form .form-item .form-content input[type="text"] {
+	background: var(--background-modifier-form-field);
 }
 
 .contribution-graph-modal-form .form-item .form-content .checkbox {

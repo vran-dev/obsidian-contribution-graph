@@ -77,6 +77,7 @@ export function CreateContributionGraphForm(props: {
 					<div className="form-content">
 						<input
 							name="title"
+							type="text"
 							defaultValue={formData.title}
 							placeholder="Contribution Graph Title"
 							onChange={handleInputChange}
@@ -218,6 +219,7 @@ export function CreateContributionGraphForm(props: {
 					<div className="form-content">
 						<input
 							name="query"
+							type="text"
 							defaultValue={formData.query}
 							placeholder='such as #tag or "folder_name"'
 							onChange={handleInputChange}
@@ -229,6 +231,7 @@ export function CreateContributionGraphForm(props: {
 					<span className="label">Date Field</span>
 					<div className="form-content">
 						<input
+							type="text"
 							defaultValue={formData.dateField}
 							name="dateField"
 							placeholder="default is file.ctime"
