@@ -107,7 +107,7 @@ export function CreateContributionGraphForm(props: {
 
 					<Choose
 						options={titleAlignChooseOptions}
-						defaultValue={formData.titleStyle.textAlign || "left"}
+						defaultValue={formData.titleStyle?.textAlign || "left"}
 						onChoose={(option) => {
 							changeFormData("titleStyle", {
 								...formData.titleStyle,

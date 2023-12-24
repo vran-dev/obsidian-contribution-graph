@@ -1,4 +1,4 @@
-import { Modal, App, Editor } from "obsidian";
+import { Modal, App, MarkdownView } from "obsidian";
 import { StrictMode } from "react";
 import { Root, createRoot } from "react-dom/client";
 import { dump, load } from "js-yaml";
@@ -8,20 +8,16 @@ import { CreateContributionGraphForm } from "./GraphForm";
 export class ContributionGraphCreateModal extends Modal {
 	root: Root | null = null;
 
-	editor: Editor;
-
 	onSave?: (content: string) => void;
 
 	originalConfigContent?: string;
 
 	constructor(
 		app: App,
-		editor: Editor,
 		originalConfigContent?: string,
 		onSave?: (content: string) => void
 	) {
 		super(app);
-		this.editor = editor;
 		this.originalConfigContent = originalConfigContent;
 		this.onSave = onSave;
 	}
@@ -57,14 +53,20 @@ export class ContributionGraphCreateModal extends Modal {
 		} else {
 			// create new Graph
 			onSubmit = (yamlGraphConfig: YamlGraphConfig) => {
+				const markdownView =
+					this.app.workspace.getActiveViewOfType(MarkdownView);
+				if (!markdownView) {
+					return;
+				}
+				const editor = markdownView.editor;
 				this.close();
 				if (ignoreLanguagePrefix) {
-					this.editor.replaceSelection(dump(yamlGraphConfig));
+					editor.replaceSelection(dump(yamlGraphConfig));
 				} else {
 					const codeblock = `\`\`\`contributionGraph\n${dump(
 						yamlGraphConfig
 					)}\n\`\`\`\n`;
-					this.editor.replaceSelection(codeblock);
+					editor.replaceSelection(codeblock);
 				}
 			};
 		}
@@ -102,7 +104,13 @@ export class ContributionGraphCreateModal extends Modal {
 	}
 
 	parseFromSelecttion(): YamlGraphConfig | null {
-		const selection = this.editor.getSelection();
+		const markdownView =
+			this.app.workspace.getActiveViewOfType(MarkdownView);
+		if (!markdownView) {
+			return null;
+		}
+		const editor = markdownView.editor;
+		const selection = editor.getSelection();
 		if (selection && selection.trim() != "") {
 			try {
 				return load(selection) as YamlGraphConfig;

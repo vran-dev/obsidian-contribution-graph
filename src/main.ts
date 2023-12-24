@@ -1,4 +1,10 @@
-import { Editor, MarkdownFileInfo, MarkdownView, Plugin } from "obsidian";
+import {
+	Editor,
+	MarkdownFileInfo,
+	MarkdownRenderChild,
+	MarkdownView,
+	Plugin,
+} from "obsidian";
 import { ContributionGraphConfig } from "./types";
 import { Renders } from "./render/renders";
 import { ContributionGraphRawProcessor } from "./processor/contributionGraphCodeBlockProcessor";
@@ -45,7 +51,7 @@ export default class ContributionGraph extends Plugin {
 				editor: Editor,
 				ctx: MarkdownView | MarkdownFileInfo
 			) => {
-				new ContributionGraphCreateModal(this.app, editor).open();
+				new ContributionGraphCreateModal(this.app).open();
 			},
 		});
 	}
