@@ -61,6 +61,7 @@ export function CreateContributionGraphForm(props: {
 			const processor = new ContributionGraphRawProcessor();
 			// copy new instance
 			const copiedFormData = JSON.parse(JSON.stringify(formData));
+			copiedFormData.cellStyleRules = cellRules;
 			processor.processYamlGraphConfig(
 				copiedFormData,
 				previewContainerRef.current!
