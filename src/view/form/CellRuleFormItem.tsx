@@ -28,7 +28,9 @@ export function CellRuleItem(props: {
 				className="cell-rule-value"
 				onChange={(e) => changeRule("min", e.target.value)}
 			/>
-			&nbsp;≤&nbsp;contributions&nbsp;＜&nbsp;
+			<span>≤</span>
+			<span>contributions</span>
+			<span>＜</span>
 			<input
 				type="number"
 				defaultValue={props.rule.max}

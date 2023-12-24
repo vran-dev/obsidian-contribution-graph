@@ -6,6 +6,7 @@ import {
 import { CellStyleRule } from "src/types";
 import { Choose, ChooseOption } from "./Choose";
 import { CellRuleItem } from "./CellRuleFormItem";
+import { Divider } from "../divider/Divider";
 
 export function CreateContributionGraphForm(props: {
 	yamlConfig: YamlGraphConfig;
@@ -69,157 +70,52 @@ export function CreateContributionGraphForm(props: {
 
 	return (
 		<div className="contribution-graph-modal-form">
-			<div className="form-item">
-				<span className="label">Graph Type</span>
-				<div className="form-content">
-					<select
-						name="graphType"
-						defaultValue={
-							formData.graphType ||
-							graphOptions.find((p) => p.selected)?.value
-						}
-						onChange={handleInputChange}
-					>
-						{graphOptions.map((option) => (
-							<option value={option.value} key={option.value}>
-								{option.label}
-							</option>
-						))}
-					</select>
-				</div>
-			</div>
-
-			<div className="form-item">
-				<span className="label">Title(option)</span>
-				<div className="form-content">
-					<input
-						name="title"
-						defaultValue={formData.title}
-						placeholder="Contribution Graph Title"
-						onChange={handleInputChange}
-						style={{
-							...formData.titleStyle,
-							fontWeight:
-								formData.titleStyle?.fontWeight || "normal",
-							textAlign: formData.titleStyle?.textAlign || "left",
-						}}
-					/>
-
-					<Choose
-						options={titleAlignChooseOptions}
-						defaultValue={formData.titleStyle?.textAlign || "left"}
-						onChoose={(option) => {
-							changeFormData("titleStyle", {
-								...formData.titleStyle,
-								textAlign: option.value,
-							});
-						}}
-					/>
-				</div>
-			</div>
-
-			<div className="form-item">
-				<span className="label">Query</span>
-				<div className="form-content">
-					<input
-						name="query"
-						defaultValue={formData.query}
-						placeholder='such as #tag or "folder_name"'
-						onChange={handleInputChange}
-					/>
-				</div>
-			</div>
-
-			<div className="form-item">
-				<span className="label">Date Field(option)</span>
-				<div className="form-content">
-					<input
-						defaultValue={formData.dateField}
-						name="dateField"
-						placeholder="default is file.ctime"
-						onChange={handleInputChange}
-					/>
-				</div>
-			</div>
-
-			<div className="form-item">
-				<span className="label">Date Range</span>
-				<div className="form-content">
-					<select
-						defaultValue={isLatestDate ? "latest" : "fixed"}
-						onChange={() => {
-							if (isLatestDate) {
-								// change to fixed date should clear days field
-								changeFormData("days", undefined);
-							}
-							setIsLatestDate(!isLatestDate);
-						}}
-					>
-						<option value="fixed">Fixed Date</option>
-						<option value="latest">Latest Date</option>
-					</select>
-				</div>
-			</div>
-
-			<div className="form-item">
-				<span className="label"></span>
-				<div className="form-content">
-					{isLatestDate ? (
-						<>
-							<input
-								id="days"
-								name="days"
-								type="number"
-								defaultValue={formData.days}
-								min={1}
-								placeholder="please input the number of the latest days"
-								onChange={(e) =>
-									changeFormData(
-										"days",
-										parseInt(e.target.value)
-									)
-								}
-							/>
-						</>
-					) : (
-						<>
-							<input
-								id="fromDate"
-								name="fromDate"
-								type="date"
-								defaultValue={formData.fromDate}
-								placeholder="from date, such as 2023-01-01"
-								onChange={handleInputChange}
-							/>
-							&nbsp;-&nbsp;
-							<input
-								id="toDate"
-								name="toDate"
-								type="date"
-								defaultValue={formData.toDate}
-								placeholder="to date, such as 2023-12-31"
-								onChange={handleInputChange}
-							/>
-						</>
-					)}
-				</div>
-			</div>
-
-			{formData.graphType == "month-track" ? null : (
+			<div className="form-group">
+				<Divider text="Graph Settings" />
 				<div className="form-item">
-					<span className="label">Start of Week</span>
+					<span className="label">Title</span>
+					<div className="form-content">
+						<input
+							name="title"
+							defaultValue={formData.title}
+							placeholder="Contribution Graph Title"
+							onChange={handleInputChange}
+							style={{
+								...formData.titleStyle,
+								fontWeight:
+									formData.titleStyle?.fontWeight || "normal",
+								textAlign:
+									formData.titleStyle?.textAlign || "left",
+							}}
+						/>
+
+						<Choose
+							options={titleAlignChooseOptions}
+							defaultValue={
+								formData.titleStyle?.textAlign || "left"
+							}
+							onChoose={(option) => {
+								changeFormData("titleStyle", {
+									...formData.titleStyle,
+									textAlign: option.value,
+								});
+							}}
+						/>
+					</div>
+				</div>
+
+				<div className="form-item">
+					<span className="label">Graph Type</span>
 					<div className="form-content">
 						<select
-							id="startOfWeek"
-							name="startOfWeek"
+							name="graphType"
 							defaultValue={
-								formData.startOfWeek ||
-								startOfWeekOptions.find((p) => p.selected)
-									?.value
+								formData.graphType ||
+								graphOptions.find((p) => p.selected)?.value
 							}
 							onChange={handleInputChange}
 						>
-							{startOfWeekOptions.map((option) => (
+							{graphOptions.map((option) => (
 								<option value={option.value} key={option.value}>
 									{option.label}
 								</option>
@@ -227,60 +123,177 @@ export function CreateContributionGraphForm(props: {
 						</select>
 					</div>
 				</div>
-			)}
 
-			<div className="form-item">
-				<span className="label">Show Cell Indicators</span>
-				<div className="form-content">
-					<input
-						name="showCellRuleIndicators"
-						type="checkbox"
-						className="checkbox"
-						defaultChecked={formData.showCellRuleIndicators}
-						onChange={() =>
-							changeFormData(
-								"showCellRuleIndicators",
-								!formData.showCellRuleIndicators
-							)
-						}
-					/>
+				<div className="form-item">
+					<span className="label">Date Range</span>
+					<div className="form-content">
+						<select
+							defaultValue={isLatestDate ? "latest" : "fixed"}
+							onChange={() => {
+								if (isLatestDate) {
+									// change to fixed date should clear days field
+									changeFormData("days", undefined);
+								}
+								setIsLatestDate(!isLatestDate);
+							}}
+						>
+							<option value="fixed">Fixed Date</option>
+							<option value="latest">Latest Date</option>
+						</select>
+					</div>
+				</div>
+
+				<div className="form-item">
+					<span className="label"></span>
+					<div className="form-content">
+						{isLatestDate ? (
+							<>
+								<input
+									id="days"
+									name="days"
+									type="number"
+									defaultValue={formData.days}
+									min={1}
+									placeholder="please input the number of the latest days"
+									onChange={(e) =>
+										changeFormData(
+											"days",
+											parseInt(e.target.value)
+										)
+									}
+								/>
+							</>
+						) : (
+							<>
+								<input
+									id="fromDate"
+									name="fromDate"
+									type="date"
+									defaultValue={formData.fromDate}
+									placeholder="from date, such as 2023-01-01"
+									onChange={handleInputChange}
+								/>
+								&nbsp;-&nbsp;
+								<input
+									id="toDate"
+									name="toDate"
+									type="date"
+									defaultValue={formData.toDate}
+									placeholder="to date, such as 2023-12-31"
+									onChange={handleInputChange}
+								/>
+							</>
+						)}
+					</div>
+				</div>
+
+				{formData.graphType == "month-track" ? null : (
+					<div className="form-item">
+						<span className="label">Start of Week</span>
+						<div className="form-content">
+							<select
+								id="startOfWeek"
+								name="startOfWeek"
+								defaultValue={
+									formData.startOfWeek ||
+									startOfWeekOptions.find((p) => p.selected)
+										?.value
+								}
+								onChange={handleInputChange}
+							>
+								{startOfWeekOptions.map((option) => (
+									<option
+										value={option.value}
+										key={option.value}
+									>
+										{option.label}
+									</option>
+								))}
+							</select>
+						</div>
+					</div>
+				)}
+				<div className="form-item">
+					<span className="label">Query</span>
+					<div className="form-content">
+						<input
+							name="query"
+							defaultValue={formData.query}
+							placeholder='such as #tag or "folder_name"'
+							onChange={handleInputChange}
+						/>
+					</div>
+				</div>
+
+				<div className="form-item">
+					<span className="label">Date Field</span>
+					<div className="form-content">
+						<input
+							defaultValue={formData.dateField}
+							name="dateField"
+							placeholder="default is file.ctime"
+							onChange={handleInputChange}
+						/>
+					</div>
 				</div>
 			</div>
-			<div className="form-item">
-				<span className="label">Cell Style Rules</span>
-				<div className="form-vertical-content">
-					{cellRules.map((rule) => {
-						return (
-							<CellRuleItem
-								rule={rule}
-								key={rule.id}
-								onChange={(newRule) => {
-									const newRules = cellRules.map((r) => {
-										if (r.id == newRule.id) {
-											return newRule;
-										} else {
-											return r;
-										}
-									});
-									setCellRules(newRules);
-								}}
-								onRemove={(id: string) => {
-									const newRules = cellRules.filter(
-										(r) => r.id != id
-									);
-									setCellRules(newRules);
-								}}
-							/>
-						);
-					})}
-					<button
-						onClick={() => addCellRule()}
-						className="cell-rule-add-button"
-					>
-						+
-					</button>
+
+			<div className="form-group">
+				<Divider text="Style Settings" />
+				<div className="form-item">
+					<span className="label">Show Cell Indicators</span>
+					<div className="form-content">
+						<input
+							name="showCellRuleIndicators"
+							type="checkbox"
+							className="checkbox"
+							defaultChecked={formData.showCellRuleIndicators}
+							onChange={() =>
+								changeFormData(
+									"showCellRuleIndicators",
+									!formData.showCellRuleIndicators
+								)
+							}
+						/>
+					</div>
+				</div>
+				<div className="form-item">
+					<span className="label">Cell Style Rules</span>
+					<div className="form-vertical-content">
+						{cellRules.map((rule) => {
+							return (
+								<CellRuleItem
+									rule={rule}
+									key={rule.id}
+									onChange={(newRule) => {
+										const newRules = cellRules.map((r) => {
+											if (r.id == newRule.id) {
+												return newRule;
+											} else {
+												return r;
+											}
+										});
+										setCellRules(newRules);
+									}}
+									onRemove={(id: string) => {
+										const newRules = cellRules.filter(
+											(r) => r.id != id
+										);
+										setCellRules(newRules);
+									}}
+								/>
+							);
+						})}
+						<button
+							onClick={() => addCellRule()}
+							className="cell-rule-add-button"
+						>
+							+
+						</button>
+					</div>
 				</div>
 			</div>
+
 			<div className="form-item">
 				<div className="form-content">
 					<button className="button" onClick={onPreview}>

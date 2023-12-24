@@ -276,9 +276,18 @@
 	flex-grow: 1;
 }
 
+.contribution-graph-modal-form .form-group {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	margin-bottom: 12px;
+	gap: 3px;
+}
+
 .contribution-graph-modal-form .form-item {
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
 	align-items: center;
 	justify-content: space-between;
 	margin-top: 12px;
@@ -288,13 +297,19 @@
 .contribution-graph-modal-form .form-item .label {
 	display: inline-flex;
 	justify-content: flex-end;
-	align-items: flex-start;
 	flex: 0 0 auto;
 	line-height: 32px;
 	font-size: 14px;
 	padding: 0 12px 0 0;
 	box-sizing: border-box;
 	width: 150px;
+}
+
+@media screen and (max-width: 768px) {
+	.contribution-graph-modal-form .form-item .label {
+		width: 100%;
+		justify-content: flex-start;
+	}
 }
 
 .contribution-graph-modal-form .form-item .form-content {
@@ -369,17 +384,27 @@
 	border: none;
 	border-width: 0px;
 	box-shadow: none;
+	background-color: transparent;
+}
+
+.contribution-graph-modal-form .form-item .cell-rule-remove-button:hover {
+	background-color: var(--interactive-accent-hover);
 }
 
 .contribution-graph-modal-form .form-item .cell-rule-add-button {
 	border: none;
 	border-width: 0px;
 	box-shadow: none;
+	background-color: transparent;
+}
+
+.contribution-graph-modal-form .form-item .cell-rule-add-button:hover {
+	background-color: var(--interactive-accent-hover);
 }
 
 .contribution-graph-modal-form .form-item .cell-rule-value {
 	text-align: center;
-	width: 48px;
+	width: 38px;
 	border-radius: 0;
 }
 
@@ -450,4 +475,27 @@
 	align-items: center;
 	justify-content: center;
 	text-align: center;
+}
+
+/* divier */
+.contribution-graph-divider {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-top: 12px;
+	margin-bottom: 12px;
+	gap: 8px;
+}
+
+.contribution-graph-divider div {
+	border-width: 0px 0px 1px 0px;
+	border-radius: 0px;
+	border-style: solid;
+	border-color: var(--background-modifier-border);
+	flex-grow: 1;
+}
+
+.contribution-graph-divider span {
+	color: var(--text-muted);
+	font-size: 12px;
 }
