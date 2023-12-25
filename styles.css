@@ -6,6 +6,7 @@
 .contribution-graph .main {
 	overflow-x: auto;
 	padding: 2px;
+	line-height: normal;
 }
 
 .contribution-graph .main .title {
