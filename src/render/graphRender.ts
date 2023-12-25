@@ -1,11 +1,16 @@
 import { DEFAULT_RULES } from "src/constants";
-import { ContributionGraphConfig, ContributionCellData } from "src/types";
+import {
+	ContributionGraphConfig,
+	ContributionCellData,
+	CellStyleRule,
+} from "src/types";
 import { parseDate } from "src/util/dateUtils";
 import { showTips, hideTips } from "src/util/tooltips";
 import {
 	generateByLatestDays,
 	generateByFixedDate,
 } from "./matrixDataGenerator";
+import { matchCellStyleRule } from "src/util/utils";
 
 export interface GraphRender {
 	render(container: HTMLElement, graphConfig: ContributionGraphConfig): void;
@@ -14,7 +19,7 @@ export interface GraphRender {
 }
 
 export abstract class BaseGraphRender implements GraphRender {
-	constructor() { }
+	constructor() {}
 
 	render(container: HTMLElement, graphConfig: ContributionGraphConfig): void {
 		throw new Error("Method not implemented.");
@@ -22,7 +27,10 @@ export abstract class BaseGraphRender implements GraphRender {
 
 	abstract graphType(): string;
 
-	renderTitle(graphConfig: ContributionGraphConfig, parent: HTMLElement): HTMLElement {
+	renderTitle(
+		graphConfig: ContributionGraphConfig,
+		parent: HTMLElement
+	): HTMLElement {
 		const titleEl = document.createElement("div");
 		titleEl.className = "title";
 		if (graphConfig.title) {
@@ -32,7 +40,7 @@ export abstract class BaseGraphRender implements GraphRender {
 			Object.assign(titleEl.style, graphConfig.titleStyle);
 		}
 		parent.appendChild(titleEl);
-		return titleEl
+		return titleEl;
 	}
 
 	renderCellRuleIndicator(
@@ -116,8 +124,9 @@ export abstract class BaseGraphRender implements GraphRender {
 		contributionItem: ContributionCellData,
 		contributionMapByYearMonth: Map<string, number>
 	) {
-		const yearMonth = `${contributionItem.year}-${contributionItem.month + 1
-			}`;
+		const yearMonth = `${contributionItem.year}-${
+			contributionItem.month + 1
+		}`;
 		const yearMonthValue = contributionMapByYearMonth.get(yearMonth) || 0;
 		// tips event
 		monthCell.addEventListener("mouseenter", (event) => {
@@ -126,6 +135,19 @@ export abstract class BaseGraphRender implements GraphRender {
 		monthCell.addEventListener("mouseleave", (event) => {
 			hideTips(event);
 		});
+	}
+
+	applyCellStyleRule(
+		cellEl: HTMLElement,
+		contributionItem: ContributionCellData,
+		cellRules: CellStyleRule[]
+	) {
+		const cellStyleRule = matchCellStyleRule(
+			contributionItem.value,
+			cellRules
+		);
+		cellEl.style.backgroundColor = cellStyleRule.color;
+		cellEl.innerText = cellStyleRule.text || "";
 	}
 
 	bindCellAttribute(

@@ -105,8 +105,9 @@ export class CalendarGraphRender extends BaseGraphRender {
 				const monthIndicator = document.createElement("div");
 				monthIndicator.className = "month-indicator";
 				if (item.month == 0) {
-					monthIndicator.innerText = `${monthMapping[item.month]} ${item.year
-						}`;
+					monthIndicator.innerText = `${monthMapping[item.month]} ${
+						item.year
+					}`;
 				} else {
 					monthIndicator.innerText = monthMapping[item.month];
 				}
@@ -168,10 +169,8 @@ export class CalendarGraphRender extends BaseGraphRender {
 				this.bindCellAttribute(cellEl, item);
 			} else {
 				cellEl.className = "cell";
-				const cellStyleRule = matchCellStyleRule(item.value, cellRules);
-				cellEl.style.backgroundColor = cellStyleRule.color;
-				cellEl.innerText = cellStyleRule.text || "";
 
+				this.applyCellStyleRule(cellEl, item, cellRules);
 				this.bindCellAttribute(cellEl, item);
 				this.bindCellClickEvent(cellEl, item, graphConfig);
 				this.bindCellTips(cellEl, item);

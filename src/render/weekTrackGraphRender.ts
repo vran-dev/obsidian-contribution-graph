@@ -94,13 +94,7 @@ export class WeekTrackGraphRender extends BaseGraphRender {
 				}
 			} else {
 				cellEl.className = "cell";
-				const cellStyleRule = matchCellStyleRule(
-					contributionItem.value,
-					cellRules
-				);
-				cellEl.style.backgroundColor = cellStyleRule.color;
-				cellEl.innerText = cellStyleRule.text || "";
-
+				this.applyCellStyleRule(cellEl, contributionItem, cellRules);
 				this.bindCellAttribute(cellEl, contributionItem);
 				this.bindCellClickEvent(cellEl, contributionItem, graphConfig);
 				this.bindCellTips(cellEl, contributionItem);
