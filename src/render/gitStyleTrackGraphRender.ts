@@ -1,9 +1,9 @@
 import { ContributionCellData, ContributionGraphConfig } from "src/types";
 import { monthMapping, weekDayMapping } from "src/constants";
-import { mapBy, matchCellStyleRule } from "src/util/utils";
+import { mapBy } from "src/util/utils";
 import { BaseGraphRender } from "./graphRender";
 
-export class WeekTrackGraphRender extends BaseGraphRender {
+export class GitStyleTrackGraphRender extends BaseGraphRender {
 	constructor() {
 		super();
 	}

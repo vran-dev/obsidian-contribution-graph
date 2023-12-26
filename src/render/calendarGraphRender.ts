@@ -6,7 +6,7 @@ import {
 	distanceBeforeTheStartOfWeek,
 	distanceBeforeTheEndOfWeek,
 } from "src/util/dateUtils";
-import { mapBy, matchCellStyleRule } from "src/util/utils";
+import { mapBy } from "src/util/utils";
 import { BaseGraphRender } from "./graphRender";
 
 export class CalendarGraphRender extends BaseGraphRender {

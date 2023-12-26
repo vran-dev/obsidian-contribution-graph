@@ -1,13 +1,13 @@
 import { ContributionGraphConfig } from "src/types";
 import { CalendarGraphRender } from "./calendarGraphRender";
 import { MonthTrackGraphRender } from "./monthTrackGraphRender";
-import { WeekTrackGraphRender } from "./weekTrackGraphRender";
+import { GitStyleTrackGraphRender } from "./gitStyleTrackGraphRender";
 
 export class Renders {
 	static renders = [
 		new CalendarGraphRender(),
 		new MonthTrackGraphRender(),
-		new WeekTrackGraphRender(),
+		new GitStyleTrackGraphRender(),
 	];
 
 	static render(

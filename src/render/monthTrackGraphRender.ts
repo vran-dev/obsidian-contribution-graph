@@ -1,6 +1,6 @@
 import { ContributionGraphConfig } from "src/types";
 import { monthMapping } from "src/constants";
-import { mapBy, matchCellStyleRule } from "src/util/utils";
+import { mapBy } from "src/util/utils";
 import { BaseGraphRender } from "./graphRender";
 
 export class MonthTrackGraphRender extends BaseGraphRender {
@@ -88,8 +88,9 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 				monthIndicator.className = "cell month-indicator";
 				monthIndicator.innerText =
 					contributionItem.month == 0
-						? `${contributionItem.year}  ${monthMapping[contributionItem.month]
-						}`
+						? `${contributionItem.year}  ${
+								monthMapping[contributionItem.month]
+						  }`
 						: monthMapping[contributionItem.month];
 
 				this.bindMonthTips(
@@ -121,7 +122,7 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 			} else {
 				cellEl.className = "cell";
 
-				this.applyCellStyleRule(cellEl, contributionItem, cellRules)
+				this.applyCellStyleRule(cellEl, contributionItem, cellRules);
 				this.bindCellAttribute(cellEl, contributionItem);
 				this.bindCellClickEvent(cellEl, contributionItem, graphConfig);
 				this.bindCellTips(cellEl, contributionItem);
