@@ -325,11 +325,9 @@ export function CreateContributionGraphForm(props: {
 							return (
 								<CellRuleItem
 									rule={rule}
-									// @ts-ignore
 									key={rule.id}
 									onChange={(newRule) => {
 										const newRules = cellRules.map((r) => {
-											// @ts-ignore
 											if (r.id == newRule.id) {
 												return newRule;
 											} else {
@@ -340,7 +338,6 @@ export function CreateContributionGraphForm(props: {
 									}}
 									onRemove={(id: string) => {
 										const newRules = cellRules.filter(
-											// @ts-ignore
 											(r) => r.id != id
 										);
 										setCellRules(newRules);
