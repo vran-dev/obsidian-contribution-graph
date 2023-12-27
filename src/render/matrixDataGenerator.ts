@@ -1,8 +1,4 @@
-import {
-	diffDays,
-	distanceBeforeTheStartOfWeek,
-	toFormattedDate,
-} from "../util/dateUtils";
+import { diffDays, toFormattedDate } from "../util/dateUtils";
 import { Contribution, ContributionCellData } from "../types";
 
 export function generateByFixedDate(
@@ -16,21 +12,6 @@ export function generateByFixedDate(
 	const contributionMapByDate = contributionToMap(data);
 
 	const cellData: ContributionCellData[] = [];
-	// fill HOLE cell at the right most column if today is not saturaday
-	// TODO remove this logic, it's should be process by the caller
-	const weekDayOfToDate = to.getDay();
-
-	const lastHoleCount = (startOfWeek - weekDayOfToDate + 7) % 7;
-	for (let i = 0; i < lastHoleCount; i++) {
-		cellData.unshift({
-			date: "$HOLE$",
-			weekDay: -1,
-			month: -1,
-			monthDate: -1,
-			year: -1,
-			value: 0,
-		});
-	}
 
 	// fill data
 	for (let i = 0; i < days; i++) {
@@ -46,24 +27,6 @@ export function generateByFixedDate(
 			year: currentDateAtIndex.getFullYear(),
 			value: contribution ? contribution.value : 0,
 			summary: contribution ? contribution.summary : undefined,
-		});
-	}
-
-	// fill HOLE cell at the left most column if start date is not sunday
-	// TODO remove this logic, it's should be process by the caller
-	const weekDayOfFromDate = from.getDay();
-	const firstHoleCount = distanceBeforeTheStartOfWeek(
-		startOfWeek,
-		weekDayOfFromDate
-	);
-	for (let i = 0; i < firstHoleCount; i++) {
-		cellData.unshift({
-			date: "$HOLE$",
-			weekDay: -1,
-			month: -1,
-			monthDate: -1,
-			year: -1,
-			value: 0,
 		});
 	}
 

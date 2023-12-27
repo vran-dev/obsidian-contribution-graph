@@ -2,6 +2,7 @@ import { ContributionCellData, ContributionGraphConfig } from "src/types";
 import { monthMapping, weekDayMapping } from "src/constants";
 import { mapBy } from "src/util/utils";
 import { BaseGraphRender } from "./graphRender";
+import { distanceBeforeTheStartOfWeek } from "src/util/dateUtils";
 
 export class GitStyleTrackGraphRender extends BaseGraphRender {
 	constructor() {
@@ -44,7 +45,26 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 
 		const contributionData: ContributionCellData[] =
 			this.generateContributionData(graphConfig);
-		// console.log(contributionData)
+
+		// fill HOLE cell at the left most column if start date is not ${startOfWeek}
+		if (contributionData.length > 0) {
+			const from = new Date(contributionData[0].date);
+			const weekDayOfFromDate = from.getDay();
+			const firstHoleCount = distanceBeforeTheStartOfWeek(
+				graphConfig.startOfWeek,
+				weekDayOfFromDate
+			);
+			for (let i = 0; i < firstHoleCount; i++) {
+				contributionData.unshift({
+					date: "$HOLE$",
+					weekDay: -1,
+					month: -1,
+					monthDate: -1,
+					year: -1,
+					value: 0,
+				});
+			}
+		}
 
 		const contributionMapByYearMonth = mapBy(
 			contributionData,

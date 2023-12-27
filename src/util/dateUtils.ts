@@ -39,3 +39,12 @@ export function distanceBeforeTheEndOfWeek(
 ) {
 	return (startOfWeek - weekDate + 6) % 7;
 }
+
+export function isToday(date: Date) {
+	const today = new Date();
+	return (
+		date.getDate() === today.getDate() &&
+		date.getMonth() === today.getMonth() &&
+		date.getFullYear() === today.getFullYear()
+	);
+}
