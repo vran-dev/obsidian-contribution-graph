@@ -7,6 +7,7 @@ import { CellStyleRule } from "src/types";
 import { Choose, ChooseOption } from "./Choose";
 import { CellRuleItem } from "./CellRuleFormItem";
 import { Divider } from "../divider/Divider";
+import { THEMES } from "./GraphTheme";
 
 export function CreateContributionGraphForm(props: {
 	yamlConfig: YamlGraphConfig;
@@ -20,12 +21,7 @@ export function CreateContributionGraphForm(props: {
 	);
 	const [formData, setFormData] = useState(yamlConfig);
 	const [cellRules, setCellRules] = useState<CellStyleRule[]>(
-		yamlConfig.cellStyleRules?.map((cell, idx) => {
-			return {
-				id: new Date().getTime() + "_" + idx,
-				...cell,
-			};
-		}) || []
+		yamlConfig.cellStyleRules || []
 	);
 
 	const handleInputChange = (
@@ -33,6 +29,34 @@ export function CreateContributionGraphForm(props: {
 	) => {
 		const { name, value } = e.target;
 		changeFormData(name, value);
+	};
+
+	const handleThemeChanged = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		const { value } = e.target;
+		const theme = THEMES.find((t) => t.name == value);
+		if (theme) {
+			changeFormData("cellStyleRules", theme.rules);
+			setCellRules(theme.rules);
+		}
+	};
+
+	const handleCellShapeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		const { value } = e.target;
+		changeFormData("cellStyle", {
+			...formData.cellStyle,
+			borderRadius: value,
+		});
+	};
+
+	const getDefaultCellShape = (): string => {
+		if (formData.cellStyle && formData.cellStyle.borderRadius) {
+			return (
+				cellShapes.find(
+					(p) => p.value == formData.cellStyle?.borderRadius
+				)?.value || ""
+			);
+		}
+		return "";
 	};
 
 	const changeFormData = (name: string, value: any) => {
@@ -263,6 +287,38 @@ export function CreateContributionGraphForm(props: {
 					</div>
 				</div>
 				<div className="form-item">
+					<span className="label">Cell Shape</span>
+					<div className="form-content">
+						<select
+							name="cellShape"
+							defaultValue={getDefaultCellShape()}
+							onChange={handleCellShapeChange}
+						>
+							{cellShapes.map((option) => (
+								<option value={option.value} key={option.label}>
+									{option.label}
+								</option>
+							))}
+						</select>
+					</div>
+				</div>
+				<div className="form-item">
+					<span className="label">Theme</span>
+					<div className="form-content">
+						<select
+							name="theme"
+							aria-placeholder="select theme to generate style"
+							onChange={handleThemeChanged}
+						>
+							{THEMES.map((option) => (
+								<option value={option.name} key={option.name}>
+									{option.name}
+								</option>
+							))}
+						</select>
+					</div>
+				</div>
+				<div className="form-item">
 					<span className="label">Cell Style Rules</span>
 					<div className="form-vertical-content">
 						{cellRules.map((rule) => {
@@ -444,5 +500,21 @@ const startOfWeekOptions: SelectOption[] = [
 	{
 		label: "Saturday",
 		value: "6",
+	},
+];
+
+const cellShapes: SelectOption[] = [
+	{
+		label: "Round",
+		value: "",
+		selected: true,
+	},
+	{
+		label: "Square",
+		value: "0%",
+	},
+	{
+		label: "Circle",
+		value: "50%",
 	},
 ];

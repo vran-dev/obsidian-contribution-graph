@@ -137,6 +137,15 @@ export abstract class BaseGraphRender implements GraphRender {
 		});
 	}
 
+	applyCellGlobalStyle(
+		cellEl: HTMLElement,
+		graphConfig: ContributionGraphConfig
+	) {
+		if (graphConfig.cellStyle) {
+			Object.assign(cellEl.style, graphConfig.cellStyle);
+		}
+	}
+
 	applyCellStyleRule(
 		cellEl: HTMLElement,
 		contributionItem: ContributionCellData,

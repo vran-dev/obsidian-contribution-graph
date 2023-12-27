@@ -32,6 +32,11 @@ export class ContributionGraphConfig {
 	data: Contribution[];
 
 	/**
+	 * the global style of the cell, could be override by `cellStyleRules`
+	 */
+	cellStyle: Partial<CSSStyleDeclaration> = {};
+
+	/**
 	 * the rules to style the cell
 	 */
 	cellStyleRules: CellStyleRule[] = DEFAULT_RULES;
@@ -81,6 +86,7 @@ export interface Contribution {
 }
 
 export interface CellStyleRule {
+	id: string | number;
 	// the background color for the cell
 	color: string;
 	// the text in the cell
