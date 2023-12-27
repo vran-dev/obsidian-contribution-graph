@@ -104,6 +104,7 @@ export class YamlGraphConfig {
 	dateField?: string;
 	data: Contribution[];
 	startOfWeek: number;
+	cellStyle?: Partial<CSSStyleDeclaration>;
 	cellStyleRules?: CellStyleRule[];
 	showCellRuleIndicators: boolean;
 

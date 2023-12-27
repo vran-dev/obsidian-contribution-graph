@@ -44,6 +44,8 @@
 .contribution-graph .main .charts.default {
 	flex-direction: row;
 	align-items: flex-start;
+	flex-wrap: nowrap;
+	justify-content: center;
 }
 
 .contribution-graph .default .week-indicator {
@@ -197,7 +199,7 @@
 
 /* default cell */
 .contribution-graph .cell {
-	min-width: 8px;
+	min-width: 10px;
 	min-height: 10px;
 	font-size: 8px;
 	width: auto;
@@ -426,6 +428,11 @@
 	width: 48px;
 	background-color: transparent;
 	border: none;
+}
+
+.contribution-graph-modal-form .preview-content {
+	display: grid;
+	overflow-x: scroll;
 }
 
 /* edit button */

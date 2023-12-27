@@ -101,7 +101,7 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 				monthDataRowEl.appendChild(monthIndicator);
 			}
 
-			// fill start month, if start month date is not 1
+			// fill hole at start month, if start month date is not 1
 			if (i == 0) {
 				const startDate = new Date(contributionItem.date).getDate();
 				const fillMax = startDate - 1;
@@ -115,6 +115,7 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 
 			// render cell
 			const cellEl = document.createElement("div");
+			this.applyCellGlobalStyle(cellEl, graphConfig);
 			monthDataRowEl?.appendChild(cellEl);
 			if (contributionItem.value == 0) {
 				cellEl.className = "cell empty";
@@ -129,7 +130,7 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 			}
 		}
 
-		// fill last month, if last month date is not 31
+		// fill hole at last month, if last month date is not end of month
 		if (contributionData.length > 0) {
 			const last = contributionData[contributionData.length - 1];
 			const fillMax = 31 - last.monthDate;
