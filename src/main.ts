@@ -4,6 +4,7 @@ import { Renders } from "./render/renders";
 import { ContributionGraphRawProcessor } from "./processor/contributionGraphCodeBlockProcessor";
 import { ContributionGraphCreateModal } from "./view/form/GraphFormModal";
 import { mountEditButtonToCodeblock } from "./view/codeblock/CodeblockEditButtonMount";
+import { Messages } from "./i18/messages";
 
 export default class ContributionGraph extends Plugin {
 	async onload() {
@@ -19,7 +20,7 @@ export default class ContributionGraph extends Plugin {
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor, info) => {
 				menu.addItem((item) => {
-					item.setTitle("Insert Contribution Graph");
+					item.setTitle(Messages.context_menu_create.get());
 					item.setIcon("gantt-chart");
 					item.onClick(() => {
 						new ContributionGraphCreateModal(this.app).open();
@@ -55,7 +56,7 @@ export default class ContributionGraph extends Plugin {
 	registerContributionGraphCreateCommand() {
 		this.addCommand({
 			id: "contribution-graph-create-command",
-			name: "create contribution graph",
+			name: Messages.context_menu_create.get(),
 			editorCallback: (
 				editor: Editor,
 				ctx: MarkdownView | MarkdownFileInfo

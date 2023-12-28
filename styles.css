@@ -7,6 +7,7 @@
 	overflow-x: auto;
 	padding: 2px;
 	line-height: normal;
+	display: grid;
 }
 
 .contribution-graph .main .title {

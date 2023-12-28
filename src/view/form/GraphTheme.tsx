@@ -1,4 +1,5 @@
 import { DEFAULT_RULES } from "src/constants";
+import { Messages } from "src/i18/messages";
 import { CellStyleRule } from "src/types";
 
 export interface Theme {
@@ -9,7 +10,7 @@ export interface Theme {
 
 export const THEMES = [
 	{
-		name: "choose theme to generate colors",
+		name: Messages.form_theme_placeholder.get(),
 		description: "",
 		rules: [],
 	},

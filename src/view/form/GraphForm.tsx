@@ -8,6 +8,7 @@ import { Choose, ChooseOption } from "./Choose";
 import { CellRuleItem } from "./CellRuleFormItem";
 import { Divider } from "../divider/Divider";
 import { THEMES } from "./GraphTheme";
+import { Messages } from "src/i18/messages";
 
 export function CreateContributionGraphForm(props: {
 	yamlConfig: YamlGraphConfig;
@@ -96,15 +97,15 @@ export function CreateContributionGraphForm(props: {
 	return (
 		<div className="contribution-graph-modal-form">
 			<div className="form-group">
-				<Divider text="Graph Settings" />
+				<Divider text={Messages.form_graph_settings.get()} />
 				<div className="form-item">
-					<span className="label">Title</span>
+					<span className="label">{Messages.form_title.get()}</span>
 					<div className="form-content">
 						<input
 							name="title"
 							type="text"
 							defaultValue={formData.title}
-							placeholder="Contribution Graph Title"
+							placeholder={Messages.form_title_placeholder.get()}
 							onChange={handleInputChange}
 							style={{
 								...formData.titleStyle,
@@ -132,7 +133,9 @@ export function CreateContributionGraphForm(props: {
 				</div>
 
 				<div className="form-item">
-					<span className="label">Graph Type</span>
+					<span className="label">
+						{Messages.form_graph_type.get()}
+					</span>
 					<div className="form-content">
 						<select
 							name="graphType"
@@ -152,7 +155,9 @@ export function CreateContributionGraphForm(props: {
 				</div>
 
 				<div className="form-item">
-					<span className="label">Date Range</span>
+					<span className="label">
+						{Messages.form_date_range.get()}
+					</span>
 					<div className="form-content">
 						<select
 							defaultValue={isLatestDate ? "latest" : "fixed"}
@@ -164,8 +169,12 @@ export function CreateContributionGraphForm(props: {
 								setIsLatestDate(!isLatestDate);
 							}}
 						>
-							<option value="fixed">Fixed Date</option>
-							<option value="latest">Latest Date</option>
+							<option value="fixed">
+								{Messages.form_date_range_fixed_date.get()}
+							</option>
+							<option value="latest">
+								{Messages.form_date_range_latest_days.get()}
+							</option>
 						</select>
 					</div>
 				</div>
@@ -181,7 +190,7 @@ export function CreateContributionGraphForm(props: {
 									type="number"
 									defaultValue={formData.days}
 									min={1}
-									placeholder="please input the number of the latest days"
+									placeholder={Messages.form_date_range_latest_days_placeholder.get()}
 									onChange={(e) =>
 										changeFormData(
 											"days",
@@ -216,7 +225,9 @@ export function CreateContributionGraphForm(props: {
 
 				{formData.graphType == "month-track" ? null : (
 					<div className="form-item">
-						<span className="label">Start of Week</span>
+						<span className="label">
+							{Messages.form_start_of_week.get()}
+						</span>
 						<div className="form-content">
 							<select
 								id="startOfWeek"
@@ -241,26 +252,28 @@ export function CreateContributionGraphForm(props: {
 					</div>
 				)}
 				<div className="form-item">
-					<span className="label">Query</span>
+					<span className="label">{Messages.form_query.get()}</span>
 					<div className="form-content">
 						<input
 							name="query"
 							type="text"
 							defaultValue={formData.query}
-							placeholder='such as #tag or "folder_name"'
+							placeholder={Messages.form_query_placeholder.get()}
 							onChange={handleInputChange}
 						/>
 					</div>
 				</div>
 
 				<div className="form-item">
-					<span className="label">Date Field</span>
+					<span className="label">
+						{Messages.form_date_field.get()}
+					</span>
 					<div className="form-content">
 						<input
 							type="text"
 							defaultValue={formData.dateField}
 							name="dateField"
-							placeholder="default is file.ctime"
+							placeholder={Messages.form_query_placeholder.get()}
 							onChange={handleInputChange}
 						/>
 					</div>
@@ -268,9 +281,11 @@ export function CreateContributionGraphForm(props: {
 			</div>
 
 			<div className="form-group">
-				<Divider text="Style Settings" />
+				<Divider text={Messages.form_style_settings.get()} />
 				<div className="form-item">
-					<span className="label">Show Cell Indicators</span>
+					<span className="label">
+						{Messages.form_show_cell_indicators.get()}
+					</span>
 					<div className="form-content">
 						<input
 							name="showCellRuleIndicators"
@@ -287,7 +302,9 @@ export function CreateContributionGraphForm(props: {
 					</div>
 				</div>
 				<div className="form-item">
-					<span className="label">Cell Shape</span>
+					<span className="label">
+						{Messages.form_cell_shape.get()}
+					</span>
 					<div className="form-content">
 						<select
 							name="cellShape"
@@ -303,7 +320,7 @@ export function CreateContributionGraphForm(props: {
 					</div>
 				</div>
 				<div className="form-item">
-					<span className="label">Theme</span>
+					<span className="label">{Messages.form_theme.get()}</span>
 					<div className="form-content">
 						<select
 							name="theme"
@@ -319,7 +336,9 @@ export function CreateContributionGraphForm(props: {
 					</div>
 				</div>
 				<div className="form-item">
-					<span className="label">Cell Style Rules</span>
+					<span className="label">
+						{Messages.form_cell_style_rules.get()}
+					</span>
 					<div className="form-vertical-content">
 						{cellRules.map((rule) => {
 							return (
@@ -358,10 +377,10 @@ export function CreateContributionGraphForm(props: {
 			<div className="form-item">
 				<div className="form-content">
 					<button className="button" onClick={onPreview}>
-						Preview
+						{Messages.form_button_preview.get()}
 					</button>
 					<button className="button" onClick={onSubmit}>
-						Save
+						{Messages.form_button_save.get()}
 					</button>
 				</div>
 			</div>
@@ -454,16 +473,16 @@ const titleAlignChooseOptions: ChooseOption[] = [
 
 const graphOptions: SelectOption[] = [
 	{
-		label: "Week Track",
+		label: Messages.form_graph_type_git.get(),
 		value: "default",
 		selected: true,
 	},
 	{
-		label: "Month Track",
+		label: Messages.form_graph_type_month_track.get(),
 		value: "month-track",
 	},
 	{
-		label: "Calendar",
+		label: Messages.form_graph_type_calendar.get(),
 		value: "calendar",
 	},
 ];
@@ -502,16 +521,16 @@ const startOfWeekOptions: SelectOption[] = [
 
 const cellShapes: SelectOption[] = [
 	{
-		label: "Round",
+		label: Messages.form_cell_shape_rounded.get(),
 		value: "",
 		selected: true,
 	},
 	{
-		label: "Square",
+		label: Messages.form_cell_shape_square.get(),
 		value: "0%",
 	},
 	{
-		label: "Circle",
+		label: Messages.form_cell_shape_circle.get(),
 		value: "50%",
 	},
 ];
