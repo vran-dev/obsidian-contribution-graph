@@ -1,10 +1,4 @@
-import {
-	Editor,
-	MarkdownFileInfo,
-	MarkdownRenderChild,
-	MarkdownView,
-	Plugin,
-} from "obsidian";
+import { Editor, MarkdownFileInfo, MarkdownView, Plugin } from "obsidian";
 import { ContributionGraphConfig } from "./types";
 import { Renders } from "./render/renders";
 import { ContributionGraphRawProcessor } from "./processor/contributionGraphCodeBlockProcessor";
@@ -16,9 +10,24 @@ export default class ContributionGraph extends Plugin {
 		this.registerGlobalRenderApi();
 		this.registerCodeblockProcessor();
 		this.registerContributionGraphCreateCommand();
+		this.registerContextMenu();
 	}
 
 	onunload() {}
+
+	registerContextMenu() {
+		this.registerEvent(
+			this.app.workspace.on("editor-menu", (menu, editor, info) => {
+				menu.addItem((item) => {
+					item.setTitle("Insert Contribution Graph");
+					item.setIcon("gantt-chart");
+					item.onClick(() => {
+						new ContributionGraphCreateModal(this.app).open();
+					});
+				});
+			})
+		);
+	}
 
 	registerGlobalRenderApi() {
 		//@ts-ignore
