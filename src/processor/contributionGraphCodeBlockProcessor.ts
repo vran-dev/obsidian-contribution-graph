@@ -16,6 +16,7 @@ import {
 	MISS_QUERY_OR_DATA,
 } from "./errorTips";
 import { GraphProcessError } from "./graphProcessError";
+import { isZh } from "src/i18/messages";
 
 export class ContributionGraphRawProcessor {
 	processCodeblock(
@@ -113,7 +114,7 @@ export class YamlGraphConfig {
 		this.graphType = "default";
 		this.query = '""';
 		this.days = 180;
-		this.startOfWeek = 0;
+		this.startOfWeek = isZh() ? 1 : 0;
 		this.showCellRuleIndicators = true;
 		this.titleStyle = {
 			textAlign: "left",

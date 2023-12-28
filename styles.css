@@ -53,6 +53,7 @@
 	background-color: transparent;
 	font-size: 10px;
 	min-width: 18px;
+	text-wrap: nowrap;
 	height: 8px;
 	margin-right: 8px;
 	margin-top: 1.5px;
@@ -63,6 +64,7 @@
 .contribution-graph .default .month-indicator {
 	position: absolute;
 	top: -24px;
+	text-wrap: nowrap;
 	font-size: 10px;
 	min-width: 20px;
 	cursor: pointer;

@@ -8,7 +8,7 @@ import { Choose, ChooseOption } from "./Choose";
 import { CellRuleItem } from "./CellRuleFormItem";
 import { Divider } from "../divider/Divider";
 import { THEMES } from "./GraphTheme";
-import { Messages } from "src/i18/messages";
+import { Messages, isZh } from "src/i18/messages";
 
 export function CreateContributionGraphForm(props: {
 	yamlConfig: YamlGraphConfig;
@@ -233,9 +233,9 @@ export function CreateContributionGraphForm(props: {
 								id="startOfWeek"
 								name="startOfWeek"
 								defaultValue={
-									formData.startOfWeek ||
-									startOfWeekOptions.find((p) => p.selected)
-										?.value
+									formData.startOfWeek != undefined
+										? formData.startOfWeek
+										: startOfWeekOptions.find((p) => p.selected)?.value
 								}
 								onChange={handleInputChange}
 							>
@@ -489,32 +489,33 @@ const graphOptions: SelectOption[] = [
 
 const startOfWeekOptions: SelectOption[] = [
 	{
-		label: "Sunday",
+		label: Messages.weekday_sunday.get(),
 		value: "0",
-		selected: true,
+		selected: !isZh(),
 	},
 	{
-		label: "Monday",
+		label: Messages.weekday_monday.get(),
 		value: "1",
+		selected: isZh(),
 	},
 	{
-		label: "Tuesday",
+		label: Messages.weekday_tuesday.get(),
 		value: "2",
 	},
 	{
-		label: "Wednesday",
+		label: Messages.weekday_wednesday.get(),
 		value: "3",
 	},
 	{
-		label: "Thursday",
+		label: Messages.weekday_thursday.get(),
 		value: "4",
 	},
 	{
-		label: "Friday",
+		label: Messages.weekday_friday.get(),
 		value: "5",
 	},
 	{
-		label: "Saturday",
+		label: Messages.weekday_saturday.get(),
 		value: "6",
 	},
 ];

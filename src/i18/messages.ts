@@ -16,6 +16,11 @@ export class Message {
 	}
 }
 
+export function isZh(): boolean {
+	const lang = window.localStorage.getItem("language");
+	return lang === "zh";
+}
+
 export const Messages = {
 	/**
 	 * context menu
@@ -30,9 +35,9 @@ export const Messages = {
 	form_title: new Message("标题", "Title"),
 	form_title_placeholder: new Message("输入标题", "Input title"),
 	form_graph_type: new Message("图表类型", "Graph Type"),
-	form_graph_type_git: new Message("Git 风格", "Git Style"),
+	form_graph_type_git: new Message("Git 视图", "Git Style"),
 	form_graph_type_month_track: new Message("月追踪视图", "Month Track"),
-	form_graph_type_calendar: new Message("日历", "Calendar"),
+	form_graph_type_calendar: new Message("日历视图", "Calendar"),
 	form_date_range: new Message("日期范围", "Date Range"),
 	form_date_range_latest_days: new Message("最近几天", "Latest Days"),
 	form_date_range_latest_days_placeholder: new Message(
@@ -73,4 +78,64 @@ export const Messages = {
 
 	form_button_preview: new Message("预览", "Preview"),
 	form_button_save: new Message("保存", "Save"),
+
+	/**
+	 * weekday
+	 */
+	weekday_sunday: new Message("周日", "Sunday"),
+	weekday_monday: new Message("周一", "Monday"),
+	weekday_tuesday: new Message("周二", "Tuesday"),
+	weekday_wednesday: new Message("周三", "Wednesday"),
+	weekday_thursday: new Message("周四", "Thursday"),
+	weekday_friday: new Message("周五", "Friday"),
+	weekday_saturday: new Message("周六", "Saturday"),
 };
+
+export const weekDayMapping = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+export const cnWeekDayMapping = ["日", "一", "二", "三", "四", "五", "六"];
+export const monthMapping = [
+	"Jan",
+	"Feb",
+	"Mar",
+	"Apr",
+	"May",
+	"Jun",
+	"Jul",
+	"Aug",
+	"Sep",
+	"Oct",
+	"Nov",
+	"Dec",
+];
+
+export function localizedMonthMapping(month: number) {
+	const lang = window.localStorage.getItem("language");
+	if (lang === "zh") {
+		return `${month + 1}月`;
+	}
+	return monthMapping[month];
+}
+
+export function localizedWeekDayMapping(weekday: number, maxLength?: number) {
+	const lang = window.localStorage.getItem("language");
+	let localizedWeekday;
+	if (lang === "zh") {
+		localizedWeekday = cnWeekDayMapping[weekday];
+	} else {
+		localizedWeekday = weekDayMapping[weekday];
+	}
+
+	if (maxLength) {
+		return localizedWeekday.substring(0, maxLength);
+	} else {
+		return localizedWeekday;
+	}
+}
+
+export function localizedYearMonthMapping(year: number, month: number) {
+	const lang = window.localStorage.getItem("language");
+	if (lang === "zh") {
+		return `${year}年${month + 1}月`;
+	}
+	return `${monthMapping[month]} ${year}`;
+}
