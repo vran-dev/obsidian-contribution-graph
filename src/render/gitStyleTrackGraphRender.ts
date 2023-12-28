@@ -1,8 +1,11 @@
 import { ContributionCellData, ContributionGraphConfig } from "src/types";
-import { monthMapping, weekDayMapping } from "src/constants";
 import { mapBy } from "src/util/utils";
 import { BaseGraphRender } from "./graphRender";
 import { distanceBeforeTheStartOfWeek } from "src/util/dateUtils";
+import {
+	localizedMonthMapping,
+	localizedWeekDayMapping,
+} from "src/i18/messages";
 
 export class GitStyleTrackGraphRender extends BaseGraphRender {
 	constructor() {
@@ -93,7 +96,9 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 					parent: columnEl,
 					text: "",
 				});
-				monthCell.innerText = monthMapping[contributionItem.month];
+				monthCell.innerText = localizedMonthMapping(
+					contributionItem.month
+				);
 				this.bindMonthTips(
 					monthCell,
 					contributionItem,
@@ -132,8 +137,9 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 				case 1:
 				case 3:
 				case 5:
-					weekdayCell.innerText =
-						weekDayMapping[(i + startOfWeek || 0) % 7];
+					weekdayCell.innerText = localizedWeekDayMapping(
+						(i + startOfWeek || 0) % 7
+					);
 					break;
 				default:
 					break;

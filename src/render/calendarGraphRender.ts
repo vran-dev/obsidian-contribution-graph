@@ -1,5 +1,4 @@
 import { ContributionGraphConfig } from "src/types";
-import { monthMapping, weekDayMapping } from "src/constants";
 import {
 	getLastDayOfMonth,
 	toFormattedDate,
@@ -8,6 +7,7 @@ import {
 } from "src/util/dateUtils";
 import { mapBy } from "src/util/utils";
 import { BaseGraphRender } from "./graphRender";
+import { localizedMonthMapping, localizedWeekDayMapping, localizedYearMonthMapping } from "src/i18/messages";
 
 export class CalendarGraphRender extends BaseGraphRender {
 	constructor() {
@@ -105,11 +105,9 @@ export class CalendarGraphRender extends BaseGraphRender {
 				const monthIndicator = document.createElement("div");
 				monthIndicator.className = "month-indicator";
 				if (item.month == 0) {
-					monthIndicator.innerText = `${monthMapping[item.month]} ${
-						item.year
-					}`;
+					monthIndicator.innerText = localizedYearMonthMapping(item.year, item.month)
 				} else {
-					monthIndicator.innerText = monthMapping[item.month];
+					monthIndicator.innerText = localizedMonthMapping(item.month);
 				}
 				monthContainer.appendChild(monthIndicator);
 				this.bindMonthTips(
@@ -125,9 +123,10 @@ export class CalendarGraphRender extends BaseGraphRender {
 				for (let i = 0; i < 7; i++) {
 					const dateIndicatorCell = document.createElement("div");
 					dateIndicatorCell.className = "cell week-indicator";
-					const weekText = weekDayMapping[
-						((graphConfig.startOfWeek || 0) + 7 + i) % 7
-					].substring(0, 2);
+					const weekText = localizedWeekDayMapping(
+						((graphConfig.startOfWeek || 0) + 7 + i) % 7,
+						2
+					);
 					dateIndicatorCell.innerText = weekText;
 					weekDateIndicators.appendChild(dateIndicatorCell);
 				}

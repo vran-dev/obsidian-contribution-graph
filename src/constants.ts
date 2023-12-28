@@ -1,22 +1,5 @@
 import { CellStyleRule } from "./types";
 
-export const monthMapping = [
-	"Jan",
-	"Feb",
-	"Mar",
-	"Apr",
-	"May",
-	"Jun",
-	"Jul",
-	"Aug",
-	"Sep",
-	"Oct",
-	"Nov",
-	"Dec",
-];
-
-export const weekDayMapping = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
 export const DEFAULT_RULES: CellStyleRule[] = [
 	{
 		id: "default_a",
