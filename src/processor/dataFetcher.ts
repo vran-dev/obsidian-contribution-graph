@@ -1,6 +1,6 @@
 import { App } from "obsidian";
 import { Contribution } from "../types";
-import { getAPI } from "obsidian-dataview";
+import { DataArray, Literal, getAPI } from "obsidian-dataview";
 import { GraphProcessError } from "./graphProcessError";
 import { DateTime } from "luxon";
 
@@ -18,26 +18,24 @@ export class DataviewDataFetcher {
 		if (!dv) {
 			throw new GraphProcessError("Dataview query not available");
 		}
-		const result = dv.pages(query);
+		const data: DataArray<Record<string, Literal>> = dv.pages(query);
 		if (dateField) {
-			return this.groupByCustomField(result, dateField, dateFieldFormat);
+			return this.groupByCustomField(data, dateField, dateFieldFormat);
 		} else {
-			return this.groupByFileCTime(result);
+			return this.groupByFileCTime(data);
 		}
 	}
 
 	groupByCustomField(
-		result: any,
+		result: DataArray<Record<string, Literal>>,
 		dateFieldName: string,
 		dateFieldFormat?: string
 	) {
 		const convertFailedPages: ConvertFail[] = [];
 		const data = result
-			// @ts-ignore
 			.map((page) => {
 				return this.toPageWrapper(page, dateFieldName, dateFieldFormat);
 			})
-			// @ts-ignore
 			.filter((wrapper) => {
 				if (wrapper.date == null) {
 					convertFailedPages.push({
@@ -46,52 +44,63 @@ export class DataviewDataFetcher {
 							"can't find field " + dateFieldName + " in page",
 					});
 					return false;
-				}
-
-				try {
-					wrapper.date.toFormat("yyyy-MM-dd");
+				} else {
 					return true;
-				} catch (e) {
-					convertFailedPages.push({
-						page: wrapper.page.file.name,
-						reason:
-							"can't convert dateField " +
-							dateFieldName +
-							" to date, please check the format, it should be like: 2022-02-02T00:00:00",
-					});
-					return false;
 				}
 			})
-			// @ts-ignore
 			.groupBy((wrapper) => {
-				return wrapper.date.toFormat("yyyy-MM-dd");
+				return wrapper.date?.toFormat("yyyy-MM-dd");
 			})
-			// @ts-ignore
 			.map((entry) => {
 				return {
 					date: entry.key,
 					value: entry.rows.length,
-				};
+				} as Contribution;
 			});
 		if (convertFailedPages.length > 0) {
 			console.warn("this page can't be processed", convertFailedPages);
 		}
-		return data;
+		return data.array();
 	}
 
-	groupByFileCTime(data: any) {
+	groupByFileCTime(data: DataArray<Record<string, Literal>>) {
 		return (
 			data
 				// @ts-ignore
 				.groupBy((p) => p.file.ctime.toFormat("yyyy-MM-dd"))
-				// @ts-ignore
 				.map((entry) => {
 					return {
 						date: entry.key,
 						value: entry.rows.length,
-					};
+					} as Contribution;
 				})
+				.array()
 		);
+	}
+
+	toPageWrapper(
+		page: Record<string, Literal>,
+		dateFieldName: string,
+		dateFieldFormat?: string
+	): PageWrapper {
+		if (!page[dateFieldName]) {
+			return new PageWrapper(
+				null,
+				page,
+				"can't find field " + dateFieldName
+			);
+		}
+		const dateField = page[dateFieldName];
+		if (this.isLuxonDateTime(dateField)) {
+			// @ts-ignore
+			return new PageWrapper(dateField, page);
+		} else {
+			return new PageWrapper(
+				// @ts-ignore
+				this.toDateTime(page.file.name, dateField, dateFieldFormat),
+				page
+			);
+		}
 	}
 
 	isLuxonDateTime(value: any): boolean {
@@ -105,7 +114,11 @@ export class DataviewDataFetcher {
 		return false;
 	}
 
-	smartParse(page: string, date: string): DateTime | null {
+	toDateTime(
+		page: string,
+		date: string,
+		dateFieldFormat?: string
+	): DateTime | null {
 		if (typeof date !== "string") {
 			console.warn(
 				"can't parse date, it's a valid format? " +
@@ -116,7 +129,15 @@ export class DataviewDataFetcher {
 			return null;
 		}
 		try {
-			let dateTime = DateTime.fromISO(date);
+			let dateTime = null;
+			if (dateFieldFormat) {
+				dateTime = DateTime.fromFormat(date, dateFieldFormat);
+				if (dateTime.isValid) {
+					return dateTime;
+				}
+			}
+
+			dateTime = DateTime.fromISO(date);
 			if (dateTime.isValid) {
 				return dateTime;
 			}
@@ -149,56 +170,6 @@ export class DataviewDataFetcher {
 			);
 		}
 		return null;
-	}
-
-	toPageWrapper(
-		page: any,
-		dateFieldName: string,
-		dateFieldFormat?: string
-	): PageWrapper {
-		if (!page[dateFieldName]) {
-			return new PageWrapper(
-				null,
-				page,
-				"can't find field " + dateFieldName
-			);
-		}
-
-		const dateField = page[dateFieldName];
-		if (this.isLuxonDateTime(dateField)) {
-			return new PageWrapper(dateField, page);
-		} else if (dateFieldFormat) {
-			try {
-				if (typeof dateField !== "string") {
-					return new PageWrapper(
-						null,
-						page,
-						"can't parse date, it's a valid format? " +
-							dateField +
-							" in page " +
-							page.file.name
-					);
-				}
-				return new PageWrapper(
-					DateTime.fromFormat(dateField, dateFieldFormat),
-					page
-				);
-			} catch (e) {
-				return new PageWrapper(
-					null,
-					page,
-					"can't parse date, it's a valid format? " +
-						dateField +
-						" in page " +
-						page.file.name
-				);
-			}
-		} else {
-			return new PageWrapper(
-				this.smartParse(page.file.name, dateField),
-				page
-			);
-		}
 	}
 }
 
