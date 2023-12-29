@@ -105,30 +105,39 @@ export class DataviewDataFetcher {
 		return false;
 	}
 
-	smartParse(date: string): DateTime | null {
-		let dateTime = DateTime.fromISO(date);
-		if (dateTime.isValid) {
-			return dateTime;
-		}
-		dateTime = DateTime.fromRFC2822(date);
-		if (dateTime.isValid) {
-			return dateTime;
-		}
-		dateTime = DateTime.fromHTTP(date);
-		if (dateTime.isValid) {
-			return dateTime;
-		}
-		dateTime = DateTime.fromSQL(date);
-		if (dateTime.isValid) {
-			return dateTime;
-		}
-		dateTime = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm')
-		if (dateTime.isValid) {
-			return dateTime;
-		}
-		dateTime = DateTime.fromFormat(date, 'yyyy-MM-ddTHH:mm')
-		if(dateTime.isValid) {
-			return dateTime;
+	smartParse(page: string, date: string): DateTime | null {
+		try {
+			let dateTime = DateTime.fromISO(date);
+			if (dateTime.isValid) {
+				return dateTime;
+			}
+			dateTime = DateTime.fromRFC2822(date);
+			if (dateTime.isValid) {
+				return dateTime;
+			}
+			dateTime = DateTime.fromHTTP(date);
+			if (dateTime.isValid) {
+				return dateTime;
+			}
+			dateTime = DateTime.fromSQL(date);
+			if (dateTime.isValid) {
+				return dateTime;
+			}
+			dateTime = DateTime.fromFormat(date, "yyyy-MM-dd HH:mm");
+			if (dateTime.isValid) {
+				return dateTime;
+			}
+			dateTime = DateTime.fromFormat(date, "yyyy-MM-ddTHH:mm");
+			if (dateTime.isValid) {
+				return dateTime;
+			}
+		} catch (e) {
+			console.warn(
+				"can't parse date, it's a valid format? " +
+					date +
+					" in page " +
+					page
+			);
 		}
 		return null;
 	}
@@ -150,12 +159,26 @@ export class DataviewDataFetcher {
 		if (this.isLuxonDateTime(dateField)) {
 			return new PageWrapper(dateField, page);
 		} else if (dateFieldFormat) {
+			try {
+				return new PageWrapper(
+					DateTime.fromFormat(dateField, dateFieldFormat),
+					page
+				);
+			} catch (e) {
+				return new PageWrapper(
+					null,
+					page,
+					"can't parse date, it's a valid format? " +
+						dateField +
+						" in page " +
+						page.file.name
+				);
+			}
+		} else {
 			return new PageWrapper(
-				DateTime.fromFormat(dateField, dateFieldFormat),
+				this.smartParse(page.file.name, dateField),
 				page
 			);
-		} else {
-			return new PageWrapper(this.smartParse(dateField), page);
 		}
 	}
 }
