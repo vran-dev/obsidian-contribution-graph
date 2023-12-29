@@ -2,9 +2,15 @@ import { App } from "obsidian";
 import { Contribution } from "../types";
 import { getAPI } from "obsidian-dataview";
 import { GraphProcessError } from "./graphProcessError";
+import { DateTime } from "luxon";
 
 export class DataviewDataFetcher {
-	fetch(query: string, dateField?: string, app?: App): Contribution[] {
+	fetch(
+		query: string,
+		dateField?: string,
+		dateFieldFormat?: string,
+		app?: App
+	): Contribution[] {
 		if (!query) {
 			return [];
 		}
@@ -14,41 +20,51 @@ export class DataviewDataFetcher {
 		}
 		const result = dv.pages(query);
 		if (dateField) {
-			return this.groupByCustomField(result, dateField);
+			return this.groupByCustomField(result, dateField, dateFieldFormat);
 		} else {
 			return this.groupByFileCTime(result);
 		}
 	}
 
-	groupByCustomField(result: any, dateFieldName: string) {
+	groupByCustomField(
+		result: any,
+		dateFieldName: string,
+		dateFieldFormat?: string
+	) {
 		const convertFailedPages: ConvertFail[] = [];
 		const data = result
 			// @ts-ignore
-			.filter((page) => {
-				if (page[dateFieldName]) {
-					try {
-						page[dateFieldName].toFormat("yyyy-MM-dd");
-						return true;
-					} catch (e) {
-						convertFailedPages.push({
-							page: page.file.name,
-							reason:
-								"can't convert dateField " +
-								dateFieldName +
-								" to date, please check the format, it should be like: 2022-02-02T00:00:00",
-						});
-						return false;
-					}
-				}
-				convertFailedPages.push({
-					page: page.file.name,
-					reason: "can't find field " + dateFieldName + " in page",
-				});
-				return false;
+			.map((page) => {
+				return this.toPageWrapper(page, dateFieldName, dateFieldFormat);
 			})
 			// @ts-ignore
-			.groupBy((page) => {
-				return page[dateFieldName].toFormat("yyyy-MM-dd");
+			.filter((wrapper) => {
+				if (wrapper.date == null) {
+					convertFailedPages.push({
+						page: wrapper.page.file.name,
+						reason:
+							"can't find field " + dateFieldName + " in page",
+					});
+					return false;
+				}
+
+				try {
+					wrapper.date.toFormat("yyyy-MM-dd");
+					return true;
+				} catch (e) {
+					convertFailedPages.push({
+						page: wrapper.page.file.name,
+						reason:
+							"can't convert dateField " +
+							dateFieldName +
+							" to date, please check the format, it should be like: 2022-02-02T00:00:00",
+					});
+					return false;
+				}
+			})
+			// @ts-ignore
+			.groupBy((wrapper) => {
+				return wrapper.date.toFormat("yyyy-MM-dd");
 			})
 			// @ts-ignore
 			.map((entry) => {
@@ -77,9 +93,86 @@ export class DataviewDataFetcher {
 				})
 		);
 	}
+
+	isLuxonDateTime(value: any): boolean {
+		if (
+			typeof value === "object" &&
+			"isLuxonDateTime" in value &&
+			value.isLuxonDateTime === true
+		) {
+			return true;
+		}
+		return false;
+	}
+
+	smartParse(date: string): DateTime | null {
+		let dateTime = DateTime.fromISO(date);
+		if (dateTime.isValid) {
+			return dateTime;
+		}
+		dateTime = DateTime.fromRFC2822(date);
+		if (dateTime.isValid) {
+			return dateTime;
+		}
+		dateTime = DateTime.fromHTTP(date);
+		if (dateTime.isValid) {
+			return dateTime;
+		}
+		dateTime = DateTime.fromSQL(date);
+		if (dateTime.isValid) {
+			return dateTime;
+		}
+		dateTime = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm')
+		if (dateTime.isValid) {
+			return dateTime;
+		}
+		dateTime = DateTime.fromFormat(date, 'yyyy-MM-ddTHH:mm')
+		if(dateTime.isValid) {
+			return dateTime;
+		}
+		return null;
+	}
+
+	toPageWrapper(
+		page: any,
+		dateFieldName: string,
+		dateFieldFormat?: string
+	): PageWrapper {
+		if (!page[dateFieldName]) {
+			return new PageWrapper(
+				null,
+				page,
+				"can't find field " + dateFieldName
+			);
+		}
+
+		const dateField = page[dateFieldName];
+		if (this.isLuxonDateTime(dateField)) {
+			return new PageWrapper(dateField, page);
+		} else if (dateFieldFormat) {
+			return new PageWrapper(
+				DateTime.fromFormat(dateField, dateFieldFormat),
+				page
+			);
+		} else {
+			return new PageWrapper(this.smartParse(dateField), page);
+		}
+	}
 }
 
 export class ConvertFail {
 	page: string;
 	reason: string;
+}
+
+class PageWrapper {
+	date: DateTime | null;
+	page: any;
+	message?: string;
+
+	constructor(date: DateTime | null, page: any, message?: string) {
+		this.date = date;
+		this.page = page;
+		this.message = message;
+	}
 }

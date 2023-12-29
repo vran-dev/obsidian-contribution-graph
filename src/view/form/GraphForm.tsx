@@ -9,13 +9,18 @@ import { CellRuleItem } from "./CellRuleFormItem";
 import { Divider } from "../divider/Divider";
 import { THEMES } from "./GraphTheme";
 import { Messages, isZh } from "src/i18/messages";
+import { App } from "obsidian";
 
 export function CreateContributionGraphForm(props: {
 	yamlConfig: YamlGraphConfig;
 	onSubmit: (yamlGraphConfig: YamlGraphConfig) => void;
+	app: App;
 }): JSX.Element {
 	const { yamlConfig } = props;
 	const previewContainerRef = useRef<HTMLDivElement>(null);
+	const [dateFormatType, setDateFormatType] = useState(
+		yamlConfig.dateFieldFormat ? "manual" : "smart_detect"
+	);
 	const [isLatestDate, setIsLatestDate] = useState(
 		yamlConfig.days !== undefined ||
 			(!yamlConfig.fromDate && !yamlConfig.toDate)
@@ -89,7 +94,8 @@ export function CreateContributionGraphForm(props: {
 			copiedFormData.cellStyleRules = cellRules;
 			processor.processYamlGraphConfig(
 				copiedFormData,
-				previewContainerRef.current!
+				previewContainerRef.current!,
+				props.app
 			);
 		}
 	};
@@ -235,7 +241,9 @@ export function CreateContributionGraphForm(props: {
 								defaultValue={
 									formData.startOfWeek != undefined
 										? formData.startOfWeek
-										: startOfWeekOptions.find((p) => p.selected)?.value
+										: startOfWeekOptions.find(
+												(p) => p.selected
+										  )?.value
 								}
 								onChange={handleInputChange}
 							>
@@ -273,9 +281,39 @@ export function CreateContributionGraphForm(props: {
 							type="text"
 							defaultValue={formData.dateField}
 							name="dateField"
-							placeholder={Messages.form_query_placeholder.get()}
+							placeholder={Messages.form_date_field_placeholder.get()}
 							onChange={handleInputChange}
 						/>
+					</div>
+				</div>
+
+				<div className="form-item">
+					<span className="label">
+						{Messages.form_date_field_format.get()}
+					</span>
+					<div className="form-content">
+						<select defaultValue={dateFormatType} onChange={(e) => {
+							setDateFormatType(e.target.value);
+							if (e.target.value == "smart_detect") {
+								changeFormData("dateFieldFormat", undefined);
+							}
+						}}>
+							<option value="smart_detect">
+								{Messages.form_date_field_format_type_smart.get()}
+							</option>
+							<option value="manual">
+								{Messages.form_date_field_format_type_manual.get()}
+							</option>
+						</select>
+						{dateFormatType == "manual" ? (
+							<input
+								type="text"
+								defaultValue={formData.dateFieldFormat}
+								name="dateFieldFormat"
+								placeholder={Messages.form_date_field_format_placeholder.get()}
+								onChange={handleInputChange}
+							/>
+						) : null}
 					</div>
 				</div>
 			</div>

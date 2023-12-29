@@ -12,6 +12,7 @@
 	"author": "",
 	"license": "MIT",
 	"devDependencies": {
+		"@types/luxon": "^3.3.7",
 		"@types/node": "^16.11.6",
 		"@types/react": "^18.2.45",
 		"@types/react-dom": "^18.2.18",
@@ -27,6 +28,7 @@
 	"dependencies": {
 		"@types/js-yaml": "^4.0.9",
 		"js-yaml": "^4.1.0",
+		"luxon": "^3.4.4",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0"
 	}

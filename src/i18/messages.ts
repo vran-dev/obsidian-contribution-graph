@@ -61,6 +61,26 @@ export const Messages = {
 		"default is file's create time"
 	),
 
+	form_date_field_format: new Message("日期格式", "Date Field Format"),
+	form_date_field_format_description: new Message(
+		"如果你的日期属性值不是标准的格式，需要指定该字段让系统知道如何识别你的日期格式",
+		"If your date property value is not a standard format, you need to specify this field so that the system knows how to recognize your date format"
+	),
+	form_date_field_format_placeholder: new Message(
+		"比如 yyyy-MM-dd HH:mm:ss",
+		"such as yyyy-MM-dd HH:mm:ss"
+	),
+
+	form_date_field_format_type_smart: new Message(
+		"自动识别",
+		"Auto Detect"
+	),
+
+	form_date_field_format_type_manual: new Message(
+		"指定格式",
+		"Specify Format"
+	),
+
 	form_show_cell_indicators: new Message(
 		"显示单元格指示器",
 		"Show Cell Indicators"

@@ -77,6 +77,7 @@ export class ContributionGraphCreateModal extends Modal {
 				<CreateContributionGraphForm
 					yamlConfig={yamlConfig}
 					onSubmit={onSubmit}
+					app={this.app}
 				/>
 			</StrictMode>
 		);

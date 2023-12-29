@@ -28,7 +28,7 @@ export class ContributionGraphRawProcessor {
 		try {
 			// validate
 			const graphConfig: YamlGraphConfig = this.loadYamlConfig(el, code);
-			this.processYamlGraphConfig(graphConfig, el);
+			this.processYamlGraphConfig(graphConfig, el, app);
 		} catch (e) {
 			if (e instanceof GraphProcessError) {
 				el.innerHTML = e.reason;
@@ -38,7 +38,7 @@ export class ContributionGraphRawProcessor {
 		}
 	}
 
-	processYamlGraphConfig(graphConfig: YamlGraphConfig, el: HTMLElement) {
+	processYamlGraphConfig(graphConfig: YamlGraphConfig, el: HTMLElement, app: App) {
 		try {
 			// validate
 			YamlGraphConfig.validate(graphConfig);
@@ -47,6 +47,7 @@ export class ContributionGraphRawProcessor {
 			const data = new DataviewDataFetcher().fetch(
 				graphConfig.query,
 				graphConfig.dateField,
+				graphConfig.dateFieldFormat,
 				app
 			);
 			const aggregatedData = [];
@@ -103,6 +104,7 @@ export class YamlGraphConfig {
 	fromDate?: string;
 	toDate?: string;
 	dateField?: string;
+	dateFieldFormat?: string;
 	data: Contribution[];
 	startOfWeek: number;
 	cellStyle?: Partial<CSSStyleDeclaration>;
@@ -113,6 +115,7 @@ export class YamlGraphConfig {
 		this.title = "Contributions";
 		this.graphType = "default";
 		this.query = '""';
+		this.dateFieldFormat = "";
 		this.days = 180;
 		this.startOfWeek = isZh() ? 1 : 0;
 		this.showCellRuleIndicators = true;
