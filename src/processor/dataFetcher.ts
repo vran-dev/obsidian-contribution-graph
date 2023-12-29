@@ -106,6 +106,15 @@ export class DataviewDataFetcher {
 	}
 
 	smartParse(page: string, date: string): DateTime | null {
+		if (typeof date !== "string") {
+			console.warn(
+				"can't parse date, it's a valid format? " +
+					date +
+					" in page " +
+					page
+			);
+			return null;
+		}
 		try {
 			let dateTime = DateTime.fromISO(date);
 			if (dateTime.isValid) {
@@ -160,6 +169,16 @@ export class DataviewDataFetcher {
 			return new PageWrapper(dateField, page);
 		} else if (dateFieldFormat) {
 			try {
+				if (typeof dateField !== "string") {
+					return new PageWrapper(
+						null,
+						page,
+						"can't parse date, it's a valid format? " +
+							dateField +
+							" in page " +
+							page.file.name
+					);
+				}
 				return new PageWrapper(
 					DateTime.fromFormat(dateField, dateFieldFormat),
 					page
