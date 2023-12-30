@@ -5,12 +5,12 @@ import {
 	CellStyleRule,
 } from "src/types";
 import { parseDate } from "src/util/dateUtils";
-import { showTips, hideTips } from "src/util/tooltips";
 import {
 	generateByLatestDays,
 	generateByFixedDate,
 } from "./matrixDataGenerator";
 import { matchCellStyleRule } from "src/util/utils";
+import { setTooltip } from "obsidian";
 
 export interface GraphRender {
 	render(container: HTMLElement, graphConfig: ContributionGraphConfig): void;
@@ -76,13 +76,8 @@ export abstract class BaseGraphRender implements GraphRender {
 				cellEl.innerText = rule.text || "";
 
 				// bind tips event
-				cellEl.addEventListener("mouseenter", (event) => {
-					const summary = `${rule.min} ≤ contributions ＜ ${rule.max}`;
-					showTips(event, summary);
-					cellEl.addEventListener("mouseleave", (event) => {
-						hideTips(event);
-					});
-				});
+				const summary = `${rule.min} ≤ contributions ＜ ${rule.max}`;
+				setTooltip(cellEl, summary);
 			});
 		createDiv({
 			cls: "cell text",
@@ -129,12 +124,7 @@ export abstract class BaseGraphRender implements GraphRender {
 		}`;
 		const yearMonthValue = contributionMapByYearMonth.get(yearMonth) || 0;
 		// tips event
-		monthCell.addEventListener("mouseenter", (event) => {
-			showTips(event, `${yearMonthValue} contributions on ${yearMonth}.`);
-		});
-		monthCell.addEventListener("mouseleave", (event) => {
-			hideTips(event);
-		});
+		setTooltip(monthCell, `${yearMonthValue} contributions on ${yearMonth}.`)
 	}
 
 	applyCellGlobalStyle(
@@ -185,10 +175,7 @@ export abstract class BaseGraphRender implements GraphRender {
 			const summary = contributionItem.summary
 				? contributionItem.summary
 				: `${contributionItem.value} contributions on ${contributionItem.date}.`;
-			showTips(event, summary);
-			cellEl.addEventListener("mouseleave", (event) => {
-				hideTips(event);
-			});
+			setTooltip(cellEl, summary)
 		});
 	}
 }
