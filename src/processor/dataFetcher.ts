@@ -4,6 +4,9 @@ import { DataArray, Literal, getAPI } from "obsidian-dataview";
 import { GraphProcessError } from "./graphProcessError";
 import { DateTime } from "luxon";
 
+export const FILE_CTIME_FIELD = "file.ctime";
+export const FILE_MFILE_FIELD = "file.mtime";
+
 export class DataviewDataFetcher {
 	fetch(
 		query: string,
@@ -20,9 +23,15 @@ export class DataviewDataFetcher {
 		}
 		const data: DataArray<Record<string, Literal>> = dv.pages(query);
 		if (dateField) {
-			return this.groupByCustomField(data, dateField, dateFieldFormat);
+			if (dateField == FILE_CTIME_FIELD) {
+				return this.groupByFileTime(data, FILE_CTIME_FIELD);
+			} else if (dateField == FILE_MFILE_FIELD) {
+				return this.groupByFileTime(data, FILE_MFILE_FIELD);
+			} else {
+				return this.groupByCustomField(data, dateField, dateFieldFormat);
+			}
 		} else {
-			return this.groupByFileCTime(data);
+			return this.groupByFileTime(data);
 		}
 	}
 
@@ -63,11 +72,20 @@ export class DataviewDataFetcher {
 		return data.array();
 	}
 
-	groupByFileCTime(data: DataArray<Record<string, Literal>>) {
+	groupByFileTime(data: DataArray<Record<string, Literal>>, type?: string) {
+		const groupFunc = (p: Record<string, Literal>) => {
+			if (type === FILE_MFILE_FIELD) {
+				// @ts-ignore
+				return p.file.mtime.toFormat("yyyy-MM-dd");
+			} else {
+				// @ts-ignore
+				return p.file.ctime.toFormat("yyyy-MM-dd");
+			}
+		};
 		return (
 			data
 				// @ts-ignore
-				.groupBy((p) => p.file.ctime.toFormat("yyyy-MM-dd"))
+				.groupBy((p) => groupFunc(p))
 				.map((entry) => {
 					return {
 						date: entry.key,
@@ -122,9 +140,9 @@ export class DataviewDataFetcher {
 		if (typeof date !== "string") {
 			console.warn(
 				"can't parse date, it's a valid format? " +
-					date +
-					" in page " +
-					page
+				date +
+				" in page " +
+				page
 			);
 			return null;
 		}
@@ -164,9 +182,9 @@ export class DataviewDataFetcher {
 		} catch (e) {
 			console.warn(
 				"can't parse date, it's a valid format? " +
-					date +
-					" in page " +
-					page
+				date +
+				" in page " +
+				page
 			);
 		}
 		return null;
