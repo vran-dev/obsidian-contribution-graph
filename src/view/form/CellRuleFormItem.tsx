@@ -15,6 +15,7 @@ export function CellRuleItem(props: {
 
 	return (
 		<div className="form-item">
+			<div className="form-content">
 			<button
 				className="cell-rule-remove-button"
 				//@ts-ignore
@@ -53,6 +54,7 @@ export function CellRuleItem(props: {
 				className="cell-rule-text"
 				onChange={(e) => changeRule("text", e.target.value)}
 			/>
+			</div>
 		</div>
 	);
 }

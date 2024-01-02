@@ -62,6 +62,10 @@ export const Messages = {
 	),
 
 	form_date_field_format: new Message("日期格式", "Date Field Format"),
+	form_date_field_format_sample: new Message(
+		"示例值",
+		"Sample"
+	),
 	form_date_field_format_description: new Message(
 		"如果你的日期属性值不是标准的格式，需要指定该字段让系统知道如何识别你的日期格式",
 		"If your date property value is not a standard format, you need to specify this field so that the system knows how to recognize your date format"

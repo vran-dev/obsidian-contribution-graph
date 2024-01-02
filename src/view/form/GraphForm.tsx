@@ -10,6 +10,7 @@ import { Divider } from "../divider/Divider";
 import { THEMES } from "./GraphTheme";
 import { Messages, isZh } from "src/i18/messages";
 import { App } from "obsidian";
+import { DateTime } from "luxon";
 
 export function CreateContributionGraphForm(props: {
 	yamlConfig: YamlGraphConfig;
@@ -115,7 +116,7 @@ export function CreateContributionGraphForm(props: {
 							onChange={handleInputChange}
 							style={{
 								...formData.titleStyle,
-								fontSize: 'inherits',
+								fontSize: "inherits",
 								fontWeight:
 									formData.titleStyle?.fontWeight || "normal",
 								// @ts-ignore
@@ -292,13 +293,19 @@ export function CreateContributionGraphForm(props: {
 					<span className="label">
 						{Messages.form_date_field_format.get()}
 					</span>
-					<div className="form-content">
-						<select defaultValue={dateFormatType} onChange={(e) => {
-							setDateFormatType(e.target.value);
-							if (e.target.value == "smart_detect") {
-								changeFormData("dateFieldFormat", undefined);
-							}
-						}}>
+					<div className="form-vertical-content">
+						<select
+							defaultValue={dateFormatType}
+							onChange={(e) => {
+								setDateFormatType(e.target.value);
+								if (e.target.value == "smart_detect") {
+									changeFormData(
+										"dateFieldFormat",
+										undefined
+									);
+								}
+							}}
+						>
 							<option value="smart_detect">
 								{Messages.form_date_field_format_type_smart.get()}
 							</option>
@@ -307,13 +314,31 @@ export function CreateContributionGraphForm(props: {
 							</option>
 						</select>
 						{dateFormatType == "manual" ? (
-							<input
-								type="text"
-								defaultValue={formData.dateFieldFormat}
-								name="dateFieldFormat"
-								placeholder={Messages.form_date_field_format_placeholder.get()}
-								onChange={handleInputChange}
-							/>
+							<>
+								<input
+									type="text"
+									defaultValue={formData.dateFieldFormat}
+									name="dateFieldFormat"
+									placeholder={Messages.form_date_field_format_placeholder.get()}
+									onChange={handleInputChange}
+								/>
+
+								<div className="form-description">
+									<a href="https://moment.github.io/luxon/#/formatting?id=table-of-tokens">
+										Luxon Format
+									</a>
+									{" " +
+										Messages.form_date_field_format_sample.get()}
+									:
+									{" " +
+										DateTime.fromJSDate(
+											new Date("2024-01-01 00:00:00")
+										).toFormat(
+											formData.dateFieldFormat ||
+												"yyyy-MM-dd'T'HH:mm:ss"
+										)}
+								</div>
+							</>
 						) : null}
 					</div>
 				</div>
