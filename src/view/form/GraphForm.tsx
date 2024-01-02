@@ -10,6 +10,7 @@ import { Divider } from "../divider/Divider";
 import { THEMES } from "./GraphTheme";
 import { Messages, isZh } from "src/i18/messages";
 import { App } from "obsidian";
+import { inherits } from "util";
 
 export function CreateContributionGraphForm(props: {
 	yamlConfig: YamlGraphConfig;
@@ -115,6 +116,7 @@ export function CreateContributionGraphForm(props: {
 							onChange={handleInputChange}
 							style={{
 								...formData.titleStyle,
+								fontSize: 'inherits',
 								fontWeight:
 									formData.titleStyle?.fontWeight || "normal",
 								// @ts-ignore
