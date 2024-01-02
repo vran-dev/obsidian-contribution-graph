@@ -25,21 +25,48 @@ export class Renders {
 		} else {
 			this.renderErrorTips(
 				container,
-				`
-Not Support graph type - ${graphConfig.graphType}.
-please set graphType to one of ${Renders.renders
-					.map((r) => r.graphType())
-					.join(", ")}
-`
+				`invalid graphType "${graphConfig.graphType}"`,
+				[
+					`please set graphType to one of ${Renders.renders
+						.map((r) => r.graphType())
+						.join(", ")}`
+				]
 			);
 		}
 	}
 
-	static renderErrorTips(container: HTMLElement, message: string): void {
-		const errorContainer = createDiv({
+	static renderErrorTips(container: HTMLElement, summary: string, recommends?: string[]): void {
+		container.empty();
+		const errDiv = createDiv({
 			cls: "contribution-graph-render-error-container",
-			parent: container,
+			parent: container
 		});
-		errorContainer.innerHTML = message;
+
+		createEl("p", {
+			text: summary,
+			cls: "summary",
+			parent: errDiv
+		})
+
+		if (recommends) {
+			recommends.forEach(r => {
+				createEl("p", {
+					text: r,
+					cls: "recommend",
+					parent: errDiv
+				})
+			})
+		}
+
+	}
+
+	static renderError(container: HTMLElement, {
+		summary,
+		recommends
+	}: {
+		summary: string,
+		recommends?: string[]
+	}): void {
+		Renders.renderErrorTips(container, summary, recommends)
 	}
 }

@@ -31,9 +31,10 @@ export class ContributionGraphRawProcessor {
 			this.processYamlGraphConfig(graphConfig, el, app);
 		} catch (e) {
 			if (e instanceof GraphProcessError) {
-				el.innerHTML = e.reason;
+				Renders.renderErrorTips(el, e.summary, e.recommends);
 			} else {
-				el.innerHTML = "unexpected error: <pre>" + e.message + "</pre>";
+				const notice = "unexpected error: " + e.message;
+				Renders.renderErrorTips(el, notice);
 			}
 		}
 	}
@@ -64,9 +65,10 @@ export class ContributionGraphRawProcessor {
 			);
 		} catch (e) {
 			if (e instanceof GraphProcessError) {
-				el.innerHTML = e.reason;
+				Renders.renderErrorTips(el, e.summary, e.recommends);
 			} else {
-				el.innerHTML = "unexpected error: <pre>" + e.message + "</pre>";
+				const notice = "unexpected error: " + e.message;
+				Renders.renderErrorTips(el, notice);
 			}
 		}
 	}
@@ -82,13 +84,17 @@ export class ContributionGraphRawProcessor {
 		} catch (e) {
 			if (e.mark?.line) {
 				throw new GraphProcessError(
-					"yaml parse error at line " +
-						(e.mark.line + 1) +
-						", please check the format"
+					{
+						summary: "yaml parse error at line " +
+							(e.mark.line + 1) +
+							", please check the format"
+					}
 				);
 			} else {
 				throw new GraphProcessError(
-					"content parse error, please check the format(such as blank, indent)"
+					{
+						summary: "content parse error, please check the format(such as blank, indent)"
+					}
 				);
 			}
 		}

@@ -19,7 +19,9 @@ export class DataviewDataFetcher {
 		}
 		const dv = getAPI(app);
 		if (!dv) {
-			throw new GraphProcessError("Dataview query not available");
+			throw new GraphProcessError({
+				summary: "Dataview query not available"
+			});
 		}
 		const data: DataArray<Record<string, Literal>> = dv.pages(query);
 		if (dateField) {
@@ -49,7 +51,7 @@ export class DataviewDataFetcher {
 				if (wrapper.date == null) {
 					convertFailedPages.push({
 						page: wrapper.page.file.name,
-						reason:
+						summary:
 							"can't find field " + dateFieldName + " in page",
 					});
 					return false;
@@ -193,7 +195,7 @@ export class DataviewDataFetcher {
 
 export class ConvertFail {
 	page: string;
-	reason: string;
+	summary: string;
 }
 
 class PageWrapper {

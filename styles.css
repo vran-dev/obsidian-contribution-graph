@@ -264,13 +264,18 @@
 /* default error tips */
 .contribution-graph-render-error-container {
 	background-color: var(--background-secondary);
-	text-align: center;
 	padding: 6px;
 	min-height: 12px;
 	border-radius: 6px;
 }
 
-.contribution-graph-render-error-container pre {
+.contribution-graph-render-error-container .summary {
+	text-align: left;
+	color: var(--text-error);
+	font-size: var(--font-ui-larger);
+}
+
+.contribution-graph-render-error-container .recommend {
 	text-align: left;
 }
 

@@ -88,7 +88,7 @@ export function CreateContributionGraphForm(props: {
 
 	const onPreview = () => {
 		if (previewContainerRef.current) {
-			previewContainerRef.current.innerHTML = "";
+			previewContainerRef.current.empty();
 			const processor = new ContributionGraphRawProcessor();
 			// copy new instance
 			const copiedFormData = JSON.parse(JSON.stringify(formData));

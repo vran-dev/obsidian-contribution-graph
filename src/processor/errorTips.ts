@@ -1,8 +1,8 @@
-function errorTipsHtmlTemplate(title: string, codes: string[]) {
-	return `
-<p>${title}<p>
-${codes.map((code) => `<pre>${code}</pre>`).join("<br>")}
-	`;
+function errorTipsHtmlTemplate(title: string, recommends: string[]) {
+	return  {
+		summary: title,
+		recommends: recommends
+	}
 }
 
 export const MISS_CONFIG = (invalidValue?: string | number | boolean) =>

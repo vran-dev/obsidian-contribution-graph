@@ -1,6 +1,9 @@
 export class GraphProcessError {
-	reason: string;
-	constructor(reason: string) {
-		this.reason = reason;
+	summary: string;
+	recommends?: string[];
+
+	constructor({ summary, recommends }: { summary: string, recommends?: string[] }) {
+		this.summary = summary;
+		this.recommends = recommends || [];
 	}
 }

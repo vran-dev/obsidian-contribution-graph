@@ -55,7 +55,7 @@ export default class ContributionGraph extends Plugin {
 
 	registerContributionGraphCreateCommand() {
 		this.addCommand({
-			id: "contribution-graph-create-command",
+			id: "create-graph",
 			name: Messages.context_menu_create.get(),
 			editorCallback: (
 				editor: Editor,
