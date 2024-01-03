@@ -91,7 +91,7 @@ export const Messages = {
 	),
 	form_cell_shape: new Message("单元格形状", "Cell Shape"),
 	form_cell_shape_circle: new Message("圆形", "Circle"),
-	form_cell_shape_square: new Message("方形", "Square"),
+	form_cell_shape_square: new Message("方块", "Square"),
 	form_cell_shape_rounded: new Message("圆角", "Rounded"),
 	form_theme: new Message("主题", "Theme"),
 	form_theme_placeholder: new Message(
