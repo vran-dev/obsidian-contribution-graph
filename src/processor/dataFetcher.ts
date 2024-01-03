@@ -180,7 +180,7 @@ export class DataviewDataFetcher {
 			if (dateTime.isValid) {
 				return dateTime;
 			}
-			dateTime = DateTime.fromFormat(date, "yyyy-MM-ddTHH:mm");
+			dateTime = DateTime.fromFormat(date, "yyyy-MM-dd'T'HH:mm");
 			if (dateTime.isValid) {
 				return dateTime;
 			}
