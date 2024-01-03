@@ -11,6 +11,10 @@ import { THEMES } from "./GraphTheme";
 import { Messages, isZh } from "src/i18/messages";
 import { App } from "obsidian";
 import { DateTime } from "luxon";
+import { SuggestInput } from "../suggest/SuggestInput";
+import { getAllProperties } from "src/util/page";
+import { randomUUID } from "crypto";
+import { Icons } from "../icon/Icons";
 
 export function CreateContributionGraphForm(props: {
 	yamlConfig: YamlGraphConfig;
@@ -279,12 +283,28 @@ export function CreateContributionGraphForm(props: {
 						{Messages.form_date_field.get()}
 					</span>
 					<div className="form-content">
-						<input
-							type="text"
-							defaultValue={formData.dateField}
-							name="dateField"
-							placeholder={Messages.form_date_field_placeholder.get()}
-							onChange={handleInputChange}
+						<SuggestInput
+							defaultInputValue={formData.dateField}
+							onInputChange={(newValue) => {
+								changeFormData("dateField", newValue);
+							}}
+							inputPlaceholder={Messages.form_date_field_placeholder.get()}
+							getItems={(query) => {
+								return getAllProperties(query, props.app).map(
+									(p, index) => {
+										return {
+											id: randomUUID(),
+											value: p.name,
+											label: p.name,
+											icon: Icons.CODE,
+											description: p.sampleValue || "",
+										};
+									}
+								);
+							}}
+							onSelected={(item) => {
+								changeFormData("dateField", item.value);
+							}}
 						/>
 					</div>
 				</div>
@@ -469,68 +489,17 @@ export class SelectOption {
 const titleAlignChooseOptions: ChooseOption[] = [
 	{
 		tip: "left",
-		icon: (
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				strokeWidth="2"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				className="svg-icon lucide lucide-align-left"
-			>
-				<line x1="21" x2="3" y1="6" y2="6" />
-				<line x1="15" x2="3" y1="12" y2="12" />
-				<line x1="17" x2="3" y1="18" y2="18" />
-			</svg>
-		),
+		icon: Icons.ALIGN_LEFT,
 		value: "left",
 	},
 	{
 		tip: "center",
-		icon: (
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				strokeWidth="2"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				className="svg-icon lucide lucide-align-center"
-			>
-				<line x1="21" x2="3" y1="6" y2="6" />
-				<line x1="17" x2="7" y1="12" y2="12" />
-				<line x1="19" x2="5" y1="18" y2="18" />
-			</svg>
-		),
+		icon: Icons.ALIGN_CENTER,
 		value: "center",
 	},
 	{
 		tip: "right",
-		icon: (
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				strokeWidth="2"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				className="svg-icon lucide lucide-align-right"
-			>
-				<line x1="21" x2="3" y1="6" y2="6" />
-				<line x1="21" x2="9" y1="12" y2="12" />
-				<line x1="21" x2="7" y1="18" y2="18" />
-			</svg>
-		),
+		icon: Icons.ALIGN_RIGHT,
 		value: "right",
 	},
 ];
