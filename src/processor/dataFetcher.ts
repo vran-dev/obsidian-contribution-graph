@@ -20,7 +20,10 @@ export class DataviewDataFetcher {
 		const dv = getAPI(app);
 		if (!dv) {
 			throw new GraphProcessError({
-				summary: "Dataview query not available"
+				summary: "Initialize Dataview failed",
+				recommends: [
+					"Please install Dataview plugin",
+				]
 			});
 		}
 		const data: DataArray<Record<string, Literal>> = dv.pages(query);
