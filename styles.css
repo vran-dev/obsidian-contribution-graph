@@ -622,4 +622,6 @@
 .suggest-container .suggest-item .suggest-content .suggest-description {
 	color: var(--text-muted);
 	font-size: var(--font-smaller);
+  overflow-wrap: break-word;
+  word-break: break-all
 }
