@@ -1,5 +1,4 @@
 import { App, MarkdownPostProcessorContext } from "obsidian";
-import { DataviewDataFetcher } from "./dataFetcher";
 import { load } from "js-yaml";
 import { Renders } from "src/render/renders";
 import {
@@ -17,8 +16,13 @@ import {
 } from "./errorTips";
 import { GraphProcessError } from "./graphProcessError";
 import { isZh } from "src/i18/messages";
+import { CompositeDataSourceQuery } from "src/query/compositeDataSourceQuery";
+import { DataSource } from "src/query/types";
 
 export class ContributionGraphRawProcessor {
+
+	dataSourceQuery: CompositeDataSourceQuery = new CompositeDataSourceQuery();
+
 	processCodeblock(
 		code: string,
 		el: HTMLElement,
@@ -44,13 +48,16 @@ export class ContributionGraphRawProcessor {
 			// validate
 			YamlGraphConfig.validate(graphConfig);
 
-			// fetch data
-			const data = new DataviewDataFetcher().fetch(
-				graphConfig.query,
-				graphConfig.dateField,
-				graphConfig.dateFieldFormat,
-				app
-			);
+			const dataSource = {
+				type: "PAGE",
+				value: graphConfig.query,
+				dateField: {
+					value: graphConfig.dateField,
+					format: graphConfig.dateFieldFormat
+				}
+			} as DataSource
+			const data = this.dataSourceQuery.query(dataSource, app)
+
 			const aggregatedData = [];
 			if (graphConfig.data) {
 				aggregatedData.push(...graphConfig.data);

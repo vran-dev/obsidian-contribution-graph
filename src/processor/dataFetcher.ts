@@ -5,7 +5,8 @@ import { GraphProcessError } from "./graphProcessError";
 import { DateTime } from "luxon";
 
 export const FILE_CTIME_FIELD = "file.ctime";
-export const FILE_MFILE_FIELD = "file.mtime";
+export const FILE_MTIME_FIELD = "file.mtime";
+export const FILE_NAME = "file.name";
 
 export class DataviewDataFetcher {
 	fetch(
@@ -30,8 +31,8 @@ export class DataviewDataFetcher {
 		if (dateField) {
 			if (dateField == FILE_CTIME_FIELD) {
 				return this.groupByFileTime(data, FILE_CTIME_FIELD);
-			} else if (dateField == FILE_MFILE_FIELD) {
-				return this.groupByFileTime(data, FILE_MFILE_FIELD);
+			} else if (dateField == FILE_MTIME_FIELD) {
+				return this.groupByFileTime(data, FILE_MTIME_FIELD);
 			} else {
 				return this.groupByCustomField(data, dateField, dateFieldFormat);
 			}
@@ -79,12 +80,15 @@ export class DataviewDataFetcher {
 
 	groupByFileTime(data: DataArray<Record<string, Literal>>, type?: string) {
 		const groupFunc = (p: Record<string, Literal>) => {
-			if (type === FILE_MFILE_FIELD) {
+			if (type === FILE_MTIME_FIELD) {
 				// @ts-ignore
 				return p.file.mtime.toFormat("yyyy-MM-dd");
-			} else {
+			} else if (type === FILE_CTIME_FIELD) {
 				// @ts-ignore
 				return p.file.ctime.toFormat("yyyy-MM-dd");
+			} else {
+				// @ts-ignore
+				return this.toDateTime(p, p.file.name)?.toFormat("yyyy-MM-dd");
 			}
 		};
 		return (
