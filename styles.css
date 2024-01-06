@@ -625,3 +625,70 @@
   overflow-wrap: break-word;
   word-break: break-all
 }
+
+
+.suggest-input-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: flex-start;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.suggest-input-tags .tags {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.suggest-input-tags input.input {
+  width: 100%;
+  flex-grow: 1;
+}
+
+.suggest-input-tags input::placeholder {
+  color: var(--text-faint);
+  font-size: var(--font-ui-smaller);
+}
+
+.suggest-input-tags .tags .tag {
+  border-radius: var(--tag-radius);
+  padding-top: var(--tag-padding-y);
+  padding-bottom: var(--tag-padding-y);
+  padding-right: var(--tag-padding-x);
+  padding-left: var(--tag-padding-x);
+  font-size: var(--font-ui-smaller);
+  color: var(--tag-color);
+  background-color: var(--tag-background);
+  border: var(--tag-border-width) solid var(--tag-border-color);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.suggest-input-tags .tags .tag .icon {
+  width: 12px;
+  height: 12px;
+}
+
+.suggest-input-tags .tags .tag .icon .lucide {
+  width: 100%;
+  height: 100%;
+}
+
+.suggest-input-tags .tags .tag:hover {
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.suggest-input-tags .tags .tag .remove-button {
+  min-width: 24px;
+  text-align: center;
+}
+
+.suggest-input-tags .tags .tag .remove-button:hover {
+  color: var(--text-normal);
+}

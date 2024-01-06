@@ -1,111 +1,26 @@
-import { App, MarkdownPostProcessorContext } from "obsidian";
-import { DataviewDataFetcher } from "./dataFetcher";
-import { load } from "js-yaml";
-import { Renders } from "src/render/renders";
+import { isZh } from "src/i18/messages";
+import { DataSource } from "src/query/types";
 import {
-	CellStyleRule,
 	Contribution,
+	CellStyleRule,
 	ContributionGraphConfig,
 } from "src/types";
 import {
-	INVALID_DATE_FORMAT,
-	INVALID_GRAPH_TYPE,
-	INVALID_START_OF_WEEK,
 	MISS_CONFIG,
+	MISS_DATASOURCE_OR_DATA,
+	INVALID_GRAPH_TYPE,
 	MISS_DAYS_OR_RANGE_DATE,
-	MISS_QUERY_OR_DATA,
-} from "./errorTips";
+	INVALID_DATE_FORMAT,
+	INVALID_START_OF_WEEK,
+} from "./bizErrors";
 import { GraphProcessError } from "./graphProcessError";
-import { isZh } from "src/i18/messages";
-
-export class ContributionGraphRawProcessor {
-	processCodeblock(
-		code: string,
-		el: HTMLElement,
-		ctx: MarkdownPostProcessorContext,
-		app: App
-	) {
-		try {
-			// validate
-			const graphConfig: YamlGraphConfig = this.loadYamlConfig(el, code);
-			this.processYamlGraphConfig(graphConfig, el, app);
-		} catch (e) {
-			if (e instanceof GraphProcessError) {
-				Renders.renderErrorTips(el, e.summary, e.recommends);
-			} else {
-				const notice = "unexpected error: " + e.message;
-				Renders.renderErrorTips(el, notice);
-			}
-		}
-	}
-
-	processYamlGraphConfig(graphConfig: YamlGraphConfig, el: HTMLElement, app: App) {
-		try {
-			// validate
-			YamlGraphConfig.validate(graphConfig);
-
-			// fetch data
-			const data = new DataviewDataFetcher().fetch(
-				graphConfig.query,
-				graphConfig.dateField,
-				graphConfig.dateFieldFormat,
-				app
-			);
-			const aggregatedData = [];
-			if (graphConfig.data) {
-				aggregatedData.push(...graphConfig.data);
-			}
-			aggregatedData.push(...data);
-			graphConfig.data = aggregatedData;
-
-			// render
-			Renders.render(
-				el,
-				YamlGraphConfig.toContributionGraphConfig(graphConfig)
-			);
-		} catch (e) {
-			if (e instanceof GraphProcessError) {
-				Renders.renderErrorTips(el, e.summary, e.recommends);
-			} else {
-				const notice = "unexpected error: " + e.message;
-				Renders.renderErrorTips(el, notice);
-			}
-		}
-	}
-
-	loadYamlConfig(el: HTMLElement, code: string): YamlGraphConfig {
-		if (code == null || code.trim() == "") {
-			throw new GraphProcessError(MISS_CONFIG());
-		}
-
-		try {
-			// @ts-ignore
-			return load(code);
-		} catch (e) {
-			if (e.mark?.line) {
-				throw new GraphProcessError(
-					{
-						summary: "yaml parse error at line " +
-							(e.mark.line + 1) +
-							", please check the format"
-					}
-				);
-			} else {
-				throw new GraphProcessError(
-					{
-						summary: "content parse error, please check the format(such as blank, indent)"
-					}
-				);
-			}
-		}
-	}
-}
 
 export class YamlGraphConfig {
 	title?: string;
 	titleStyle: Partial<CSSStyleDeclaration>;
 	graphType: string;
-	query: string;
+	query?: string;
+	dataSource: DataSource;
 	days?: number;
 	fromDate?: string;
 	toDate?: string;
@@ -120,8 +35,6 @@ export class YamlGraphConfig {
 	constructor() {
 		this.title = "Contributions";
 		this.graphType = "default";
-		this.query = '""';
-		this.dateFieldFormat = "";
 		this.days = 180;
 		this.startOfWeek = isZh() ? 1 : 0;
 		this.showCellRuleIndicators = true;
@@ -130,6 +43,16 @@ export class YamlGraphConfig {
 			fontSize: "1.5em",
 			fontWeight: "normal",
 		};
+		this.dataSource = {
+			type: "PAGE",
+			value: "",
+			dateField: {},
+		} as DataSource;
+
+		// deprecated
+		this.query = undefined;
+		this.dateFieldFormat = undefined;
+		this.dateField = undefined;
 	}
 
 	static toContributionGraphConfig(
@@ -145,8 +68,8 @@ export class YamlGraphConfig {
 		if (!config) {
 			throw new GraphProcessError(MISS_CONFIG());
 		}
-		if (!config.query && !config.data) {
-			throw new GraphProcessError(MISS_QUERY_OR_DATA());
+		if (!config.dataSource && !config.data) {
+			throw new GraphProcessError(MISS_DATASOURCE_OR_DATA());
 		}
 
 		if (config.graphType) {

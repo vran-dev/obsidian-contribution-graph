@@ -1,26 +1,35 @@
 function errorTipsHtmlTemplate(title: string, recommends: string[]) {
-	return  {
+	return {
 		summary: title,
-		recommends: recommends
-	}
+		recommends: recommends,
+	};
 }
 
 export const MISS_CONFIG = (invalidValue?: string | number | boolean) =>
 	errorTipsHtmlTemplate("Empty Graph, please add config, for example", [
 		`title: 'Contributions'
 days: 365
-query: '#tag'`,
+dataSource: '#tag' # means all notes with tag 'tag'
+  type: "page" # or "task"
+  value: '""' # means all notes in folder`,
 	]);
 
-export const MISS_QUERY_OR_DATA = (invalidValue?: string | number | boolean) =>
-	errorTipsHtmlTemplate("please set query or data property, for example", [
-		`query: '#tag' # means all notes with tag 'tag'
+export const MISS_DATASOURCE_OR_DATA = (invalidValue?: string | number | boolean) =>
+	errorTipsHtmlTemplate(
+		"please set dataSource or data property, for example",
+		[
+			`dataSource: '#tag' # means all notes with tag 'tag'
+  type: "page" # or "task"
+  value: '""' # means all notes
 days: 365`,
 
-		`query: '#tag and "folder"' # means all notes with tag 'tag' and in folder 'folder', folder should surrounded by quotes
+			`dataSource: '#tag and "folder"' # means all notes with tag 'tag' and in folder 'folder', folder should surrounded by quotes
+  type: "page" # or "task"
+	value: '""' # means all notes
 fromDate: '2023-01-01' 
-toDate: '2023-12-31'  `
-	]);
+toDate: '2023-12-31'  `,
+		]
+	);
 
 export const INVALID_GRAPH_TYPE = (invalidValue?: string | number | boolean) =>
 	errorTipsHtmlTemplate(
@@ -28,15 +37,9 @@ export const INVALID_GRAPH_TYPE = (invalidValue?: string | number | boolean) =>
 		[
 			`graphType: 'default'
 days: 365
-query: '#project' `,
-
-			`graphType: 'month-track'
-days: 365
-query: '#project' `,
-
-			`graphType: 'calendar'
-days: 365
-query: '#project' `,
+dataSource: '#tag' # means all notes with tag 'tag'
+  type: "page" # or "task"
+  value: '""' # means all notes in folde `,
 		]
 	);
 
@@ -47,11 +50,15 @@ export const MISS_DAYS_OR_RANGE_DATE = (
 		"please set days or fromDate and toDate property, for example",
 		[
 			`days: 365
-query: '#project' `,
+dataSource: '#tag' # means all notes with tag 'tag'
+  type: "page" # or "task"
+  value: '""' # means all notes in folde `,
 
 			`fromDate: '2023-01-01'
 toDate: '2023-12-31'
-query: '#project'`,
+dataSource: '#tag' # means all notes with tag 'tag'
+  type: "page" # or "task"
+  value: '""' # means all notes in folde`,
 		]
 	);
 

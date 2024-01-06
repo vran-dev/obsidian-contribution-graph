@@ -48,7 +48,15 @@ export const Messages = {
 	form_date_range_start_date: new Message("开始日期", "Start Date"),
 
 	form_start_of_week: new Message("每周开始于", "Start of Week"),
-	form_query: new Message("查询", "Query"),
+	form_data_source_value: new Message("来源", "Source"),
+	form_data_source_filter_label: new Message("筛选", "Filter"),
+
+	form_datasource_filter_task_none: new Message("无", "None"),
+	form_datasource_filter_task_completed: new Message("已完成（不包含子任务）", "Completed"),
+	form_datasource_filter_task_fully_completed: new Message("已完成（包含子任务）", "Fully completed"),
+	form_datasource_filter_contains_tag: new Message("包含任意一个标签", "Contains Any Tag"),
+	form_datasource_filter_contains_tag_input_placeholder: new Message("请输入标签，比如 #todo", "Please input tag, such as #todo"),
+	form_datasource_filter_customize: new Message("自定义", "Customize"),
 
 	form_query_placeholder: new Message(
 		'比如 #tag 或 "folder"',
@@ -93,6 +101,11 @@ export const Messages = {
 	form_cell_shape_circle: new Message("圆形", "Circle"),
 	form_cell_shape_square: new Message("方块", "Square"),
 	form_cell_shape_rounded: new Message("圆角", "Rounded"),
+
+	form_datasource_type_page: new Message("页面", "Page"),
+	form_datasource_type_all_task: new Message("所有任务", "All Task"),
+	form_datasource_type_task_in_specific_page: new Message("指定页面中的任务", "Task in Specific Page"),
+
 	form_theme: new Message("主题", "Theme"),
 	form_theme_placeholder: new Message(
 		"选择主题或自定义样式",
