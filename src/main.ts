@@ -1,7 +1,7 @@
 import { Editor, MarkdownFileInfo, MarkdownView, Plugin } from "obsidian";
 import { ContributionGraphConfig } from "./types";
 import { Renders } from "./render/renders";
-import { ContributionGraphRawProcessor } from "./processor/contributionGraphCodeBlockProcessor";
+import { CodeBlockProcessor } from "./processor/codeBlockProcessor";
 import { ContributionGraphCreateModal } from "./view/form/GraphFormModal";
 import { mountEditButtonToCodeblock } from "./view/codeblock/CodeblockEditButtonMount";
 import { Messages } from "./i18/messages";
@@ -44,8 +44,8 @@ export default class ContributionGraph extends Plugin {
 		this.registerMarkdownCodeBlockProcessor(
 			"contributionGraph",
 			(code, el, ctx) => {
-				const processor = new ContributionGraphRawProcessor();
-				processor.processCodeblock(code, el, ctx, this.app);
+				const processor = new CodeBlockProcessor();
+				processor.renderFromCodeBlock(code, el, ctx, this.app);
 				if (el.parentElement) {
 					mountEditButtonToCodeblock(code, el.parentElement);
 				}

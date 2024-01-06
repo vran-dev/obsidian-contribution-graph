@@ -50,7 +50,7 @@ export class Renders {
 
 		if (recommends) {
 			recommends.forEach(r => {
-				createEl("p", {
+				createEl("pre", {
 					text: r,
 					cls: "recommend",
 					parent: errDiv

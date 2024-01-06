@@ -2,8 +2,9 @@ import { Modal, App, MarkdownView } from "obsidian";
 import { StrictMode } from "react";
 import { Root, createRoot } from "react-dom/client";
 import { dump, load } from "js-yaml";
-import { YamlGraphConfig } from "src/processor/contributionGraphCodeBlockProcessor";
 import { CreateContributionGraphForm } from "./GraphForm";
+import { DataSource } from "src/query/types";
+import { YamlGraphConfig } from "src/processor/types";
 
 export class ContributionGraphCreateModal extends Modal {
 	root: Root | null = null;
@@ -69,6 +70,18 @@ export class ContributionGraphCreateModal extends Modal {
 					editor.replaceSelection(codeblock);
 				}
 			};
+		}
+
+		if (!yamlConfig.dataSource) {
+			yamlConfig.dataSource = {
+				type: "PAGE",
+				value: yamlConfig.query,
+				dateField: {
+					value: yamlConfig.dateField,
+					format: yamlConfig.dateFieldFormat,
+				},
+				filter: {},
+			} as DataSource;
 		}
 
 		this.root = createRoot(rootContainer);

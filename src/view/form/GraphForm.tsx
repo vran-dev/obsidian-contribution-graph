@@ -1,20 +1,21 @@
 import { useRef, useState } from "react";
-import {
-	YamlGraphConfig,
-	ContributionGraphRawProcessor,
-} from "src/processor/contributionGraphCodeBlockProcessor";
+import { CodeBlockProcessor } from "src/processor/codeBlockProcessor";
 import { CellStyleRule } from "src/types";
-import { Choose, ChooseOption } from "./Choose";
+import { Choose } from "../choose/Choose";
 import { CellRuleItem } from "./CellRuleFormItem";
 import { Divider } from "../divider/Divider";
 import { THEMES } from "./GraphTheme";
-import { Messages, isZh } from "src/i18/messages";
+import { Messages } from "src/i18/messages";
 import { App } from "obsidian";
-import { DateTime } from "luxon";
-import { SuggestInput } from "../suggest/SuggestInput";
-import { getAllProperties } from "src/util/page";
-import { randomUUID } from "crypto";
-import { Icons } from "../icon/Icons";
+
+import {
+	cellShapes,
+	titleAlignChooseOptions,
+	graphOptions,
+	startOfWeekOptions,
+} from "./options";
+import { DataSourceFormItem } from "./DataSourceFormItem";
+import { YamlGraphConfig } from "src/processor/types";
 
 export function CreateContributionGraphForm(props: {
 	yamlConfig: YamlGraphConfig;
@@ -23,9 +24,7 @@ export function CreateContributionGraphForm(props: {
 }): JSX.Element {
 	const { yamlConfig } = props;
 	const previewContainerRef = useRef<HTMLDivElement>(null);
-	const [dateFormatType, setDateFormatType] = useState(
-		yamlConfig.dateFieldFormat ? "manual" : "smart_detect"
-	);
+
 	const [isLatestDate, setIsLatestDate] = useState(
 		yamlConfig.days !== undefined ||
 			(!yamlConfig.fromDate && !yamlConfig.toDate)
@@ -93,11 +92,11 @@ export function CreateContributionGraphForm(props: {
 	const onPreview = () => {
 		if (previewContainerRef.current) {
 			previewContainerRef.current.empty();
-			const processor = new ContributionGraphRawProcessor();
+			const processor = new CodeBlockProcessor();
 			// copy new instance
 			const copiedFormData = JSON.parse(JSON.stringify(formData));
 			copiedFormData.cellStyleRules = cellRules;
-			processor.processYamlGraphConfig(
+			processor.renderFromYaml(
 				copiedFormData,
 				previewContainerRef.current!,
 				props.app
@@ -249,7 +248,7 @@ export function CreateContributionGraphForm(props: {
 										? formData.startOfWeek
 										: startOfWeekOptions.find(
 												(p) => p.selected
-										  )?.value
+										)?.value
 								}
 								onChange={handleInputChange}
 							>
@@ -265,103 +264,14 @@ export function CreateContributionGraphForm(props: {
 						</div>
 					</div>
 				)}
-				<div className="form-item">
-					<span className="label">{Messages.form_query.get()}</span>
-					<div className="form-content">
-						<input
-							name="query"
-							type="text"
-							defaultValue={formData.query}
-							placeholder={Messages.form_query_placeholder.get()}
-							onChange={handleInputChange}
-						/>
-					</div>
-				</div>
 
-				<div className="form-item">
-					<span className="label">
-						{Messages.form_date_field.get()}
-					</span>
-					<div className="form-content">
-						<SuggestInput
-							defaultInputValue={formData.dateField}
-							onInputChange={(newValue) => {
-								changeFormData("dateField", newValue);
-							}}
-							inputPlaceholder={Messages.form_date_field_placeholder.get()}
-							getItems={(query) => {
-								return getAllProperties(query, props.app).map(
-									(p, index) => {
-										return {
-											id: randomUUID(),
-											value: p.name,
-											label: p.name,
-											icon: Icons.CODE,
-											description: p.sampleValue || "",
-										};
-									}
-								);
-							}}
-							onSelected={(item) => {
-								changeFormData("dateField", item.value);
-							}}
-						/>
-					</div>
-				</div>
-
-				<div className="form-item">
-					<span className="label">
-						{Messages.form_date_field_format.get()}
-					</span>
-					<div className="form-vertical-content">
-						<select
-							defaultValue={dateFormatType}
-							onChange={(e) => {
-								setDateFormatType(e.target.value);
-								if (e.target.value == "smart_detect") {
-									changeFormData(
-										"dateFieldFormat",
-										undefined
-									);
-								}
-							}}
-						>
-							<option value="smart_detect">
-								{Messages.form_date_field_format_type_smart.get()}
-							</option>
-							<option value="manual">
-								{Messages.form_date_field_format_type_manual.get()}
-							</option>
-						</select>
-						{dateFormatType == "manual" ? (
-							<>
-								<input
-									type="text"
-									defaultValue={formData.dateFieldFormat}
-									name="dateFieldFormat"
-									placeholder={Messages.form_date_field_format_placeholder.get()}
-									onChange={handleInputChange}
-								/>
-
-								<div className="form-description">
-									<a href="https://moment.github.io/luxon/#/formatting?id=table-of-tokens">
-										Luxon Format
-									</a>
-									{" " +
-										Messages.form_date_field_format_sample.get()}
-									:
-									{" " +
-										DateTime.fromJSDate(
-											new Date("2024-01-01 00:00:00")
-										).toFormat(
-											formData.dateFieldFormat ||
-												"yyyy-MM-dd'T'HH:mm:ss"
-										)}
-								</div>
-							</>
-						) : null}
-					</div>
-				</div>
+				<DataSourceFormItem
+					dataSource={formData.dataSource}
+					onChange={(newDataSource) => {
+						changeFormData("dataSource", newDataSource);
+					}}
+					app={props.app}
+				/>
 			</div>
 
 			<div className="form-group">
@@ -485,86 +395,3 @@ export class SelectOption {
 		this.selected = selected;
 	}
 }
-
-const titleAlignChooseOptions: ChooseOption[] = [
-	{
-		tip: "left",
-		icon: Icons.ALIGN_LEFT,
-		value: "left",
-	},
-	{
-		tip: "center",
-		icon: Icons.ALIGN_CENTER,
-		value: "center",
-	},
-	{
-		tip: "right",
-		icon: Icons.ALIGN_RIGHT,
-		value: "right",
-	},
-];
-
-const graphOptions: SelectOption[] = [
-	{
-		label: Messages.form_graph_type_git.get(),
-		value: "default",
-		selected: true,
-	},
-	{
-		label: Messages.form_graph_type_month_track.get(),
-		value: "month-track",
-	},
-	{
-		label: Messages.form_graph_type_calendar.get(),
-		value: "calendar",
-	},
-];
-
-const startOfWeekOptions: SelectOption[] = [
-	{
-		label: Messages.weekday_sunday.get(),
-		value: "0",
-		selected: !isZh(),
-	},
-	{
-		label: Messages.weekday_monday.get(),
-		value: "1",
-		selected: isZh(),
-	},
-	{
-		label: Messages.weekday_tuesday.get(),
-		value: "2",
-	},
-	{
-		label: Messages.weekday_wednesday.get(),
-		value: "3",
-	},
-	{
-		label: Messages.weekday_thursday.get(),
-		value: "4",
-	},
-	{
-		label: Messages.weekday_friday.get(),
-		value: "5",
-	},
-	{
-		label: Messages.weekday_saturday.get(),
-		value: "6",
-	},
-];
-
-const cellShapes: SelectOption[] = [
-	{
-		label: Messages.form_cell_shape_rounded.get(),
-		value: "",
-		selected: true,
-	},
-	{
-		label: Messages.form_cell_shape_square.get(),
-		value: "0%",
-	},
-	{
-		label: Messages.form_cell_shape_circle.get(),
-		value: "50%",
-	},
-];
