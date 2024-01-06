@@ -692,3 +692,56 @@
 .suggest-input-tags .tags .tag .remove-button:hover {
   color: var(--text-normal);
 }
+
+.tab-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+  gap: 6px;
+}
+
+.tab-container .tab-titles {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 3px 6px;
+}
+
+.tab-container .tab-titles .tab-item-title {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 3px 6px;
+}
+
+.tab-container .tab-titles .tab-item-title.active {
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent)
+}
+
+.tab-container .tab-titles .tab-item-title.active :hover {
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent)
+}
+.tab-container .tab-titles .tab-item-title:hover {
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.tab-container .tab-items .tab-item{
+  padding: 3px 6px;
+  display: none;
+}
+
+.tab-container .tab-items .tab-item.active {
+  display: block;
+}
