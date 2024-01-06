@@ -1,6 +1,32 @@
 import { diffDays, toFormattedDate } from "../util/dateUtils";
 import { Contribution, ContributionCellData } from "../types";
 
+export function generateByData(data: Contribution[]) {
+	if (!data || data.length === 0) {
+		return [];
+	}
+
+	const dateData = data.map((item) => {
+		if (item.date instanceof Date) {
+			return {
+				...item,
+				timestamp: item.date.getTime(),
+			};
+		} else {
+			return {
+				...item,
+				date: new Date(item.date),
+				timestamp: new Date(item.date).getTime(),
+			};
+		}
+	});
+
+	const sortedData = dateData.sort((a, b) => b.timestamp - a.timestamp);
+	const min = sortedData[sortedData.length - 1].timestamp;
+	const max = sortedData[0].timestamp;
+	return generateByFixedDate(new Date(min), new Date(max), data);
+}
+
 export function generateByFixedDate(
 	from: Date,
 	to: Date,

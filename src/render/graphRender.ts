@@ -8,6 +8,7 @@ import { parseDate } from "src/util/dateUtils";
 import {
 	generateByLatestDays,
 	generateByFixedDate,
+	generateByData,
 } from "./matrixDataGenerator";
 import { matchCellStyleRule } from "src/util/utils";
 import { setTooltip } from "obsidian";
@@ -103,7 +104,7 @@ export abstract class BaseGraphRender implements GraphRender {
 				graphConfig.startOfWeek || 0
 			);
 		} else {
-			throw new Error("Miss days or fromDate and toDate.");
+			return generateByData(graphConfig.data);
 		}
 	}
 
@@ -124,7 +125,10 @@ export abstract class BaseGraphRender implements GraphRender {
 		}`;
 		const yearMonthValue = contributionMapByYearMonth.get(yearMonth) || 0;
 		// tips event
-		setTooltip(monthCell, `${yearMonthValue} contributions on ${yearMonth}.`)
+		setTooltip(
+			monthCell,
+			`${yearMonthValue} contributions on ${yearMonth}.`
+		);
 	}
 
 	applyCellGlobalStyle(
@@ -175,7 +179,7 @@ export abstract class BaseGraphRender implements GraphRender {
 			const summary = contributionItem.summary
 				? contributionItem.summary
 				: `${contributionItem.value} contributions on ${contributionItem.date}.`;
-			setTooltip(cellEl, summary)
+			setTooltip(cellEl, summary);
 		});
 	}
 }
