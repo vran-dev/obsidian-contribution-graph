@@ -2,11 +2,11 @@ import { App } from "obsidian";
 import { DataviewApi, getAPI, DataArray, Literal } from "obsidian-dataview";
 import { GraphProcessError } from "src/processor/graphProcessError";
 import {
+	CountFieldType,
 	Data,
 	DataSource,
-	FILE_CTIME_FIELD,
-	FILE_MTIME_FIELD,
-	FILE_NAME,
+	DateFieldType,
+	PropertySource,
 } from "./types";
 import { DateTime } from "luxon";
 import { Contribution } from "src/types";
@@ -32,9 +32,14 @@ export abstract class BaseDataviewDataSourceQuery {
 			.filter((d) => d.date != undefined)
 			.groupBy((d) => d.date?.toFormat("yyyy-MM-dd"))
 			.map((entry) => {
+				const value = this.countSumValueByCustomizeProperty(
+					entry.rows,
+					source.countField?.type,
+					source.countField?.value
+				);
 				return {
 					date: entry.key,
-					value: entry.rows.length,
+					value: value,
 				} as Contribution;
 			})
 			.array();
@@ -68,18 +73,27 @@ export abstract class BaseDataviewDataSourceQuery {
 	): DataArray<Data<Record<string, Literal>>> {
 		if (source.dateField && source.dateField.value) {
 			const dateFieldName = source.dateField.value;
+			const dateFieldType = source.dateField.type;
 			const dateFieldFormat = source.dateField.format;
 			return data
 				.filter((item) => {
 					if (
-						dateFieldName == FILE_CTIME_FIELD ||
-						dateFieldName == FILE_MTIME_FIELD ||
-						dateFieldName == FILE_NAME
+						dateFieldType == "FILE_CTIME" ||
+						dateFieldType == "FILE_MTIME" ||
+						dateFieldType == "FILE_NAME"
 					) {
 						return true;
 					}
 
-					const fieldValue = item[dateFieldName];
+					const propertySource =
+						this.getPropertySourceByDateFieldType(
+							source.dateField?.type
+						);
+					const fieldValue = this.getValueByCustomizeProperty(
+						item,
+						propertySource,
+						dateFieldName
+					);
 					if (!fieldValue) {
 						return false;
 					}
@@ -91,13 +105,13 @@ export abstract class BaseDataviewDataSourceQuery {
 				.map((item) => {
 					// @ts-ignore
 					const fileName = item.file.name;
-					if (dateFieldName == FILE_CTIME_FIELD) {
+					if (dateFieldType == "FILE_CTIME") {
 						// @ts-ignore
 						return new Data(item, item.file.ctime);
-					} else if (dateFieldName == FILE_MTIME_FIELD) {
+					} else if (dateFieldType == "FILE_MTIME") {
 						// @ts-ignore
 						return new Data(item, item.file.mtime);
-					} else if (dateFieldName == FILE_NAME) {
+					} else if (dateFieldType == "FILE_NAME") {
 						const dateTime = this.toDateTime(
 							fileName,
 							fileName,
@@ -109,7 +123,15 @@ export abstract class BaseDataviewDataSourceQuery {
 							return new Data(item);
 						}
 					} else {
-						const fieldValue = item[dateFieldName];
+						const propertySource =
+							this.getPropertySourceByDateFieldType(
+								source.dateField?.type
+							);
+						const fieldValue = this.getValueByCustomizeProperty(
+							item,
+							propertySource,
+							dateFieldName
+						);
 						if (isLuxonDateTime(fieldValue)) {
 							return new Data(item, fieldValue as DateTime);
 						} else {
@@ -186,5 +208,93 @@ export abstract class BaseDataviewDataSourceQuery {
 			);
 		}
 		return undefined;
+	}
+
+	countSumValueByCustomizeProperty(
+		groupData: DataArray<Data<Record<string, Literal>>>,
+		propertyType?: CountFieldType,
+		propertyName?: string
+	): number {
+		if (!propertyType || propertyType == "DEFAULT") {
+			return groupData.length;
+		}
+
+		if (propertyName) {
+			return groupData
+				.map((item) => {
+					let propertySource: PropertySource;
+					switch (propertyType) {
+						case "PAGE_PROPERTY":
+							propertySource = "PAGE";
+							break;
+						case "TASK_PROPERTY":
+							propertySource = "TASK";
+							break;
+						default:
+							propertySource = "UNKNOWN";
+							break;
+					}
+
+					const r = this.getValueByCustomizeProperty(
+						item.raw,
+						propertySource,
+						propertyName
+					);
+					if (r == undefined || r == null) {
+						return 0;
+					}
+
+					if (r instanceof Array) {
+						return r.length;
+					}
+
+					if (typeof r === "number" || r instanceof Number) {
+						return r as number;
+					}
+
+					if (typeof r === "string" || r instanceof String) {
+						return r.trim() === "" ? 0 : 1;
+					}
+
+					if (typeof r === "boolean" || r instanceof Boolean) {
+						return r ? 1 : 0;
+					}
+					return 1;
+				})
+				.array()
+				.reduce((a, b) => a + b, 0);
+		}
+		return groupData.length;
+	}
+
+	abstract getValueByCustomizeProperty(
+		data: Record<string, Literal>,
+		propertyType: PropertySource,
+		propertyName: string
+	): any;
+
+	getPropertySourceByCountFieldType(type: CountFieldType): PropertySource {
+		switch (type) {
+			case "PAGE_PROPERTY":
+				return "PAGE";
+			case "TASK_PROPERTY":
+				return "TASK";
+			default:
+				return "UNKNOWN";
+		}
+	}
+
+	getPropertySourceByDateFieldType(type?: DateFieldType): PropertySource {
+		switch (type) {
+			case "FILE_CTIME":
+			case "FILE_MTIME":
+			case "FILE_NAME":
+			case "PAGE_PROPERTY":
+				return "PAGE";
+			case "TASK_PROPERTY":
+				return "TASK";
+			default:
+				return "UNKNOWN";
+		}
 	}
 }

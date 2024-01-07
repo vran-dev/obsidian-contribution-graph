@@ -15,7 +15,7 @@ import {
 } from "./options";
 import { DataSourceFormItem } from "./DataSourceFormItem";
 import { YamlGraphConfig } from "src/processor/types";
-import { Tab, TabItem } from "../tab/Tab";
+import { Tab } from "../tab/Tab";
 
 export function CreateContributionGraphForm(props: {
 	yamlConfig: YamlGraphConfig;
@@ -110,7 +110,7 @@ export function CreateContributionGraphForm(props: {
 				activeIndex={0}
 				tabs={[
 					{
-						title: Messages.form_graph_settings.get(),
+						title: Messages.form_basic_settings.get(),
 						children: (
 							<div className="contribution-graph-modal-form">
 								<div className="form-group">
@@ -316,7 +316,7 @@ export function CreateContributionGraphForm(props: {
 															: startOfWeekOptions.find(
 																	(p) =>
 																		p.selected
-															)?.value
+															  )?.value
 													}
 													onChange={handleInputChange}
 												>
@@ -447,7 +447,7 @@ export function CreateContributionGraphForm(props: {
 											})}
 											<button
 												onClick={() => addCellRule()}
-												className="cell-rule-add-button"
+												className="list-add-button"
 											>
 												+
 											</button>
@@ -479,12 +479,12 @@ export function CreateContributionGraphForm(props: {
 	);
 }
 
-export class SelectOption {
+export class SelectOption<T> {
 	label: string;
-	value: string;
+	value: T;
 	selected?: boolean;
 
-	constructor(label: string, value: string, selected?: boolean) {
+	constructor(label: string, value: T, selected?: boolean) {
 		this.label = label;
 		this.value = value;
 		this.selected = selected;

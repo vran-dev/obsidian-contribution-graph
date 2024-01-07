@@ -15,12 +15,14 @@ export class YamlConfigReconciler {
 			yamlConfig.dataSource = {
 				type: "PAGE",
 				value: yamlConfig.query || '""',
-				filter: {
-					type: "NONE",
-				},
+				filters: [],
 				dateField: {
+					type: "PAGE_PROPERTY",
 					value: yamlConfig.dateField,
 					format: yamlConfig.dateFieldFormat,
+				},
+				countField: {
+					type: "DEFAULT",
 				},
 			};
 		}

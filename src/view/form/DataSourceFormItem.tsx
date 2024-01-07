@@ -1,12 +1,17 @@
-import { randomUUID } from "crypto";
 import { DateTime } from "luxon";
 import { Fragment, useState } from "react";
 import { Messages } from "src/i18/messages";
-import { DataSource, DataSourceType } from "src/query/types";
+import { DataFilter, DataSource, DataSourceType } from "src/query/types";
 import { getAllProperties, getTagOptions } from "src/util/page";
 import { Icons } from "../icon/Icons";
 import { SuggestInput } from "../suggest/SuggestInput";
-import { dataSourceTypes, getDataSourceFilterOptions } from "./options";
+import {
+	countFieldTypes,
+	dataSourceTypes,
+	dateFieldTypes,
+	getDataSourceFilterOptions,
+	taskStatusOptions,
+} from "./options";
 import { App } from "obsidian";
 import { InputTags, TagOption } from "../suggest/SuggestTagInput";
 
@@ -33,22 +38,65 @@ export function DataSourceFormItem(props: {
 		changeDataSource("dateField", newDateField);
 	};
 
-	const changeFilter = (name: string, value: any) => {
-		const newFilter = { ...dataSource.filter, [name]: value };
-		changeDataSource("filter", newFilter);
+	const changeCountField = (name: string, value: any) => {
+		const newCountField = { ...dataSource.countField, [name]: value };
+		changeDataSource("countField", newCountField);
 	};
 
-	const getTagsFromDataSource = (): TagOption[] => {
-		if (!dataSource.filter) {
+	const changeFilter = (id: string, name: string, value: any) => {
+		const newFilters = dataSource.filters?.map((f) => {
+			if (f.id == id) {
+				return { ...f, [name]: value };
+			}
+			return f;
+		});
+		changeDataSource("filters", newFilters);
+	};
+
+	const addFilter = (id: string) => {
+		const newFilters = dataSource.filters || [];
+		newFilters.push({
+			id: id,
+			type: "NONE",
+		});
+		changeDataSource("filters", newFilters);
+	};
+
+	const removeFilter = (id: string) => {
+		const newFilters = dataSource.filters?.filter((f) => f.id != id);
+		changeDataSource("filters", newFilters || []);
+	};
+
+	const onDataSourceTypeChange = (newSource: DataSourceType) => {
+		const newDataSource = { ...dataSource, type: newSource };
+		if (newSource === "PAGE") {
+			newDataSource.filters = [];
+
+			if (newDataSource.dateField?.type === "TASK_PROPERTY") {
+				newDataSource.dateField = {
+					type: "FILE_CTIME",
+				};
+			}
+
+			if (dataSource.countField?.type === "TASK_PROPERTY") {
+				changeCountField("type", "DEFAULT");
+				changeCountField("value", undefined);
+				newDataSource.countField = {
+					type: "DEFAULT",
+				};
+			}
+		}
+		props.onChange(newDataSource);
+	};
+
+	const getTagsFromDataSource = (filter: DataFilter): TagOption[] => {
+		if (filter.type != "CONTAINS_ANY_TAG") {
 			return [];
 		}
-		if (dataSource.filter.type != "CONTAINS_ANY_TAG") {
+		if (!(filter.value instanceof Array)) {
 			return [];
 		}
-		if (!(dataSource.filter.value instanceof Array)) {
-			return [];
-		}
-		return dataSource.filter.value.map((t) => {
+		return filter.value.map((t) => {
 			return {
 				id: t,
 				label: t,
@@ -70,11 +118,12 @@ export function DataSourceFormItem(props: {
 				</span>
 				<div className="form-content">
 					<select
-						defaultValue={dataSource.type}
+						defaultValue={dataSource.type || "PAGE"}
 						onChange={(e) => {
-							// @ts-ignore
-							setDataSourceType(e.target.value);
-							changeDataSource("type", e.target.value);
+							setDataSourceType(e.target.value as DataSourceType);
+							onDataSourceTypeChange(
+								e.target.value as DataSourceType
+							);
 						}}
 					>
 						{dataSourceTypes.map((option) => {
@@ -103,57 +152,127 @@ export function DataSourceFormItem(props: {
 					<span className="label">
 						{Messages.form_data_source_filter_label.get()}
 					</span>
-					<div className="form-content">
-						<select
-							defaultValue={dataSource.filter?.type || "NONE"}
-							onChange={(e) => {
-								changeFilter("type", e.target.value);
-							}}
-						>
-							{getDataSourceFilterOptions("TAG").map((option) => {
-								return (
-									<option
-										value={option.value}
-										key={option.value}
-									>
-										{option.label}
-									</option>
-								);
-							})}
-						</select>
+					<div className="form-vertical-content">
+						{dataSource.filters?.map((filter, index) => {
+							return (
+								<>
+									<div className="form-content">
+										<select
+											defaultValue={filter.type || "NONE"}
+											onChange={(e) => {
+												changeFilter(
+													filter.id,
+													"type",
+													e.target.value
+												);
+											}}
+										>
+											{getDataSourceFilterOptions(
+												"TASK"
+											).map((op) => {
+												return (
+													<option
+														value={op.value}
+														key={op.value}
+													>
+														{op.label}
+													</option>
+												);
+											})}
+										</select>
 
-						{dataSource?.filter?.type == "CONTAINS_ANY_TAG" ? (
-							<InputTags
-								tags={getTagsFromDataSource()}
-								onChange={(tags) => {
-									changeFilter(
-										"value",
-										tags.map((t) => {
-											return t.value;
-										})
-									);
-								}}
-								onRemove={(tag) => {
-									if (
-										dataSource.filter?.value instanceof
-										Array
-									) {
-										changeFilter(
-											"value",
-											dataSource.filter?.value?.filter(
-												(t) => {
-													return t != tag.value;
+										{filter.type == "STATUS_IS" && (
+											<select
+												defaultValue={
+													filter?.type || "NONE"
 												}
-											)
-										);
-									}
-								}}
-								getItems={(query) => {
-									return getTagOptions(query, props.app);
-								}}
-								inputPlaceholder={Messages.form_datasource_filter_contains_tag_input_placeholder.get()}
-							/>
-						) : null}
+												onChange={(e) => {
+													changeFilter(
+														filter.id,
+														"value",
+														e.target.value
+													);
+												}}
+											>
+												{taskStatusOptions.map(
+													(option) => {
+														return (
+															<option
+																value={
+																	option.value
+																}
+																key={
+																	option.value
+																}
+															>
+																{option.label}
+															</option>
+														);
+													}
+												)}
+											</select>
+										)}
+
+										{filter?.type == "CONTAINS_ANY_TAG" ? (
+											<InputTags
+												tags={getTagsFromDataSource(
+													filter
+												)}
+												onChange={(tags) => {
+													changeFilter(
+														filter.id,
+														"value",
+														tags.map((t) => {
+															return t.value;
+														})
+													);
+												}}
+												onRemove={(tag) => {
+													if (
+														filter?.value instanceof
+														Array
+													) {
+														changeFilter(
+															filter.id,
+															"value",
+															filter?.value?.filter(
+																(t) => {
+																	return (
+																		t !=
+																		tag.value
+																	);
+																}
+															)
+														);
+													}
+												}}
+												getItems={(query) => {
+													return getTagOptions(
+														query,
+														props.app
+													);
+												}}
+												inputPlaceholder={Messages.form_datasource_filter_contains_tag_input_placeholder.get()}
+											/>
+										) : null}
+
+										<button className="list-remove-button">
+											x
+										</button>
+									</div>
+								</>
+							);
+						})}
+						<div className="form-content">
+							<button
+								className="list-add-button"
+								onClick={(e) =>
+									addFilter(Date.now().toString())
+								}
+							>
+								+
+							</button>
+						</div>
 					</div>
 				</div>
 			)}
@@ -161,29 +280,58 @@ export function DataSourceFormItem(props: {
 			<div className="form-item">
 				<span className="label">{Messages.form_date_field.get()}</span>
 				<div className="form-content">
-					<SuggestInput
-						defaultInputValue={dataSource.dateField?.value}
-						onInputChange={(newValue) => {
-							changeDateField("value", newValue);
+					<select
+						defaultValue={
+							dataSource.dateField?.type || "FILE_CTIME"
+						}
+						onChange={(e) => {
+							changeDateField("type", e.target.value);
 						}}
-						inputPlaceholder={Messages.form_date_field_placeholder.get()}
-						getItems={(query) => {
-							return getAllProperties(query, props.app).map(
-								(p, index) => {
-									return {
-										id: randomUUID(),
-										value: p.name,
-										label: p.name,
-										icon: Icons.CODE,
-										description: p.sampleValue || "",
-									};
-								}
+					>
+						{dateFieldTypes(dataSource.type).map((option) => {
+							return (
+								<option value={option.value} key={option.value}>
+									{option.label}
+								</option>
 							);
-						}}
-						onSelected={(item) => {
-							changeDateField("value", item.value);
-						}}
-					/>
+						})}
+					</select>
+					{dataSource.dateField?.type == "PAGE_PROPERTY" && (
+						<SuggestInput
+							defaultInputValue={dataSource.dateField?.value}
+							onInputChange={(newValue) => {
+								changeDateField("value", newValue);
+							}}
+							inputPlaceholder={Messages.form_date_field_placeholder.get()}
+							getItems={(query) => {
+								return getAllProperties(query, props.app).map(
+									(p, index) => {
+										return {
+											id: p.name,
+											value: p.name,
+											label: p.name,
+											icon: Icons.CODE,
+											description: p.sampleValue || "",
+										};
+									}
+								);
+							}}
+							onSelected={(item) => {
+								changeDateField("value", item.value);
+							}}
+						/>
+					)}
+
+					{dataSource.dateField?.type == "TASK_PROPERTY" && (
+						<input
+							type="text"
+							defaultValue={dataSource.dateField?.value || ""}
+							placeholder={Messages.form_date_field_placeholder.get()}
+							onChange={(e) => {
+								changeDateField("value", e.target.value);
+							}}
+						/>
+					)}
 				</div>
 			</div>
 
@@ -238,6 +386,56 @@ export function DataSourceFormItem(props: {
 									)}
 							</div>
 						</>
+					) : null}
+				</div>
+			</div>
+
+			<div className="form-item">
+				<span className="label">
+					{Messages.form_count_field_count_field_label.get()}
+				</span>
+				<div className="form-vertical-content">
+					<select
+						defaultValue={dataSource.countField?.type || "DEFAULT"}
+						onChange={(e) => {
+							changeCountField("type", e.target.value);
+						}}
+					>
+						{countFieldTypes(dataSource.type).map((option) => {
+							return (
+								<option value={option.value} key={option.value}>
+									{option.label}
+								</option>
+							);
+						})}
+					</select>
+					{dataSource.countField?.type == "PAGE_PROPERTY" ||
+					dataSource.countField?.type == "TASK_PROPERTY" ? (
+						<SuggestInput
+							defaultInputValue={
+								dataSource.countField?.value || ""
+							}
+							onInputChange={(newValue) => {
+								changeCountField("value", newValue);
+							}}
+							inputPlaceholder={Messages.form_count_field_count_field_input_placeholder.get()}
+							getItems={(query) => {
+								return getAllProperties(query, props.app).map(
+									(p, index) => {
+										return {
+											id: p.name,
+											value: p.name,
+											label: p.name,
+											icon: Icons.CODE,
+											description: p.sampleValue || "",
+										};
+									}
+								);
+							}}
+							onSelected={(item) => {
+								changeCountField("value", item.value);
+							}}
+						/>
 					) : null}
 				</div>
 			</div>
