@@ -8,6 +8,7 @@
 	padding: 2px;
 	line-height: normal;
 	display: grid;
+  margin-top: 20px;
 }
 
 .contribution-graph .main .title {
