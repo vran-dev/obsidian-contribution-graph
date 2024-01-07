@@ -8,7 +8,12 @@
 	padding: 2px;
 	line-height: normal;
 	display: grid;
-  margin-top: 20px;
+	margin-top: 20px;
+	overflow-x: hidden;
+}
+
+.contribution-graph .main:hover {
+	overflow-x: scroll;
 }
 
 .contribution-graph .main .title {
@@ -50,6 +55,15 @@
 	justify-content: center;
 }
 
+.contribution-graph .main .charts.default .column {
+	/* override default flex-grow */
+	flex-grow: 0;
+}
+
+.contribution-graph .fill-the-screen.main .charts.default .column {
+	flex-grow: 1;
+}
+
 .contribution-graph .default .week-indicator {
 	background-color: transparent;
 	font-size: 10px;
@@ -76,7 +90,7 @@
 */
 .contribution-graph .main .charts.month-track {
 	flex-direction: column;
-	align-items: flex-start;
+	align-items: center;
 	padding-right: 12px;
 	width: 100%;
 }
@@ -92,9 +106,14 @@
 }
 
 .contribution-graph .main .charts.month-track .row {
-	width: 100%;
+	width: auto;
 	align-items: flex-start;
 	margin-bottom: 8px;
+	gap: 1px;
+}
+
+.contribution-graph .fill-the-screen.main .charts.month-track .row {
+	width: 100%;
 }
 
 .contribution-graph .month-track .cell {

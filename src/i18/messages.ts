@@ -53,7 +53,10 @@ export const Messages = {
 
 	form_datasource_filter_type_none: new Message("无", "None"),
 	form_datasource_filter_type_status_is: new Message("状态等于", "Status Is"),
-	form_datasource_filter_type_contains_any_tag: new Message("包含任意标签", "Contains Any Tag"),
+	form_datasource_filter_type_contains_any_tag: new Message(
+		"包含任意标签",
+		"Contains Any Tag"
+	),
 
 	form_datasource_filter_task_none: new Message("无", "None"),
 	form_datasource_filter_task_status_completed: new Message(
@@ -147,7 +150,10 @@ export const Messages = {
 		"任务属性",
 		"Task Property"
 	),
-
+	form_fill_the_screen_label: new Message(
+		"充满屏幕",
+		"Fill The Screen"
+	),
 	form_show_cell_indicators: new Message(
 		"显示单元格指示器",
 		"Show Cell Indicators"

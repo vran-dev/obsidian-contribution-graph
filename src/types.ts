@@ -42,6 +42,13 @@ export class ContributionGraphConfig {
 	cellStyleRules: CellStyleRule[] = DEFAULT_RULES;
 
 	/**
+	 * set true to fill the screen, default value is false
+	 * 
+	 * notice: it's not work when `graphType` is `calendar`
+	 */
+	fillTheScreen = false;
+
+	/**
 	 * set false to hide rule indicators
 	 */
 	showCellRuleIndicators = true;

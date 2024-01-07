@@ -299,6 +299,26 @@ export function CreateContributionGraphForm(props: {
 						children: (
 							<div className="contribution-graph-modal-form">
 								<div className="form-group">
+									<div className="form-item">
+										<span className="label">
+											{Messages.form_fill_the_screen_label.get()}
+										</span>
+										<div className="form-content">
+											<input
+												type="checkbox"
+												className="checkbox"
+												defaultChecked={
+													formData.fillTheScreen
+												}
+												onChange={() =>
+													changeFormData(
+														"fillTheScreen",
+														!formData.fillTheScreen
+													)
+												}
+											/>
+										</div>
+									</div>
 									{formData.graphType ==
 									"month-track" ? null : (
 										<div className="form-item">
