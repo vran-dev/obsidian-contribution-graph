@@ -156,7 +156,7 @@ export function DataSourceFormItem(props: {
 						{dataSource.filters?.map((filter, index) => {
 							return (
 								<>
-									<div className="form-content">
+									<div className="form-content" key={filter.id}>
 										<select
 											defaultValue={filter.type || "NONE"}
 											onChange={(e) => {
@@ -256,7 +256,7 @@ export function DataSourceFormItem(props: {
 											/>
 										) : null}
 
-										<button className="list-remove-button">
+										<button className="list-remove-button" onClick={e => removeFilter(filter.id)}>
 											x
 										</button>
 									</div>
