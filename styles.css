@@ -13,7 +13,7 @@
 }
 
 .contribution-graph .main:hover {
-	overflow-x: scroll;
+	overflow-x: auto;
 }
 
 .contribution-graph .main .title {
