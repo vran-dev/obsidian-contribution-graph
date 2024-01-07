@@ -7,12 +7,13 @@ export function mountEditButtonToCodeblock(
 ) {
 	const formEditButton = document.createElement("div");
 	formEditButton.className = "contribution-graph-codeblock-edit-button";
-	const iconEl = getIcon('gantt-chart')
+	const iconEl = getIcon("gantt-chart");
 	if (iconEl) {
-		formEditButton.appendChild(iconEl)
+		formEditButton.appendChild(iconEl);
 	}
 	codeblockDom.addEventListener("mouseover", () => {
 		formEditButton.style.opacity = "1";
+		justifyTop(codeblockDom, formEditButton);
 	});
 	codeblockDom.addEventListener("mouseout", () => {
 		formEditButton.style.opacity = "0";
@@ -43,4 +44,20 @@ export function mountEditButtonToCodeblock(
 	};
 	codeblockDom.appendChild(formEditButton);
 	return formEditButton;
+}
+
+function justifyTop(codeblockDom: HTMLElement, formEditButton: HTMLDivElement) {
+	const obCodeblocButtonEls =
+		codeblockDom.getElementsByClassName("edit-block-button");
+	let top: string | undefined;
+	if (obCodeblocButtonEls.length > 0) {
+		const obCodeblocButtonEl = obCodeblocButtonEls[0] as HTMLElement;
+		top = obCodeblocButtonEl.computedStyleMap().get("top")?.toString();
+	}
+
+	if (top) {
+		formEditButton.style.top = top;
+	} else {
+		formEditButton.style.top = "0";
+	}
 }
