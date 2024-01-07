@@ -117,11 +117,20 @@
 }
 
 .contribution-graph .month-track .cell {
-	width: auto;
-	min-height: 15px;
-	min-width: 15px;
+	min-height: 13px;
+	min-width: 13px;
 	font-size: 10px;
 	border-radius: 3px;
+}
+
+@media (max-width: 720px) {
+	.contribution-graph .month-track .cell {
+		height: 10px;
+		min-height: 10px;
+		min-width: 10px;
+		font-size: 10px;
+		border-radius: 3px;
+	}
 }
 
 .contribution-graph .month-track .month-indicator {
@@ -222,11 +231,10 @@
 
 /* default cell */
 .contribution-graph .cell {
-	min-width: 10px;
-	min-height: 10px;
-	font-size: 8px;
-	width: auto;
-	height: 10px;
+	min-width: 8.8px;
+	min-height: 8.8px;
+	height: 8.8px;
+  font-size: 8px;
 	border-radius: 2px;
 	background-color: transparent;
 	margin-top: 2px;
