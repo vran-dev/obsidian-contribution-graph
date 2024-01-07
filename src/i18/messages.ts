@@ -30,7 +30,7 @@ export const Messages = {
 	/**
 	 * form
 	 */
-	form_graph_settings: new Message("图表设置", "Graph Settings"),
+	form_basic_settings: new Message("基础设置", "Basic Settings"),
 	form_style_settings: new Message("样式设置", "Style Settings"),
 	form_title: new Message("标题", "Title"),
 	form_title_placeholder: new Message("输入标题", "Input title"),
@@ -51,11 +51,35 @@ export const Messages = {
 	form_data_source_value: new Message("来源", "Source"),
 	form_data_source_filter_label: new Message("筛选", "Filter"),
 
+	form_datasource_filter_type_none: new Message("无", "None"),
+	form_datasource_filter_type_status_is: new Message("状态等于", "Status Is"),
+	form_datasource_filter_type_contains_any_tag: new Message("包含任意标签", "Contains Any Tag"),
+
 	form_datasource_filter_task_none: new Message("无", "None"),
-	form_datasource_filter_task_completed: new Message("已完成（不包含子任务）", "Completed"),
-	form_datasource_filter_task_fully_completed: new Message("已完成（包含子任务）", "Fully completed"),
-	form_datasource_filter_contains_tag: new Message("包含任意一个标签", "Contains Any Tag"),
-	form_datasource_filter_contains_tag_input_placeholder: new Message("请输入标签，比如 #todo", "Please input tag, such as #todo"),
+	form_datasource_filter_task_status_completed: new Message(
+		"已完成（不包含子任务）",
+		"Completed"
+	),
+	form_datasource_filter_task_status_fully_completed: new Message(
+		"已完成（包含子任务）",
+		"Fully completed"
+	),
+	form_datasource_filter_task_status_any: new Message(
+		"任意状态",
+		"Any Status"
+	),
+	form_datasource_filter_task_status_incomplete: new Message(
+		"未完成",
+		"Incomplete"
+	),
+	form_datasource_filter_contains_tag: new Message(
+		"包含任意一个标签",
+		"Contains Any Tag"
+	),
+	form_datasource_filter_contains_tag_input_placeholder: new Message(
+		"请输入标签，比如 #todo",
+		"Please input tag, such as #todo"
+	),
 	form_datasource_filter_customize: new Message("自定义", "Customize"),
 
 	form_query_placeholder: new Message(
@@ -64,16 +88,31 @@ export const Messages = {
 	),
 
 	form_date_field: new Message("日期字段", "Date Field"),
+	form_date_field_type_file_name: new Message("文件名称", "File Name"),
+	form_date_field_type_file_ctime: new Message(
+		"文件创建日期",
+		"File Create Time"
+	),
+	form_date_field_type_file_mtime: new Message(
+		"文件修改日期",
+		"File Modify Time"
+	),
+	form_date_field_type_file_specific_page_property: new Message(
+		"指定页面属性",
+		"Specific Page Property"
+	),
+	form_date_field_type_file_specific_task_property: new Message(
+		"指定任务属性",
+		"Specific Task Property"
+	),
+
 	form_date_field_placeholder: new Message(
 		"默认为文件的创建日期",
 		"default is file's create time"
 	),
 
 	form_date_field_format: new Message("日期格式", "Date Field Format"),
-	form_date_field_format_sample: new Message(
-		"示例值",
-		"Sample"
-	),
+	form_date_field_format_sample: new Message("示例值", "Sample"),
 	form_date_field_format_description: new Message(
 		"如果你的日期属性值不是标准的格式，需要指定该字段让系统知道如何识别你的日期格式",
 		"If your date property value is not a standard format, you need to specify this field so that the system knows how to recognize your date format"
@@ -83,14 +122,30 @@ export const Messages = {
 		"such as yyyy-MM-dd HH:mm:ss"
 	),
 
-	form_date_field_format_type_smart: new Message(
-		"自动识别",
-		"Auto Detect"
-	),
+	form_date_field_format_type_smart: new Message("自动识别", "Auto Detect"),
 
 	form_date_field_format_type_manual: new Message(
 		"指定格式",
 		"Specify Format"
+	),
+
+	form_count_field_count_field_label: new Message("计数属性", "Count Field"),
+
+	form_count_field_count_field_input_placeholder: new Message(
+		"请输入属性名称",
+		"Please input property name"
+	),
+
+	form_count_field_count_field_type_default: new Message("默认", "Default"),
+
+	form_count_field_count_field_type_page_prop: new Message(
+		"页面属性",
+		"Page Property"
+	),
+
+	form_count_field_count_field_type_task_prop: new Message(
+		"任务属性",
+		"Task Property"
 	),
 
 	form_show_cell_indicators: new Message(
@@ -104,7 +159,10 @@ export const Messages = {
 
 	form_datasource_type_page: new Message("页面", "Page"),
 	form_datasource_type_all_task: new Message("所有任务", "All Task"),
-	form_datasource_type_task_in_specific_page: new Message("指定页面中的任务", "Task in Specific Page"),
+	form_datasource_type_task_in_specific_page: new Message(
+		"指定页面中的任务",
+		"Task in Specific Page"
+	),
 
 	form_theme: new Message("主题", "Theme"),
 	form_theme_placeholder: new Message(

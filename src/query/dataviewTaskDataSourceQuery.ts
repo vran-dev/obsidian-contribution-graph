@@ -1,6 +1,6 @@
 import { DataArray, DataviewApi, Literal } from "obsidian-dataview";
 import { BaseDataviewDataSourceQuery } from "./baseDataviewSourceQuery";
-import { DataSource } from "./types";
+import { DataFilter, DataSource, PropertySource } from "./types";
 
 export class DataviewTaskDataSourceQuery extends BaseDataviewDataSourceQuery {
 	accept(source: DataSource): boolean {
@@ -36,49 +36,83 @@ export class DataviewTaskDataSourceQuery extends BaseDataviewDataSourceQuery {
 				return fileTasks.array();
 			});
 
-		if (!source.filter) {
+		if (!source.filters || source.filters.length === 0) {
 			return taskData;
 		}
-		switch (source.filter.type) {
-			case "NONE":
-				return taskData;
-			case "TASK_COMPLETED":
-				// @ts-ignore
-				return taskData.filter((task) => {
-					return task.completed;
-				});
-			case "TASK_FULLY_COMPLETED":
-				// @ts-ignore
-				return taskData.filter((task) => {
-					return task.fullyCompleted;
-				});
-			case "CONTAINS_ANY_TAG":
-				return taskData.filter((task) => {
-					if (source.filter?.value instanceof Array) {
-						const values: string[] = source.filter?.value;
-						if (values.length === 0) {
-							return true;
-						} else {
-							// @ts-ignore
-							return task.tags.some(
-								// @ts-ignore
-								(tag) =>
-									values.find(
-										(value) =>
-											value.toLowerCase() ===
-											tag.toLowerCase()
-									) !== undefined
-							);
-						}
-					} else {
+
+		return taskData.filter((task) => {
+			if (!source.filters) {
+				return true;
+			}
+			return source.filters.every((filter) => {
+				switch (filter.type) {
+					case "NONE":
+						return task;
+					case "STATUS_IS":
+						return this.filterByStatusIs(filter, task);
+					case "CONTAINS_ANY_TAG":
+						return this.filterByContainsAnyTag(filter, task);
+					default:
 						return true;
-					}
-				});
-			case "CUSTOMIZE":
-				// TODO @vran
-				return taskData;
-			default:
-				return taskData;
+				}
+			});
+		});
+	}
+
+	filterByStatusIs(
+		filter: DataFilter,
+		data: Record<string, Literal>
+	): boolean {
+		if (filter.value == "COMPLETED") {
+			return data.completed as boolean;
+		} else if (filter.value == "INCOMPLETE") {
+			return !(data.completed as boolean);
+		} else if (filter.value == "ANY") {
+			return true;
+		} else if (filter.value == "FULLY_COMPLETED") {
+			return data.fullyCompleted as boolean;
 		}
+		return true;
+	}
+
+	filterByContainsAnyTag(
+		filter: DataFilter,
+		task: Record<string, Literal>
+	): boolean {
+		if (filter?.value instanceof Array) {
+			const values: string[] = filter?.value;
+			if (values.length === 0) {
+				return true;
+			} else {
+				// @ts-ignore
+				return task.tags.some(
+					// @ts-ignore
+					(tag) =>
+						values.find(
+							(value) => value.toLowerCase() === tag.toLowerCase()
+						) !== undefined
+				);
+			}
+		} else {
+			return true;
+		}
+	}
+
+	getValueByCustomizeProperty(
+		data: Record<string, Literal>,
+		propertyType: PropertySource,
+		propertyName: string
+	): any {
+		if (propertyType === "PAGE") {
+			if (data.file) {
+				// @ts-ignore
+				return data.file[propertyName];
+			}
+		}
+
+		if (propertyType === "TASK") {
+			return data[propertyName];
+		}
+		return undefined;
 	}
 }

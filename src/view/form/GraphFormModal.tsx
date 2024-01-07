@@ -5,6 +5,7 @@ import { dump, load } from "js-yaml";
 import { CreateContributionGraphForm } from "./GraphForm";
 import { DataSource } from "src/query/types";
 import { YamlGraphConfig } from "src/processor/types";
+import { YamlConfigReconciler } from "src/processor/yamlConfigReconciler";
 
 export class ContributionGraphCreateModal extends Modal {
 	root: Root | null = null;
@@ -72,17 +73,7 @@ export class ContributionGraphCreateModal extends Modal {
 			};
 		}
 
-		if (!yamlConfig.dataSource) {
-			yamlConfig.dataSource = {
-				type: "PAGE",
-				value: yamlConfig.query,
-				dateField: {
-					value: yamlConfig.dateField,
-					format: yamlConfig.dateFieldFormat,
-				},
-				filter: {},
-			} as DataSource;
-		}
+		yamlConfig = YamlConfigReconciler.reconcile(yamlConfig);
 
 		this.root = createRoot(rootContainer);
 		this.root.render(
