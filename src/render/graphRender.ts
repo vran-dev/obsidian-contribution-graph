@@ -49,9 +49,6 @@ export abstract class BaseGraphRender implements GraphRender {
 		parent: HTMLElement
 	) {
 		if (graphConfig.showCellRuleIndicators === false) {
-			console.debug(
-				"hide cell rule indicators cause `showCellRuleIndicators` is false"
-			);
 			return;
 		}
 

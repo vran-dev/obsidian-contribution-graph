@@ -27,3 +27,17 @@ export function matchCellStyleRule(value: number, rules: CellStyleRule[]): CellS
 	}
 	return rules[0];
 }
+
+export function parseNumberOption(str: string): number | null {
+	const trimmedStr = str.trim();
+
+	if (trimmedStr === "") {
+		return null;
+	}
+	const num = Number(trimmedStr);
+
+	if (Number.isNaN(num)) {
+		return null;
+	}
+	return num;
+}

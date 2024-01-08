@@ -11,6 +11,7 @@ import {
 import { DateTime } from "luxon";
 import { Contribution } from "src/types";
 import { isLuxonDateTime } from "src/util/dateTimeUtils";
+import { parseNumberOption } from "src/util/utils";
 
 export abstract class BaseDataviewDataSourceQuery {
 	abstract accept(source: DataSource): boolean;
@@ -24,7 +25,7 @@ export abstract class BaseDataviewDataSourceQuery {
 		if (unsatisfiedData.length > 0) {
 			console.warn(
 				unsatisfiedData.length +
-					" data can't be converted to date, please check the date field format",
+				" data can't be converted to date, please check the date field format",
 				unsatisfiedData
 			);
 		}
@@ -97,9 +98,6 @@ export abstract class BaseDataviewDataSourceQuery {
 					if (!fieldValue) {
 						return false;
 					}
-					if (!isLuxonDateTime(fieldValue)) {
-						return false;
-					}
 					return true;
 				})
 				.map((item) => {
@@ -160,9 +158,9 @@ export abstract class BaseDataviewDataSourceQuery {
 		if (typeof date !== "string") {
 			console.warn(
 				"can't parse date, it's a valid format? " +
-					date +
-					" in page " +
-					page
+				date +
+				" in page " +
+				page
 			);
 			return undefined;
 		}
@@ -202,9 +200,9 @@ export abstract class BaseDataviewDataSourceQuery {
 		} catch (e) {
 			console.warn(
 				"can't parse date, it's a valid format? " +
-					date +
-					" in page " +
-					page
+				date +
+				" in page " +
+				page
 			);
 		}
 		return undefined;
@@ -253,6 +251,10 @@ export abstract class BaseDataviewDataSourceQuery {
 					}
 
 					if (typeof r === "string" || r instanceof String) {
+						const n = parseNumberOption(r as string)
+						if (n != null) {
+							return n;
+						}
 						return r.trim() === "" ? 0 : 1;
 					}
 
