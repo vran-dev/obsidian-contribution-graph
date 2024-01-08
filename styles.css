@@ -3,6 +3,11 @@
 	position: relative;
 }
 
+.contribution-graph .center {
+	justify-content: center;
+	text-align: center;
+}
+
 .contribution-graph .main {
 	overflow-x: auto;
 	padding: 2px;
@@ -10,6 +15,11 @@
 	display: grid;
 	margin-top: 20px;
 	overflow-x: hidden;
+	justify-content: center;
+}
+
+.contribution-graph .main.fill-the-screen {
+	justify-content: normal;
 }
 
 .contribution-graph .main:hover {
@@ -214,7 +224,11 @@
 	margin-top: 12px;
 }
 
-.contribution-graph .calendar .month-container .week-indicator-container .week-indicator {
+.contribution-graph
+	.calendar
+	.month-container
+	.week-indicator-container
+	.week-indicator {
 	font-size: 10px;
 	line-height: 1.5;
 	text-align: center;
@@ -234,7 +248,7 @@
 	min-width: 8.8px;
 	min-height: 8.8px;
 	height: 8.8px;
-  font-size: 8px;
+	font-size: 8px;
 	border-radius: 2px;
 	background-color: transparent;
 	margin-top: 2px;
@@ -375,7 +389,10 @@
 	gap: 8px;
 }
 
-.contribution-graph-modal-form .form-item .form-vertical-content>input[type="text"] {
+.contribution-graph-modal-form
+	.form-item
+	.form-vertical-content
+	> input[type="text"] {
 	flex-grow: 1;
 	border-width: 0px 0px 1px 0px;
 	padding: 3px;
@@ -647,9 +664,8 @@
 	color: var(--text-muted);
 	font-size: var(--font-smaller);
 	overflow-wrap: break-word;
-	word-break: break-all
+	word-break: break-all;
 }
-
 
 .suggest-input-tags {
 	display: flex;
