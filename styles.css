@@ -1,6 +1,7 @@
 .contribution-graph {
 	margin-bottom: 6px;
 	position: relative;
+	width: 100%;
 }
 
 .contribution-graph .center {
@@ -9,21 +10,15 @@
 }
 
 .contribution-graph .main {
-	overflow-x: auto;
 	padding: 2px;
 	line-height: normal;
 	display: grid;
 	margin-top: 20px;
-	overflow-x: hidden;
 	justify-content: center;
 }
 
 .contribution-graph .main.fill-the-screen {
-	justify-content: normal;
-}
-
-.contribution-graph .main:hover {
-	overflow-x: auto;
+	justify-content: unset;
 }
 
 .contribution-graph .main .title {
@@ -35,6 +30,11 @@
 .contribution-graph .main .charts {
 	width: 100%;
 	display: flex;
+	overflow: hidden;
+}
+
+.contribution-graph .main .charts:hover {
+	overflow: auto;
 }
 
 .contribution-graph .main .charts .column {
@@ -62,7 +62,7 @@
 	flex-direction: row;
 	align-items: flex-start;
 	flex-wrap: nowrap;
-	justify-content: center;
+	justify-content: flex-start;
 }
 
 .contribution-graph .main .charts.default .column {
@@ -100,7 +100,7 @@
 */
 .contribution-graph .main .charts.month-track {
 	flex-direction: column;
-	align-items: center;
+	align-items: flex-start;
 	padding-right: 12px;
 	width: 100%;
 }
@@ -122,8 +122,11 @@
 	gap: 1px;
 }
 
-.contribution-graph .fill-the-screen.main .charts.month-track .row {
-	width: 100%;
+.contribution-graph .main.fill-the-screen .charts.month-track .row {
+  width: 100%;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  gap: 1px;
 }
 
 .contribution-graph .month-track .cell {
@@ -147,7 +150,7 @@
 	background-color: transparent;
 	font-size: 12px;
 	height: 22px;
-	width: 88px;
+	min-width: 66px;
 	margin-right: 12px;
 	text-align: right;
 	cursor: pointer;
@@ -224,11 +227,7 @@
 	margin-top: 12px;
 }
 
-.contribution-graph
-	.calendar
-	.month-container
-	.week-indicator-container
-	.week-indicator {
+.contribution-graph .calendar .month-container .week-indicator-container .week-indicator {
 	font-size: 10px;
 	line-height: 1.5;
 	text-align: center;
@@ -389,10 +388,7 @@
 	gap: 8px;
 }
 
-.contribution-graph-modal-form
-	.form-item
-	.form-vertical-content
-	> input[type="text"] {
+.contribution-graph-modal-form .form-item .form-vertical-content>input[type="text"] {
 	flex-grow: 1;
 	border-width: 0px 0px 1px 0px;
 	padding: 3px;
