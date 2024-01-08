@@ -1,7 +1,10 @@
 import { ContributionGraphConfig } from "src/types";
 import { mapBy } from "src/util/utils";
 import { BaseGraphRender } from "./graphRender";
-import { localizedMonthMapping, localizedYearMonthMapping } from "src/i18/messages";
+import {
+	localizedMonthMapping,
+	localizedYearMonthMapping,
+} from "src/i18/messages";
 
 export class MonthTrackGraphRender extends BaseGraphRender {
 	constructor() {
@@ -20,7 +23,7 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 
 		// main
 		const main = createDiv({
-			cls: "main",
+			cls: `main ${graphConfig.fillTheScreen ? "fill-the-screen" : ""}`,
 			parent: graphEl,
 		});
 
@@ -88,7 +91,10 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 				monthIndicator.className = "cell month-indicator";
 				monthIndicator.innerText =
 					contributionItem.month == 0
-						? localizedYearMonthMapping(contributionItem.year, contributionItem.month)
+						? localizedYearMonthMapping(
+								contributionItem.year,
+								contributionItem.month
+						)
 						: localizedMonthMapping(contributionItem.month);
 
 				this.bindMonthTips(

@@ -24,7 +24,7 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 
 		// main
 		const main = createDiv({
-			cls: "main",
+			cls: `main ${graphConfig.fillTheScreen ? "fill-the-screen" : ""}`,
 			parent: graphEl,
 		});
 

@@ -31,6 +31,7 @@ export class YamlGraphConfig {
 	cellStyle?: Partial<CSSStyleDeclaration>;
 	cellStyleRules?: CellStyleRule[];
 	showCellRuleIndicators: boolean;
+	fillTheScreen: boolean;
 
 	constructor() {
 		this.title = "Contributions";
@@ -48,6 +49,7 @@ export class YamlGraphConfig {
 			value: "",
 			dateField: {},
 		} as DataSource;
+		this.fillTheScreen = false;
 
 		// deprecated
 		this.query = undefined;

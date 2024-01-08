@@ -8,7 +8,12 @@
 	padding: 2px;
 	line-height: normal;
 	display: grid;
-  margin-top: 20px;
+	margin-top: 20px;
+	overflow-x: hidden;
+}
+
+.contribution-graph .main:hover {
+	overflow-x: auto;
 }
 
 .contribution-graph .main .title {
@@ -50,6 +55,15 @@
 	justify-content: center;
 }
 
+.contribution-graph .main .charts.default .column {
+	/* override default flex-grow */
+	flex-grow: 0;
+}
+
+.contribution-graph .fill-the-screen.main .charts.default .column {
+	flex-grow: 1;
+}
+
 .contribution-graph .default .week-indicator {
 	background-color: transparent;
 	font-size: 10px;
@@ -76,7 +90,7 @@
 */
 .contribution-graph .main .charts.month-track {
 	flex-direction: column;
-	align-items: flex-start;
+	align-items: center;
 	padding-right: 12px;
 	width: 100%;
 }
@@ -92,17 +106,31 @@
 }
 
 .contribution-graph .main .charts.month-track .row {
-	width: 100%;
+	width: auto;
 	align-items: flex-start;
 	margin-bottom: 8px;
+	gap: 1px;
+}
+
+.contribution-graph .fill-the-screen.main .charts.month-track .row {
+	width: 100%;
 }
 
 .contribution-graph .month-track .cell {
-	width: auto;
-	min-height: 15px;
-	min-width: 15px;
+	min-height: 13px;
+	min-width: 13px;
 	font-size: 10px;
 	border-radius: 3px;
+}
+
+@media (max-width: 720px) {
+	.contribution-graph .month-track .cell {
+		height: 10px;
+		min-height: 10px;
+		min-width: 10px;
+		font-size: 10px;
+		border-radius: 3px;
+	}
 }
 
 .contribution-graph .month-track .month-indicator {
@@ -203,11 +231,10 @@
 
 /* default cell */
 .contribution-graph .cell {
-	min-width: 10px;
-	min-height: 10px;
-	font-size: 8px;
-	width: auto;
-	height: 10px;
+	min-width: 8.8px;
+	min-height: 8.8px;
+	height: 8.8px;
+  font-size: 8px;
 	border-radius: 2px;
 	background-color: transparent;
 	margin-top: 2px;
