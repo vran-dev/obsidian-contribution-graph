@@ -28,7 +28,9 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 		});
 
 		// title
-		this.renderTitle(graphConfig, main);
+		if (graphConfig.title && graphConfig.title.trim() != "") {
+			this.renderTitle(graphConfig, main);
+		}
 
 		// main -> charts
 		const chartsEl = createDiv({
@@ -94,7 +96,7 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 						? localizedYearMonthMapping(
 								contributionItem.year,
 								contributionItem.month
-						)
+						  )
 						: localizedMonthMapping(contributionItem.month);
 
 				this.bindMonthTips(

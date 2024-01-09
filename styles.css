@@ -30,11 +30,11 @@
 .contribution-graph .main .charts {
 	width: 100%;
 	display: flex;
-	overflow: hidden;
+	overflow-x: hidden;
 }
 
 .contribution-graph .main .charts:hover {
-	overflow: auto;
+	overflow-x: auto;
 }
 
 .contribution-graph .main .charts .column {
@@ -63,14 +63,17 @@
 	align-items: flex-start;
 	flex-wrap: nowrap;
 	justify-content: flex-start;
+
 }
 
 .contribution-graph .main .charts.default .column {
+	margin-top: 1.6rem;
 	/* override default flex-grow */
 	flex-grow: 0;
 }
 
 .contribution-graph .fill-the-screen.main .charts.default .column {
+	margin-top: 1.6rem;
 	flex-grow: 1;
 }
 
@@ -105,9 +108,7 @@
 	width: 100%;
 }
 
-.contribution-graph .month-track .date-indicator {
-	min-width: 15px;
-	min-height: 15px;
+.contribution-graph .month-track .cell.date-indicator {
 	font-size: 8px;
 	width: auto;
 	border-radius: 2px;
@@ -123,10 +124,10 @@
 }
 
 .contribution-graph .main.fill-the-screen .charts.month-track .row {
-  width: 100%;
-  align-items: flex-start;
-  margin-bottom: 8px;
-  gap: 1px;
+	width: 100%;
+	align-items: flex-start;
+	margin-bottom: 8px;
+	gap: 1px;
 }
 
 .contribution-graph .month-track .cell {
@@ -150,7 +151,7 @@
 	background-color: transparent;
 	font-size: 12px;
 	height: 22px;
-	min-width: 66px;
+	min-width: 77px;
 	margin-right: 12px;
 	text-align: right;
 	cursor: pointer;
@@ -160,50 +161,30 @@
 }
 
 /* calendar charts */
-.contribution-graph .calendar {
+.contribution-graph .main .charts.calendar {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	padding: 12px;
+	padding: 0.5rem 1rem;
+	gap: 2rem;
+	overflow-x: auto;
+	max-width: 1000px;
 }
 
 .contribution-graph .calendar .month-container {
-	min-width: calc(25% - 12px);
-	margin-right: 12px;
-	margin-bottom: 12px;
-	padding: 6px;
+	min-width: calc(25% - 2rem);
+	padding: 0.2rem 0.33rem;
 	position: relative;
-	border: 1px solid var(--background-modifier-border);
-	border-radius: 6px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: transparent;
+	border-radius: 5px;
 	justify-content: space-between;
-}
-
-@media (max-width: 720px) {
-	.contribution-graph .calendar .month-container {
-		width: calc(50% - 12px);
-		margin-right: 12px;
-		margin-bottom: 12px;
-		padding: 6px;
-		position: relative;
-		border: 1px solid var(--background-modifier-border);
-		border-radius: 6px;
-	}
-}
-
-@media (max-width: 480px) {
-	.contribution-graph .calendar .month-container {
-		width: calc(100% - 12px);
-		margin-right: 12px;
-		margin-bottom: 12px;
-		padding: 6px;
-		position: relative;
-		border: 1px solid var(--background-modifier-border);
-		border-radius: 6px;
-	}
 }
 
 .contribution-graph .calendar .month-container:hover {
 	border: 1px solid var(--background-modifier-border-hover);
+	border-color: transparent;
 	background-color: rgba(244, 244, 244, 0.6);
 }
 
@@ -217,6 +198,7 @@
 	text-align: center;
 	cursor: pointer;
 	color: var(--text-normal);
+	font-size: 0.8rem;
 }
 
 .contribution-graph .calendar .month-container .month-indicator:hover {
@@ -227,19 +209,34 @@
 	margin-top: 12px;
 }
 
-.contribution-graph .calendar .month-container .week-indicator-container .week-indicator {
-	font-size: 10px;
+.contribution-graph .main .calendar .month-container .row {
+	gap: 0.6rem;
+	justify-content: center;
+}
+
+.contribution-graph .calendar .month-container .week-indicator-container .cell.week-indicator {
+	font-size: 0.6rem;
 	line-height: 1.5;
 	text-align: center;
 	color: var(--text-muted);
 }
 
-.contribution-graph .calendar .month-container .cell {
-	width: auto;
-	min-height: 18px;
-	min-width: 18px;
-	font-size: 10px;
-	border-radius: 3px;
+.contribution-graph .main .calendar .month-container .cell {
+	min-width: 8px;
+	min-height: 8px;
+	width: 8px;
+	height: 8px;
+	font-size: 8px;
+	border-radius: 2px;
+	margin-top: 0px;
+	margin-right: 0px;
+	flex-grow: 0;
+	display: flex;
+	align-items: center;
+}
+
+.contribution-graph .main.fill-the-screen .calendar .month-container .cell {
+	flex-grow: 1;
 }
 
 /* default cell */
