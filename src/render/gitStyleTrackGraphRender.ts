@@ -29,7 +29,9 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 		});
 
 		// title
-		this.renderTitle(graphConfig, main);
+		if (graphConfig.title && graphConfig.title.trim() != "") {
+			this.renderTitle(graphConfig, main);
+		}
 
 		// main -> charts
 		const chartsEl = createDiv({

@@ -7,7 +7,11 @@ import {
 } from "src/util/dateUtils";
 import { mapBy } from "src/util/utils";
 import { BaseGraphRender } from "./graphRender";
-import { localizedMonthMapping, localizedWeekDayMapping, localizedYearMonthMapping } from "src/i18/messages";
+import {
+	localizedMonthMapping,
+	localizedWeekDayMapping,
+	localizedYearMonthMapping,
+} from "src/i18/messages";
 
 export class CalendarGraphRender extends BaseGraphRender {
 	constructor() {
@@ -31,7 +35,9 @@ export class CalendarGraphRender extends BaseGraphRender {
 		});
 
 		// title
-		this.renderTitle(graphConfig, main);
+		if (graphConfig.title && graphConfig.title.trim() != "") {
+			this.renderTitle(graphConfig, main);
+		}
 
 		// main -> charts
 		const chartsEl = createDiv({
@@ -105,9 +111,14 @@ export class CalendarGraphRender extends BaseGraphRender {
 				const monthIndicator = document.createElement("div");
 				monthIndicator.className = "month-indicator";
 				if (item.month == 0) {
-					monthIndicator.innerText = localizedYearMonthMapping(item.year, item.month)
+					monthIndicator.innerText = localizedYearMonthMapping(
+						item.year,
+						item.month
+					);
 				} else {
-					monthIndicator.innerText = localizedMonthMapping(item.month);
+					monthIndicator.innerText = localizedMonthMapping(
+						item.month
+					);
 				}
 				monthContainer.appendChild(monthIndicator);
 				this.bindMonthTips(
