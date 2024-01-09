@@ -1,4 +1,4 @@
-import { App } from "obsidian";
+import { App, Platform } from "obsidian";
 import { DataviewApi, getAPI, DataArray, Literal } from "obsidian-dataview";
 import { GraphProcessError } from "src/processor/graphProcessError";
 import {
@@ -9,9 +9,10 @@ import {
 	PropertySource,
 } from "./types";
 import { DateTime } from "luxon";
-import { Contribution } from "src/types";
+import { Contribution, ContributionItem } from "src/types";
 import { isLuxonDateTime } from "src/util/dateTimeUtils";
 import { parseNumberOption } from "src/util/utils";
+import { dataviewDataFilterChain } from "./filter/dataviewDataFilter";
 
 export abstract class BaseDataviewDataSourceQuery {
 	abstract accept(source: DataSource): boolean;
@@ -25,25 +26,56 @@ export abstract class BaseDataviewDataSourceQuery {
 		if (unsatisfiedData.length > 0) {
 			console.warn(
 				unsatisfiedData.length +
-				" data can't be converted to date, please check the date field format",
+					" data can't be converted to date, please check the date field format",
 				unsatisfiedData
 			);
 		}
-		return queryData
+		const result = queryData
 			.filter((d) => d.date != undefined)
 			.groupBy((d) => d.date?.toFormat("yyyy-MM-dd"))
 			.map((entry) => {
+				// performance optimization
 				const value = this.countSumValueByCustomizeProperty(
 					entry.rows,
 					source.countField?.type,
 					source.countField?.value
 				);
+				const items = entry.rows
+					.map((item) => {
+						let label;
+						if (source.type == "PAGE") {
+							// @ts-ignore
+							label = item.raw.file.name;
+						} else {
+							label = item.raw.text;
+						}
+
+						const value =
+							this.getAndConvertValueByCustomizeProperty(
+								item,
+								source.countField?.type,
+								source.countField?.value
+							);
+
+						if (source.countField?.type == "PAGE_PROPERTY") {
+							label += ` [${source.countField?.value}:${value}]`;
+						}
+
+						return {
+							label: label,
+							value: value,
+							open: (e) => jump(e, source, item, app),
+						} as ContributionItem;
+					})
+					.array();
 				return {
 					date: entry.key,
 					value: value,
+					items: items,
 				} as Contribution;
 			})
 			.array();
+		return result;
 	}
 
 	reconcileSourceValueIfNotExists(source: DataSource) {
@@ -78,27 +110,9 @@ export abstract class BaseDataviewDataSourceQuery {
 			const dateFieldFormat = source.dateField.format;
 			return data
 				.filter((item) => {
-					if (
-						dateFieldType == "FILE_CTIME" ||
-						dateFieldType == "FILE_MTIME" ||
-						dateFieldType == "FILE_NAME"
-					) {
-						return true;
-					}
-
-					const propertySource =
-						this.getPropertySourceByDateFieldType(
-							source.dateField?.type
-						);
-					const fieldValue = this.getValueByCustomizeProperty(
-						item,
-						propertySource,
-						dateFieldName
+					return dataviewDataFilterChain.every((filter) =>
+						filter.filter(source, item, this)
 					);
-					if (!fieldValue) {
-						return false;
-					}
-					return true;
 				})
 				.map((item) => {
 					// @ts-ignore
@@ -158,9 +172,9 @@ export abstract class BaseDataviewDataSourceQuery {
 		if (typeof date !== "string") {
 			console.warn(
 				"can't parse date, it's a valid format? " +
-				date +
-				" in page " +
-				page
+					date +
+					" in page " +
+					page
 			);
 			return undefined;
 		}
@@ -200,9 +214,9 @@ export abstract class BaseDataviewDataSourceQuery {
 		} catch (e) {
 			console.warn(
 				"can't parse date, it's a valid format? " +
-				date +
-				" in page " +
-				page
+					date +
+					" in page " +
+					page
 			);
 		}
 		return undefined;
@@ -220,53 +234,69 @@ export abstract class BaseDataviewDataSourceQuery {
 		if (propertyName) {
 			return groupData
 				.map((item) => {
-					let propertySource: PropertySource;
-					switch (propertyType) {
-						case "PAGE_PROPERTY":
-							propertySource = "PAGE";
-							break;
-						case "TASK_PROPERTY":
-							propertySource = "TASK";
-							break;
-						default:
-							propertySource = "UNKNOWN";
-							break;
-					}
-
-					const r = this.getValueByCustomizeProperty(
-						item.raw,
-						propertySource,
+					return this.getAndConvertValueByCustomizeProperty(
+						item,
+						propertyType,
 						propertyName
 					);
-					if (r == undefined || r == null) {
-						return 0;
-					}
-
-					if (r instanceof Array) {
-						return r.length;
-					}
-
-					if (typeof r === "number" || r instanceof Number) {
-						return r as number;
-					}
-
-					if (typeof r === "string" || r instanceof String) {
-						const n = parseNumberOption(r as string)
-						if (n != null) {
-							return n;
-						}
-						return r.trim() === "" ? 0 : 1;
-					}
-
-					if (typeof r === "boolean" || r instanceof Boolean) {
-						return r ? 1 : 0;
-					}
-					return 1;
 				})
 				.array()
 				.reduce((a, b) => a + b, 0);
 		}
 		return groupData.length;
+	}
+
+	getAndConvertValueByCustomizeProperty(
+		item: Data<Record<string, Literal>>,
+		propertyType?: CountFieldType,
+		propertyName?: string
+	): number {
+		if (propertyName) {
+			let propertySource: PropertySource;
+			switch (propertyType) {
+				case "PAGE_PROPERTY":
+					propertySource = "PAGE";
+					break;
+				case "TASK_PROPERTY":
+					propertySource = "TASK";
+					break;
+				default:
+					propertySource = "UNKNOWN";
+					break;
+			}
+
+			const r = this.getValueByCustomizeProperty(
+				item.raw,
+				propertySource,
+				propertyName
+			);
+			if (r == undefined || r == null) {
+				return 0;
+			}
+
+			if (r instanceof Array) {
+				return r.length;
+			}
+
+			if (typeof r === "number" || r instanceof Number) {
+				return r as number;
+			}
+
+			if (typeof r === "string" || r instanceof String) {
+				const n = parseNumberOption(r as string);
+				if (n != null) {
+					return n;
+				}
+				return r.trim() === "" ? 0 : 1;
+			}
+
+			if (typeof r === "boolean" || r instanceof Boolean) {
+				return r ? 1 : 0;
+			}
+			return 1;
+		} else {
+			return 1;
+		}
 	}
 
 	abstract getValueByCustomizeProperty(
@@ -298,5 +328,49 @@ export abstract class BaseDataviewDataSourceQuery {
 			default:
 				return "UNKNOWN";
 		}
+	}
+}
+
+function jump(
+	evt: MouseEvent,
+	source: DataSource,
+	item: Data<Record<string, Literal>>,
+	app: App
+) {
+	if (source.type != "PAGE") {
+		const selectionState = {
+			eState: {
+				cursor: {
+					from: {
+						line: item.raw.line,
+						// @ts-ignore
+						ch: item.raw.position.start.col,
+					},
+					to: {
+						// @ts-ignore
+						line: item.raw.line + item.raw.lineCount - 1,
+						// @ts-ignore
+						ch: item.raw.position.end.col,
+					},
+				},
+				line: item.raw.line,
+			},
+		};
+		// MacOS interprets the Command key as Meta.
+		app.workspace.openLinkText(
+			// @ts-ignore
+			item.raw.link.toFile().obsidianLink(),
+			// @ts-ignore
+			item.raw.path,
+			evt.ctrlKey || (evt.metaKey && Platform.isMacOS),
+			selectionState as any
+		);
+	} else {
+		app.workspace.openLinkText(
+			// @ts-ignore
+			item.raw.file?.path,
+			"",
+			evt.ctrlKey || (evt.metaKey && Platform.isMacOS)
+		);
 	}
 }
