@@ -40,7 +40,8 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 		});
 
 		this.renderCellRuleIndicator(graphConfig, main);
-
+		const activityContainer= this.renderActivityContainer(graphConfig, main);
+		
 		// main ->  week day indicator(text cell)
 		const weekTextColumns = createDiv({
 			cls: "column",
@@ -125,7 +126,7 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 				this.applyCellGlobalStyle(cellEl, graphConfig);
 				this.applyCellStyleRule(cellEl, contributionItem, cellRules);
 				this.bindCellAttribute(cellEl, contributionItem);
-				this.bindCellClickEvent(cellEl, contributionItem, graphConfig);
+				this.bindCellClickEvent(cellEl, contributionItem, graphConfig, activityContainer);
 				this.bindCellTips(cellEl, contributionItem);
 			}
 		}

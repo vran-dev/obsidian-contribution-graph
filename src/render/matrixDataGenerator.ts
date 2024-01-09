@@ -52,6 +52,7 @@ export function generateByFixedDate(
 			year: currentDateAtIndex.getFullYear(),
 			value: contribution ? contribution.value : 0,
 			summary: contribution ? contribution.summary : undefined,
+			items: contribution ? contribution.items || [] : [],
 		});
 	}
 

@@ -3,6 +3,7 @@ import {
 	ContributionGraphConfig,
 	ContributionCellData,
 	CellStyleRule,
+	ContributionItem,
 } from "src/types";
 import { parseDate } from "src/util/dateUtils";
 import {
@@ -12,6 +13,7 @@ import {
 } from "./matrixDataGenerator";
 import { matchCellStyleRule } from "src/util/utils";
 import { setTooltip } from "obsidian";
+import { Messages } from "src/i18/messages";
 
 export interface GraphRender {
 	render(container: HTMLElement, graphConfig: ContributionGraphConfig): void;
@@ -84,20 +86,91 @@ export abstract class BaseGraphRender implements GraphRender {
 		});
 	}
 
+	renderActivityContainer(
+		graphConfig: ContributionGraphConfig,
+		parent: HTMLElement
+	): HTMLElement {
+		const activityContainer = createDiv({
+			cls: "activity-container",
+			parent: parent,
+		});
+		return activityContainer;
+	}
+
+	renderActivity(
+		graphConfig: ContributionGraphConfig,
+		cellData: ContributionCellData,
+		contaienr: HTMLElement
+	) {
+		contaienr.empty();
+
+		let summary;
+		if (cellData.value > 0) {
+			summary = Messages.you_have_contributed_to
+				.get()
+				.replace("{date}", cellData.date)
+				.replace("{value}", cellData.value.toString());
+		} else {
+			summary = Messages.you_have_no_contributions_on
+				.get()
+				.replace("{date}", cellData.date)
+				.replace("{value}", "0");
+		}
+		createDiv({
+			cls: "activity-summary",
+			parent: contaienr,
+			text: summary,
+		});
+
+		const content = createDiv({
+			cls: "activity-content",
+			parent: contaienr,
+		});
+
+		// list-main
+		const list = createDiv({
+			cls: "activity-list",
+			parent: content,
+		});
+
+		// show top 10 items
+		const size = 10;
+		const items = cellData.items || [];
+		renderActivityItem(items.slice(0, size), list);
+
+		const navigation = createDiv({
+			cls: "activity-navigation",
+			parent: content,
+		});
+
+		let page = 1;
+		if (items.length > size) {
+			const loadMore = createEl("a", {
+				text: Messages.click_to_load_more.get(),
+				href: "#",
+				parent: navigation,
+			});
+			loadMore.onclick = (event) => {
+				event.preventDefault();
+				page++;
+				renderActivityItem(
+					items.slice((page - 1) * size, page * size),
+					list
+				);
+				if (page * size >= items.length) {
+					loadMore.remove();
+				}
+			};
+		}
+	}
+
 	generateContributionData(graphConfig: ContributionGraphConfig) {
 		if (graphConfig.days) {
-			return generateByLatestDays(
-				graphConfig.days,
-				graphConfig.data
-			);
+			return generateByLatestDays(graphConfig.days, graphConfig.data);
 		} else if (graphConfig.fromDate && graphConfig.toDate) {
 			const fromDate = parseDate(graphConfig.fromDate);
 			const toDate = parseDate(graphConfig.toDate);
-			return generateByFixedDate(
-				fromDate,
-				toDate,
-				graphConfig.data
-			);
+			return generateByFixedDate(fromDate, toDate, graphConfig.data);
 		} else {
 			return generateByData(graphConfig.data);
 		}
@@ -160,11 +233,20 @@ export abstract class BaseGraphRender implements GraphRender {
 	bindCellClickEvent(
 		cellEl: HTMLElement,
 		contributionItem: ContributionCellData,
-		graphConfig: ContributionGraphConfig
+		graphConfig: ContributionGraphConfig,
+		activityContainer?: HTMLElement
 	) {
 		cellEl.onclick = (event: MouseEvent) => {
 			if (graphConfig.onCellClick) {
 				graphConfig.onCellClick(contributionItem, event);
+			}
+
+			if (activityContainer) {
+				this.renderActivity(
+					graphConfig,
+					contributionItem,
+					activityContainer
+				);
 			}
 		};
 	}
@@ -177,4 +259,26 @@ export abstract class BaseGraphRender implements GraphRender {
 			setTooltip(cellEl, summary);
 		});
 	}
+}
+
+function renderActivityItem(items: ContributionItem[], listMain: HTMLElement) {
+	(items || []).slice(0, 10).forEach((item) => {
+		const listItem = createDiv({
+			cls: "activity-item",
+			parent: listMain,
+		});
+
+		const linkEl = createEl("a", {
+			text: item.label,
+			href: "#",
+			parent: listItem,
+			cls: "label",
+		});
+		linkEl.onclick = (event) => {
+			event.preventDefault();
+			if (item.open) {
+				item.open(event);
+			}
+		};
+	});
 }

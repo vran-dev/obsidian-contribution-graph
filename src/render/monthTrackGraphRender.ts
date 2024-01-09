@@ -53,6 +53,9 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 			})
 		);
 		this.renderMonthDateIndicator(dateIndicatorRow);
+
+		const activityContainer= this.renderActivityContainer(graphConfig, main);
+		
 		const contributionData = this.generateContributionData(
 			graphConfig
 		).filter((item) => item.date != "$HOLE$");
@@ -131,7 +134,7 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 
 				this.applyCellStyleRule(cellEl, contributionItem, cellRules);
 				this.bindCellAttribute(cellEl, contributionItem);
-				this.bindCellClickEvent(cellEl, contributionItem, graphConfig);
+				this.bindCellClickEvent(cellEl, contributionItem, graphConfig, activityContainer);
 				this.bindCellTips(cellEl, contributionItem);
 			}
 		}

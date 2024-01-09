@@ -47,6 +47,8 @@ export class CalendarGraphRender extends BaseGraphRender {
 
 		this.renderCellRuleIndicator(graphConfig, main);
 
+		const activityContainer= this.renderActivityContainer(graphConfig, main);
+
 		const contributionData = this.generateContributionData(
 			graphConfig
 		).filter((item) => item.date != "$HOLE$");
@@ -183,7 +185,7 @@ export class CalendarGraphRender extends BaseGraphRender {
 				this.applyCellGlobalStyle(cellEl, graphConfig);
 				this.applyCellStyleRule(cellEl, item, cellRules);
 				this.bindCellAttribute(cellEl, item);
-				this.bindCellClickEvent(cellEl, item, graphConfig);
+				this.bindCellClickEvent(cellEl, item, graphConfig, activityContainer);
 				this.bindCellTips(cellEl, item);
 			}
 
