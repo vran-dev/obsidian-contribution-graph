@@ -30,8 +30,7 @@ export function generateByData(data: Contribution[]) {
 export function generateByFixedDate(
 	from: Date,
 	to: Date,
-	data: Contribution[],
-	startOfWeek = 0
+	data: Contribution[]
 ) {
 	const days = diffDays(from, to) + 1;
 	// convert contributions to map: date(yyyy-MM-dd) -> value(sum)
@@ -66,12 +65,11 @@ export function generateByFixedDate(
  */
 export function generateByLatestDays(
 	days: number,
-	data: Contribution[] = [],
-	startOfWeek = 0
+	data: Contribution[] = []
 ): ContributionCellData[] {
 	const fromDate = new Date();
 	fromDate.setDate(fromDate.getDate() - days + 1);
-	return generateByFixedDate(fromDate, new Date(), data, startOfWeek);
+	return generateByFixedDate(fromDate, new Date(), data);
 }
 
 function contributionToMap(data: Contribution[]) {

@@ -46,7 +46,7 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 			cls: "column",
 			parent: chartsEl,
 		});
-		this.renderWeekIndicator(weekTextColumns, graphConfig.startOfWeek);
+		this.renderWeekIndicator(weekTextColumns, graphConfig.startOfWeek || 0);
 
 		const contributionData: ContributionCellData[] =
 			this.generateContributionData(graphConfig);
@@ -56,7 +56,7 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 			const from = new Date(contributionData[0].date);
 			const weekDayOfFromDate = from.getDay();
 			const firstHoleCount = distanceBeforeTheStartOfWeek(
-				graphConfig.startOfWeek,
+				graphConfig.startOfWeek || 0,
 				weekDayOfFromDate
 			);
 			for (let i = 0; i < firstHoleCount; i++) {

@@ -88,8 +88,7 @@ export abstract class BaseGraphRender implements GraphRender {
 		if (graphConfig.days) {
 			return generateByLatestDays(
 				graphConfig.days,
-				graphConfig.data,
-				graphConfig.startOfWeek || 0
+				graphConfig.data
 			);
 		} else if (graphConfig.fromDate && graphConfig.toDate) {
 			const fromDate = parseDate(graphConfig.fromDate);
@@ -97,8 +96,7 @@ export abstract class BaseGraphRender implements GraphRender {
 			return generateByFixedDate(
 				fromDate,
 				toDate,
-				graphConfig.data,
-				graphConfig.startOfWeek || 0
+				graphConfig.data
 			);
 		} else {
 			return generateByData(graphConfig.data);
