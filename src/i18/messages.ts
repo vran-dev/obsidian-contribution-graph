@@ -190,6 +190,19 @@ export const Messages = {
 	weekday_thursday: new Message("周四", "Thursday"),
 	weekday_friday: new Message("周五", "Friday"),
 	weekday_saturday: new Message("周六", "Saturday"),
+
+	/**
+	 * graph text
+	 */
+	you_have_no_contributions_on: new Message(
+		"你在 {date} 没有任何贡献",
+		"No contributions on {date}"
+	),
+	you_have_contributed_to: new Message(
+		"你在 {date} 有 {value} 次贡献",
+		"{value} contributions on {date}"
+	),
+	click_to_load_more: new Message("点击加载更多......", "Click to load more..."),
 };
 
 export const weekDayMapping = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

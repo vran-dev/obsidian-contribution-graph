@@ -43,7 +43,7 @@ export class ContributionGraphConfig {
 
 	/**
 	 * set true to fill the screen, default value is false
-	 * 
+	 *
 	 * notice: it's not work when `graphType` is `calendar`
 	 */
 	fillTheScreen = false;
@@ -90,6 +90,15 @@ export interface Contribution {
 	 * the summary of the contribution, will be shown when hover on the cell
 	 */
 	summary: string | undefined;
+
+	items?: ContributionItem[];
+}
+
+export interface ContributionItem {
+	label: string;
+	value: number;
+	link?: string;
+	open?: (e: MouseEvent) => void;
 }
 
 export interface CellStyleRule {
@@ -112,4 +121,5 @@ export class ContributionCellData {
 	year: number; // sample: 2020
 	value: number;
 	summary?: string;
+	items?: ContributionItem[];
 }
