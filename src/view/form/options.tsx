@@ -1,4 +1,4 @@
-import { Messages, isZh } from "src/i18/messages";
+import { Locals, isZh } from "src/i18/messages";
 import { Icons } from "../icon/Icons";
 import { ChooseOption } from "../choose/Choose";
 import { SelectOption } from "./GraphForm";
@@ -30,81 +30,81 @@ export const titleAlignChooseOptions: ChooseOption[] = [
 
 export const graphOptions: SelectOption<string>[] = [
 	{
-		label: Messages.form_graph_type_git.get(),
+		label: Locals.get().form_graph_type_git,
 		value: "default",
 		selected: true,
 	},
 	{
-		label: Messages.form_graph_type_month_track.get(),
+		label: Locals.get().form_graph_type_month_track,
 		value: "month-track",
 	},
 	{
-		label: Messages.form_graph_type_calendar.get(),
+		label: Locals.get().form_graph_type_calendar,
 		value: "calendar",
 	},
 ];
 
 export const startOfWeekOptions: SelectOption<string>[] = [
 	{
-		label: Messages.weekday_sunday.get(),
+		label: Locals.get().weekday_sunday,
 		value: "0",
 		selected: !isZh(),
 	},
 	{
-		label: Messages.weekday_monday.get(),
+		label: Locals.get().weekday_monday,
 		value: "1",
 		selected: isZh(),
 	},
 	{
-		label: Messages.weekday_tuesday.get(),
+		label: Locals.get().weekday_tuesday,
 		value: "2",
 	},
 	{
-		label: Messages.weekday_wednesday.get(),
+		label: Locals.get().weekday_wednesday,
 		value: "3",
 	},
 	{
-		label: Messages.weekday_thursday.get(),
+		label: Locals.get().weekday_thursday,
 		value: "4",
 	},
 	{
-		label: Messages.weekday_friday.get(),
+		label: Locals.get().weekday_friday,
 		value: "5",
 	},
 	{
-		label: Messages.weekday_saturday.get(),
+		label: Locals.get().weekday_saturday,
 		value: "6",
 	},
 ];
 
 export const cellShapes: SelectOption<string>[] = [
 	{
-		label: Messages.form_cell_shape_rounded.get(),
+		label: Locals.get().form_cell_shape_rounded,
 		value: "",
 		selected: true,
 	},
 	{
-		label: Messages.form_cell_shape_square.get(),
+		label: Locals.get().form_cell_shape_square,
 		value: "0%",
 	},
 	{
-		label: Messages.form_cell_shape_circle.get(),
+		label: Locals.get().form_cell_shape_circle,
 		value: "50%",
 	},
 ];
 
 export const dataSourceTypes: SelectOption<DataSourceType>[] = [
 	{
-		label: Messages.form_datasource_type_page.get(),
+		label: Locals.get().form_datasource_type_page,
 		value: "PAGE",
 		selected: true,
 	},
 	{
-		label: Messages.form_datasource_type_all_task.get(),
+		label: Locals.get().form_datasource_type_all_task,
 		value: "ALL_TASK",
 	},
 	{
-		label: Messages.form_datasource_type_task_in_specific_page.get(),
+		label: Locals.get().form_datasource_type_task_in_specific_page,
 		value: "TASK_IN_SPECIFIC_PAGE",
 	},
 ];
@@ -117,15 +117,15 @@ export function getDataSourceFilterOptions(
 	} else {
 		return [
 			{
-				label: Messages.form_datasource_filter_type_none.get(),
+				label: Locals.get().form_datasource_filter_type_none,
 				value: "NONE",
 			},
 			{
-				label: Messages.form_datasource_filter_type_status_is.get(),
+				label: Locals.get().form_datasource_filter_type_status_is,
 				value: "STATUS_IS",
 			},
 			{
-				label: Messages.form_datasource_filter_type_contains_any_tag.get(),
+				label: Locals.get().form_datasource_filter_type_contains_any_tag,
 				value: "CONTAINS_ANY_TAG",
 			},
 		];
@@ -137,18 +137,18 @@ export const countFieldTypes = (
 ): SelectOption<CountFieldType>[] => {
 	const options: SelectOption<CountFieldType>[] = [
 		{
-			label: Messages.form_count_field_count_field_type_default.get(),
+			label: Locals.get().form_count_field_count_field_type_default,
 			value: "DEFAULT",
 		},
 		{
-			label: Messages.form_count_field_count_field_type_page_prop.get(),
+			label: Locals.get().form_count_field_count_field_type_page_prop,
 			value: "PAGE_PROPERTY",
 		},
 	];
 
 	if (source === "ALL_TASK" || source === "TASK_IN_SPECIFIC_PAGE") {
 		options.push({
-			label: Messages.form_count_field_count_field_type_task_prop.get(),
+			label: Locals.get().form_count_field_count_field_type_task_prop,
 			value: "TASK_PROPERTY",
 		});
 	}
@@ -160,27 +160,27 @@ export const dateFieldTypes = (
 ): SelectOption<DateFieldType>[] => {
 	const options: SelectOption<DateFieldType>[] = [
 		{
-			label: Messages.form_date_field_type_file_ctime.get(),
+			label: Locals.get().form_date_field_type_file_ctime,
 			value: "FILE_CTIME",
 		},
 		{
-			label: Messages.form_date_field_type_file_mtime.get(),
+			label: Locals.get().form_date_field_type_file_mtime,
 			value: "FILE_MTIME",
 		},
 		{
-			label: Messages.form_date_field_type_file_name.get(),
+			label: Locals.get().form_date_field_type_file_name,
 			value: "FILE_NAME",
 		},
 
 		{
-			label: Messages.form_date_field_type_file_specific_page_property.get(),
+			label: Locals.get().form_date_field_type_file_specific_page_property,
 			value: "PAGE_PROPERTY",
 		},
 	];
 
 	if (source === "ALL_TASK" || source === "TASK_IN_SPECIFIC_PAGE") {
 		options.push({
-			label: Messages.form_date_field_type_file_specific_task_property.get(),
+			label: Locals.get().form_date_field_type_file_specific_task_property,
 			value: "TASK_PROPERTY",
 		});
 	}
@@ -190,20 +190,20 @@ export const dateFieldTypes = (
 
 export const taskStatusOptions: SelectOption<TaskStatus>[] = [
 	{
-		label: Messages.form_datasource_filter_task_status_completed.get(),
+		label: Locals.get().form_datasource_filter_task_status_completed,
 		value: "COMPLETED",
 		selected: true,
 	},
 	{
-		label: Messages.form_datasource_filter_task_status_fully_completed.get(),
+		label: Locals.get().form_datasource_filter_task_status_fully_completed,
 		value: "FULLY_COMPLETED",
 	},
 	{
-		label: Messages.form_datasource_filter_task_status_incomplete.get(),
+		label: Locals.get().form_datasource_filter_task_status_incomplete,
 		value: "INCOMPLETE",
 	},
 	{
-		label: Messages.form_datasource_filter_task_status_any.get(),
+		label: Locals.get().form_datasource_filter_task_status_any,
 		value: "ANY",
 	},
 ];
