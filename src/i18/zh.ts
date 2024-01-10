@@ -46,7 +46,7 @@ export class Zh implements Local {
     form_date_field_type_file_name = "文件名称";
     form_date_field_type_file_ctime = "文件创建日期";
     form_date_field_type_file_mtime = "文件修改日期";
-    form_date_field_type_file_specific_page_property = "指定页面属性";
+    form_date_field_type_file_specific_page_property = "指定文档属性";
     form_date_field_type_file_specific_task_property = "指定任务属性";
 
     form_date_field_placeholder = "默认为文件的创建日期";
@@ -66,7 +66,7 @@ export class Zh implements Local {
 
     form_count_field_count_field_type_default = "默认";
 
-    form_count_field_count_field_type_page_prop = "页面属性";
+    form_count_field_count_field_type_page_prop = "文档属性";
 
     form_count_field_count_field_type_task_prop = "任务属性";
     form_fill_the_screen_label = "充满屏幕";
@@ -76,9 +76,9 @@ export class Zh implements Local {
     form_cell_shape_square = "方块";
     form_cell_shape_rounded = "圆角";
 
-    form_datasource_type_page = "页面";
+    form_datasource_type_page = "文档";
     form_datasource_type_all_task = "所有任务";
-    form_datasource_type_task_in_specific_page = "指定页面中的任务";
+    form_datasource_type_task_in_specific_page = "指定文档中的任务";
 
     form_theme = "主题";
     form_theme_placeholder = "选择主题或自定义样式";
