@@ -1,5 +1,4 @@
-import { App, MarkdownPostProcessorContext } from "obsidian";
-import { load } from "js-yaml";
+import { App, MarkdownPostProcessorContext, parseYaml } from "obsidian";
 import { Renders } from "src/render/renders";
 
 import { MISS_CONFIG } from "./bizErrors";
@@ -70,7 +69,7 @@ export class CodeBlockProcessor {
 
 		try {
 			// @ts-ignore
-			const yamlConfig: YamlGraphConfig = load(code);
+			const yamlConfig: YamlGraphConfig = parseYaml(code);
 			return YamlConfigReconciler.reconcile(yamlConfig);
 		} catch (e) {
 			if (e.mark?.line) {

@@ -6,8 +6,7 @@
 
 ## What
 
-Contribution Graph is a plugin for [obsidin.md](https://obsidian.md/) which could generate interactive contribution graphs like GitHub to track your notes, habits, activity, history, and so on.
-
+Contribution Graph is a plugin for [obsidian.md](https://obsidian.md/) which could generate interactive heatmap graphs like GitHub to track your notes, habits, activity, history, and so on.
 
 [![Buy me a coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://www.buymeacoffee.com/vran)
 
