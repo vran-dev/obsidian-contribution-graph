@@ -13,7 +13,7 @@ import {
 } from "./matrixDataGenerator";
 import { matchCellStyleRule } from "src/util/utils";
 import { setTooltip } from "obsidian";
-import { Messages } from "src/i18/messages";
+import { Locals } from "src/i18/messages";
 
 export interface GraphRender {
 	render(container: HTMLElement, graphConfig: ContributionGraphConfig): void;
@@ -106,13 +106,11 @@ export abstract class BaseGraphRender implements GraphRender {
 
 		let summary;
 		if (cellData.value > 0) {
-			summary = Messages.you_have_contributed_to
-				.get()
+			summary = Locals.get().you_have_contributed_to
 				.replace("{date}", cellData.date)
 				.replace("{value}", cellData.value.toString());
 		} else {
-			summary = Messages.you_have_no_contributions_on
-				.get()
+			summary = Locals.get().you_have_no_contributions_on
 				.replace("{date}", cellData.date)
 				.replace("{value}", "0");
 		}
@@ -146,7 +144,7 @@ export abstract class BaseGraphRender implements GraphRender {
 		let page = 1;
 		if (items.length > size) {
 			const loadMore = createEl("a", {
-				text: Messages.click_to_load_more.get(),
+				text: Locals.get().click_to_load_more,
 				href: "#",
 				parent: navigation,
 			});

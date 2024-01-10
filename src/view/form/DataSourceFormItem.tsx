@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { Fragment, useState } from "react";
-import { Messages } from "src/i18/messages";
+import { Locals } from "src/i18/messages";
 import { DataFilter, DataSource, DataSourceType } from "src/query/types";
 import { getAllProperties, getTagOptions } from "src/util/page";
 import { Icons } from "../icon/Icons";
@@ -110,11 +110,12 @@ export function DataSourceFormItem(props: {
 		"TASK_IN_SPECIFIC_PAGE",
 	];
 
+	const local = Locals.get()
 	return (
 		<Fragment>
 			<div className="form-item">
 				<span className="label">
-					{Messages.form_data_source_value.get()}
+					{local.form_data_source_value}
 				</span>
 				<div className="form-content">
 					<select
@@ -138,7 +139,7 @@ export function DataSourceFormItem(props: {
 						<input
 							type="text"
 							defaultValue={dataSource.value}
-							placeholder={Messages.form_query_placeholder.get()}
+							placeholder={local.form_query_placeholder}
 							onChange={(e) => {
 								changeDataSource("value", e.target.value);
 							}}
@@ -150,7 +151,7 @@ export function DataSourceFormItem(props: {
 			{taskDataSource.includes(dataSource.type) && (
 				<div className="form-item">
 					<span className="label">
-						{Messages.form_data_source_filter_label.get()}
+						{local.form_data_source_filter_label}
 					</span>
 					<div className="form-vertical-content">
 						{dataSource.filters?.map((filter, index) => {
@@ -252,7 +253,7 @@ export function DataSourceFormItem(props: {
 														props.app
 													);
 												}}
-												inputPlaceholder={Messages.form_datasource_filter_contains_tag_input_placeholder.get()}
+												inputPlaceholder={local.form_datasource_filter_contains_tag_input_placeholder}
 											/>
 										) : null}
 
@@ -278,7 +279,7 @@ export function DataSourceFormItem(props: {
 			)}
 
 			<div className="form-item">
-				<span className="label">{Messages.form_date_field.get()}</span>
+				<span className="label">{local.form_date_field}</span>
 				<div className="form-content">
 					<select
 						defaultValue={
@@ -302,7 +303,7 @@ export function DataSourceFormItem(props: {
 							onInputChange={(newValue) => {
 								changeDateField("value", newValue);
 							}}
-							inputPlaceholder={Messages.form_date_field_placeholder.get()}
+							inputPlaceholder={local.form_date_field_placeholder}
 							getItems={(query) => {
 								return getAllProperties(query, props.app).map(
 									(p, index) => {
@@ -326,7 +327,7 @@ export function DataSourceFormItem(props: {
 						<input
 							type="text"
 							defaultValue={dataSource.dateField?.value || ""}
-							placeholder={Messages.form_date_field_placeholder.get()}
+							placeholder={local.form_date_field_placeholder}
 							onChange={(e) => {
 								changeDateField("value", e.target.value);
 							}}
@@ -337,7 +338,7 @@ export function DataSourceFormItem(props: {
 
 			<div className="form-item">
 				<span className="label">
-					{Messages.form_date_field_format.get()}
+					{local.form_date_field_format}
 				</span>
 				<div className="form-vertical-content">
 					<select
@@ -350,10 +351,10 @@ export function DataSourceFormItem(props: {
 						}}
 					>
 						<option value="smart_detect">
-							{Messages.form_date_field_format_type_smart.get()}
+							{local.form_date_field_format_type_smart}
 						</option>
 						<option value="manual">
-							{Messages.form_date_field_format_type_manual.get()}
+							{local.form_date_field_format_type_manual}
 						</option>
 					</select>
 					{dateFormatType == "manual" ? (
@@ -364,7 +365,7 @@ export function DataSourceFormItem(props: {
 									dataSource.dateField?.format || ""
 								}
 								name="dateFieldFormat"
-								placeholder={Messages.form_date_field_format_placeholder.get()}
+								placeholder={local.form_date_field_format_placeholder}
 								onChange={(e) => {
 									changeDateField("format", e.target.value);
 								}}
@@ -375,7 +376,7 @@ export function DataSourceFormItem(props: {
 									Luxon Format
 								</a>
 								{" " +
-									Messages.form_date_field_format_sample.get()}
+									local.form_date_field_format_sample}
 								:
 								{" " +
 									DateTime.fromJSDate(
@@ -392,7 +393,7 @@ export function DataSourceFormItem(props: {
 
 			<div className="form-item">
 				<span className="label">
-					{Messages.form_count_field_count_field_label.get()}
+					{local.form_count_field_count_field_label}
 				</span>
 				<div className="form-vertical-content">
 					<select
@@ -418,7 +419,7 @@ export function DataSourceFormItem(props: {
 							onInputChange={(newValue) => {
 								changeCountField("value", newValue);
 							}}
-							inputPlaceholder={Messages.form_count_field_count_field_input_placeholder.get()}
+							inputPlaceholder={local.form_count_field_count_field_input_placeholder}
 							getItems={(query) => {
 								return getAllProperties(query, props.app).map(
 									(p, index) => {

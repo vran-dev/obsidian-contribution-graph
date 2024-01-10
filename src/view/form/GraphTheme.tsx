@@ -1,5 +1,5 @@
 import { DEFAULT_RULES } from "src/constants";
-import { Messages } from "src/i18/messages";
+import { Locals } from "src/i18/messages";
 import { CellStyleRule } from "src/types";
 
 export interface Theme {
@@ -10,7 +10,7 @@ export interface Theme {
 
 export const THEMES = [
 	{
-		name: Messages.form_theme_placeholder.get(),
+		name: Locals.get().form_theme_placeholder,
 		description: "",
 		rules: [],
 	},

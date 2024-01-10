@@ -4,7 +4,7 @@ import { CellStyleRule } from "src/types";
 import { Choose } from "../choose/Choose";
 import { CellRuleItem } from "./CellRuleFormItem";
 import { THEMES } from "./GraphTheme";
-import { Messages } from "src/i18/messages";
+import { Locals } from "src/i18/messages";
 import { App } from "obsidian";
 
 import {
@@ -23,6 +23,7 @@ export function CreateContributionGraphForm(props: {
 	app: App;
 }): JSX.Element {
 	const { yamlConfig } = props;
+	const local = Locals.get();
 	const previewContainerRef = useRef<HTMLDivElement>(null);
 
 	const [isLatestDate, setIsLatestDate] = useState(
@@ -110,20 +111,20 @@ export function CreateContributionGraphForm(props: {
 				activeIndex={0}
 				tabs={[
 					{
-						title: Messages.form_basic_settings.get(),
+						title: local.form_basic_settings,
 						children: (
 							<div className="contribution-graph-modal-form">
 								<div className="form-group">
 									<div className="form-item">
 										<span className="label">
-											{Messages.form_title.get()}
+											{local.form_title}
 										</span>
 										<div className="form-content">
 											<input
 												name="title"
 												type="text"
 												defaultValue={formData.title}
-												placeholder={Messages.form_title_placeholder.get()}
+												placeholder={local.form_title_placeholder}
 												onChange={handleInputChange}
 												style={{
 													...formData.titleStyle,
@@ -164,7 +165,7 @@ export function CreateContributionGraphForm(props: {
 
 									<div className="form-item">
 										<span className="label">
-											{Messages.form_graph_type.get()}
+											{local.form_graph_type}
 										</span>
 										<div className="form-content">
 											<select
@@ -191,7 +192,7 @@ export function CreateContributionGraphForm(props: {
 
 									<div className="form-item">
 										<span className="label">
-											{Messages.form_date_range.get()}
+											{local.form_date_range}
 										</span>
 										<div className="form-content">
 											<select
@@ -214,10 +215,10 @@ export function CreateContributionGraphForm(props: {
 												}}
 											>
 												<option value="fixed">
-													{Messages.form_date_range_fixed_date.get()}
+													{local.form_date_range_fixed_date}
 												</option>
 												<option value="latest">
-													{Messages.form_date_range_latest_days.get()}
+													{local.form_date_range_latest_days}
 												</option>
 											</select>
 										</div>
@@ -236,7 +237,7 @@ export function CreateContributionGraphForm(props: {
 															formData.days
 														}
 														min={1}
-														placeholder={Messages.form_date_range_latest_days_placeholder.get()}
+														placeholder={local.form_date_range_latest_days_placeholder}
 														onChange={(e) =>
 															changeFormData(
 																"days",
@@ -295,13 +296,13 @@ export function CreateContributionGraphForm(props: {
 						),
 					},
 					{
-						title: Messages.form_style_settings.get(),
+						title: local.form_style_settings,
 						children: (
 							<div className="contribution-graph-modal-form">
 								<div className="form-group">
 									<div className="form-item">
 										<span className="label">
-											{Messages.form_fill_the_screen_label.get()}
+											{local.form_fill_the_screen_label}
 										</span>
 										<div className="form-content">
 											<input
@@ -323,7 +324,7 @@ export function CreateContributionGraphForm(props: {
 									"month-track" ? null : (
 										<div className="form-item">
 											<span className="label">
-												{Messages.form_start_of_week.get()}
+												{local.form_start_of_week}
 											</span>
 											<div className="form-content">
 												<select
@@ -360,7 +361,7 @@ export function CreateContributionGraphForm(props: {
 									)}
 									<div className="form-item">
 										<span className="label">
-											{Messages.form_show_cell_indicators.get()}
+											{local.form_show_cell_indicators}
 										</span>
 										<div className="form-content">
 											<input
@@ -381,7 +382,7 @@ export function CreateContributionGraphForm(props: {
 									</div>
 									<div className="form-item">
 										<span className="label">
-											{Messages.form_cell_shape.get()}
+											{local.form_cell_shape}
 										</span>
 										<div className="form-content">
 											<select
@@ -402,7 +403,7 @@ export function CreateContributionGraphForm(props: {
 									</div>
 									<div className="form-item">
 										<span className="label">
-											{Messages.form_theme.get()}
+											{local.form_theme}
 										</span>
 										<div className="form-content">
 											<select
@@ -423,7 +424,7 @@ export function CreateContributionGraphForm(props: {
 									</div>
 									<div className="form-item">
 										<span className="label">
-											{Messages.form_cell_style_rules.get()}
+											{local.form_cell_style_rules}
 										</span>
 										<div className="form-vertical-content">
 											{cellRules.map((rule) => {
@@ -487,10 +488,10 @@ export function CreateContributionGraphForm(props: {
 				<div className="form-item">
 					<div className="form-content">
 						<button className="button" onClick={onPreview}>
-							{Messages.form_button_preview.get()}
+							{local.form_button_preview}
 						</button>
 						<button className="button" onClick={onSubmit}>
-							{Messages.form_button_save.get()}
+							{local.form_button_save}
 						</button>
 					</div>
 				</div>
