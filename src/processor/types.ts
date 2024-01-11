@@ -74,7 +74,7 @@ export class YamlGraphConfig {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { query, dateField, ...rest } = config;
 
-		if (config.dateRangeType != "DATE_RANGE") {
+		if (config.dateRangeType != "FIXED_DATE_RANGE") {
 			if (config.dateRangeType == "LATEST_DAYS") {
 				return {
 					days: config.dateRangeValue,
