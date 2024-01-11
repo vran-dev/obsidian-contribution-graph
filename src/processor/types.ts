@@ -88,6 +88,7 @@ export class YamlGraphConfig {
 				);
 				return {
 					...rest,
+					days: undefined,
 					fromDate: toFormattedDate(start),
 					toDate: toFormattedDate(end),
 				} as ContributionGraphConfig;
@@ -99,6 +100,7 @@ export class YamlGraphConfig {
 				);
 				return {
 					...rest,
+					days: undefined,
 					fromDate: toFormattedDate(start),
 					toDate: toFormattedDate(end),
 				} as ContributionGraphConfig;
