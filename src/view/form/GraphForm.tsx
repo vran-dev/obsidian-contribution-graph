@@ -12,9 +12,10 @@ import {
 	titleAlignChooseOptions,
 	graphOptions,
 	startOfWeekOptions,
+	dateTypeOptions,
 } from "./options";
 import { DataSourceFormItem } from "./DataSourceFormItem";
-import { YamlGraphConfig } from "src/processor/types";
+import { DateRangeType, YamlGraphConfig } from "src/processor/types";
 import { Tab } from "../tab/Tab";
 
 export function CreateContributionGraphForm(props: {
@@ -26,10 +27,6 @@ export function CreateContributionGraphForm(props: {
 	const local = Locals.get();
 	const previewContainerRef = useRef<HTMLDivElement>(null);
 
-	const [isLatestDate, setIsLatestDate] = useState(
-		yamlConfig.days !== undefined ||
-			(!yamlConfig.fromDate && !yamlConfig.toDate)
-	);
 	const [formData, setFormData] = useState(yamlConfig);
 	const [cellRules, setCellRules] = useState<CellStyleRule[]>(
 		yamlConfig.cellStyleRules || []
@@ -124,7 +121,9 @@ export function CreateContributionGraphForm(props: {
 												name="title"
 												type="text"
 												defaultValue={formData.title}
-												placeholder={local.form_title_placeholder}
+												placeholder={
+													local.form_title_placeholder
+												}
 												onChange={handleInputChange}
 												style={{
 													...formData.titleStyle,
@@ -197,29 +196,45 @@ export function CreateContributionGraphForm(props: {
 										<div className="form-content">
 											<select
 												defaultValue={
-													isLatestDate
-														? "latest"
-														: "fixed"
+													formData.dateRangeType ||
+													"LATEST_DAYS"
 												}
-												onChange={() => {
-													if (isLatestDate) {
-														// change to fixed date should clear days field
+												onChange={(e) => {
+													changeFormData(
+														"dateRangeType",
+														e.target
+															.value as DateRangeType
+													);
+													if (
+														e.target.type !=
+														"FIXED_DATE_RANGE"
+													) {
 														changeFormData(
-															"days",
+															"fromDate",
+															undefined
+														);
+														changeFormData(
+															"toDate",
+															undefined
+														);
+													} else {
+														changeFormData(
+															"dateRangeValue",
 															undefined
 														);
 													}
-													setIsLatestDate(
-														!isLatestDate
-													);
 												}}
 											>
-												<option value="fixed">
-													{local.form_date_range_fixed_date}
-												</option>
-												<option value="latest">
-													{local.form_date_range_latest_days}
-												</option>
+												{dateTypeOptions.map(
+													(option) => (
+														<option
+															value={option.value}
+															key={option.value}
+														>
+															{option.label}
+														</option>
+													)
+												)}
 											</select>
 										</div>
 									</div>
@@ -227,20 +242,21 @@ export function CreateContributionGraphForm(props: {
 									<div className="form-item">
 										<span className="label"></span>
 										<div className="form-content">
-											{isLatestDate ? (
+											{formData.dateRangeType !=
+											"FIXED_DATE_RANGE" ? (
 												<>
 													<input
-														id="days"
-														name="days"
 														type="number"
 														defaultValue={
-															formData.days
+															formData.dateRangeValue
 														}
 														min={1}
-														placeholder={local.form_date_range_latest_days_placeholder}
+														placeholder={
+															local.form_date_range_latest_days_placeholder
+														}
 														onChange={(e) =>
 															changeFormData(
-																"days",
+																"dateRangeValue",
 																parseInt(
 																	e.target
 																		.value

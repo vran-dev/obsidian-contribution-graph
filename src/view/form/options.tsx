@@ -9,6 +9,7 @@ import {
 	DateFieldType,
 	TaskStatus,
 } from "src/query/types";
+import { DateRangeType } from "src/processor/types";
 
 export const titleAlignChooseOptions: ChooseOption[] = [
 	{
@@ -125,7 +126,8 @@ export function getDataSourceFilterOptions(
 				value: "STATUS_IS",
 			},
 			{
-				label: Locals.get().form_datasource_filter_type_contains_any_tag,
+				label: Locals.get()
+					.form_datasource_filter_type_contains_any_tag,
 				value: "CONTAINS_ANY_TAG",
 			},
 		];
@@ -173,14 +175,16 @@ export const dateFieldTypes = (
 		},
 
 		{
-			label: Locals.get().form_date_field_type_file_specific_page_property,
+			label: Locals.get()
+				.form_date_field_type_file_specific_page_property,
 			value: "PAGE_PROPERTY",
 		},
 	];
 
 	if (source === "ALL_TASK" || source === "TASK_IN_SPECIFIC_PAGE") {
 		options.push({
-			label: Locals.get().form_date_field_type_file_specific_task_property,
+			label: Locals.get()
+				.form_date_field_type_file_specific_task_property,
 			value: "TASK_PROPERTY",
 		});
 	}
@@ -205,5 +209,24 @@ export const taskStatusOptions: SelectOption<TaskStatus>[] = [
 	{
 		label: Locals.get().form_datasource_filter_task_status_any,
 		value: "ANY",
+	},
+];
+
+export const dateTypeOptions: SelectOption<DateRangeType>[] = [
+	{
+		label: Locals.get().form_date_range_latest_days,
+		value: "LATEST_DAYS",
+	},
+	{
+		label: Locals.get().form_date_range_fixed_date,
+		value: "FIXED_DATE_RANGE",
+	},
+	{
+		label: Locals.get().form_date_range_latest_month,
+		value: "LATEST_MONTH",
+	},
+	{
+		label: Locals.get().form_date_range_latest_year,
+		value: "LATEST_YEAR",
 	},
 ];

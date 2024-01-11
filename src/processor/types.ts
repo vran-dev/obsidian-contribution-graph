@@ -14,18 +14,21 @@ import {
 	INVALID_START_OF_WEEK,
 } from "./bizErrors";
 import { GraphProcessError } from "./graphProcessError";
+import {
+	getLatestMonthAbsoluteFromAndEnd,
+	getLatestYearAbsoluteFromAndEnd,
+	toFormattedDate,
+} from "src/util/dateUtils";
 
 export class YamlGraphConfig {
 	title?: string;
 	titleStyle: Partial<CSSStyleDeclaration>;
 	graphType: string;
-	query?: string;
 	dataSource: DataSource;
-	days?: number;
+	dateRangeValue?: number;
+	dateRangeType?: DateRangeType;
 	fromDate?: string;
 	toDate?: string;
-	dateField?: string;
-	dateFieldFormat?: string;
 	data: Contribution[];
 	startOfWeek: number;
 	cellStyle?: Partial<CSSStyleDeclaration>;
@@ -33,10 +36,17 @@ export class YamlGraphConfig {
 	showCellRuleIndicators: boolean;
 	fillTheScreen: boolean;
 
+	// deprecated
+	days?: number;
+	query?: string;
+	dateField?: string;
+	dateFieldFormat?: string;
+
 	constructor() {
 		this.title = "Contributions";
 		this.graphType = "default";
-		this.days = 180;
+		this.dateRangeValue = 180;
+		this.dateRangeType = "LATEST_DAYS";
 		this.startOfWeek = isZh() ? 1 : 0;
 		this.showCellRuleIndicators = true;
 		this.titleStyle = {
@@ -55,6 +65,7 @@ export class YamlGraphConfig {
 		this.query = undefined;
 		this.dateFieldFormat = undefined;
 		this.dateField = undefined;
+		this.days = undefined;
 	}
 
 	static toContributionGraphConfig(
@@ -62,8 +73,38 @@ export class YamlGraphConfig {
 	): ContributionGraphConfig {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { query, dateField, ...rest } = config;
-		const graphConfig = rest as ContributionGraphConfig;
-		return graphConfig;
+
+		if (config.dateRangeType != "DATE_RANGE") {
+			if (config.dateRangeType == "LATEST_DAYS") {
+				return {
+					days: config.dateRangeValue,
+					...rest,
+				} as ContributionGraphConfig;
+			}
+
+			if (config.dateRangeType == "LATEST_MONTH") {
+				const { start, end } = getLatestMonthAbsoluteFromAndEnd(
+					config.dateRangeValue || 0
+				);
+				return {
+					...rest,
+					fromDate: toFormattedDate(start),
+					toDate: toFormattedDate(end),
+				} as ContributionGraphConfig;
+			}
+
+			if (config.dateRangeType == "LATEST_YEAR") {
+				const { start, end } = getLatestYearAbsoluteFromAndEnd(
+					config.dateRangeValue || 0
+				);
+				return {
+					...rest,
+					fromDate: toFormattedDate(start),
+					toDate: toFormattedDate(end),
+				} as ContributionGraphConfig;
+			}
+		}
+		return rest as ContributionGraphConfig;
 	}
 
 	static validate(config: YamlGraphConfig): void {
@@ -83,7 +124,7 @@ export class YamlGraphConfig {
 			}
 		}
 
-		if (!config.days) {
+		if (!config.dateRangeValue) {
 			if (!config.fromDate || !config.toDate) {
 				throw new GraphProcessError(MISS_DAYS_OR_RANGE_DATE());
 			}
@@ -127,3 +168,9 @@ export class ValidationResult {
 	valid: boolean;
 	message?: string;
 }
+
+export type DateRangeType =
+	| "LATEST_DAYS"
+	| "LATEST_MONTH"
+	| "LATEST_YEAR"
+	| "FIXED_DATE_RANGE";

@@ -48,3 +48,38 @@ export function isToday(date: Date) {
 		date.getFullYear() === today.getFullYear()
 	);
 }
+
+/**
+ * if years <= 1, then return the first day of the current year and the last day of the current year
+ * if years = 2, then return the first day of the last year and the last day of the current year
+ */
+
+export function getLatestYearAbsoluteFromAndEnd(years: number) {
+	const today = new Date();
+	const normalizedYear = years <= 1 ? 1 : years;
+	const start = new Date(today.getFullYear() - normalizedYear + 1, 0, 1);
+	const end = new Date(today.getFullYear(), 12, 0);
+	return {
+		start,
+		end,
+	};
+}
+
+/**
+ * if months <= 1, then return the first day of the current month and the last day of the current month
+ * if months = 2, then return the first day of the last month and the last day of the current month
+ */
+export function getLatestMonthAbsoluteFromAndEnd(months: number) {
+	const today = new Date();
+	const normalizedMonth = months <= 1 ? 1 : months;
+	const start = new Date(
+		today.getFullYear(),
+		today.getMonth() - normalizedMonth + 1,
+		1
+	);
+	const end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+	return {
+		start,
+		end,
+	};
+}
