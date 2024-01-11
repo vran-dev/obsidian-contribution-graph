@@ -18,6 +18,8 @@ export interface Local {
 	form_graph_type_calendar: string;
 	form_date_range: string;
 	form_date_range_latest_days: string;
+	form_date_range_latest_month: string;
+	form_date_range_latest_year: string;
 	form_date_range_latest_days_placeholder: string;
 	form_date_range_fixed_date: string;
 	form_date_range_start_date: string;

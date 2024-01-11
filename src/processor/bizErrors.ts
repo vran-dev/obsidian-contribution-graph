@@ -47,14 +47,16 @@ export const MISS_DAYS_OR_RANGE_DATE = (
 	invalidValue?: string | number | boolean
 ) =>
 	errorTipsHtmlTemplate(
-		"please set days or fromDate and toDate property, for example",
+		"please set dateRangeValue or fromDate and toDate property, for example",
 		[
-			`days: 365
+			`dateRangeType: LATEST_DAYS
+dateRangeValue: 365
 dataSource: '#tag' # means all notes with tag 'tag'
   type: "page" # or "task"
   value: '""' # means all notes in folde `,
 
-			`fromDate: '2023-01-01'
+			`dateRangeType: FIXED_DATE_RANGE
+fromDate: '2023-01-01'
 toDate: '2023-12-31'
 dataSource: '#tag' # means all notes with tag 'tag'
   type: "page" # or "task"

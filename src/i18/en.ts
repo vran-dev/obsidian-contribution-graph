@@ -19,6 +19,8 @@ export class En implements Local {
     form_graph_type_calendar = "Calendar";
     form_date_range = "Date Range";
     form_date_range_latest_days = "Latest Days";
+    form_date_range_latest_month = "Latest Whole Month";
+	form_date_range_latest_year = "Latest Whole Year";
     form_date_range_latest_days_placeholder = "Input days";
     form_date_range_fixed_date = "Fixed Date";
     form_date_range_start_date = "Start Date";

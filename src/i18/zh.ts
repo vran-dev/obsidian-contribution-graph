@@ -19,6 +19,8 @@ export class Zh implements Local {
     form_graph_type_calendar = "日历视图";
     form_date_range = "日期范围";
     form_date_range_latest_days = "最近几天";
+    form_date_range_latest_month = "最近几个整月";
+	form_date_range_latest_year = "最近几个整年";
     form_date_range_latest_days_placeholder = "输入天数";
     form_date_range_fixed_date = "固定日期";
     form_date_range_start_date = "开始日期";
@@ -60,7 +62,7 @@ export class Zh implements Local {
 
     form_date_field_format_type_manual = "指定格式";
 
-    form_count_field_count_field_label = "计数属性";
+    form_count_field_count_field_label = "打分属性";
 
     form_count_field_count_field_input_placeholder = "请输入属性名称";
 
