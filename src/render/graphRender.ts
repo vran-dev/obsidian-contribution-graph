@@ -22,7 +22,10 @@ export interface GraphRender {
 }
 
 export abstract class BaseGraphRender implements GraphRender {
-	constructor() {}
+
+	activeCellEl?: HTMLElement;
+
+	constructor() { }
 
 	render(container: HTMLElement, graphConfig: ContributionGraphConfig): void {
 		throw new Error("Method not implemented.");
@@ -186,9 +189,8 @@ export abstract class BaseGraphRender implements GraphRender {
 		contributionItem: ContributionCellData,
 		contributionMapByYearMonth: Map<string, number>
 	) {
-		const yearMonth = `${contributionItem.year}-${
-			contributionItem.month + 1
-		}`;
+		const yearMonth = `${contributionItem.year}-${contributionItem.month + 1
+			}`;
 		const yearMonthValue = contributionMapByYearMonth.get(yearMonth) || 0;
 		// tips event
 		setTooltip(
@@ -239,7 +241,14 @@ export abstract class BaseGraphRender implements GraphRender {
 				graphConfig.onCellClick(contributionItem, event);
 			}
 
+			// add active
+			if (this.activeCellEl) {
+				this.activeCellEl.classList.remove("active");
+			}
+			cellEl.classList.add("active");
+			this.activeCellEl = cellEl;
 			if (activityContainer) {
+				// render activity
 				this.renderActivity(
 					graphConfig,
 					contributionItem,
