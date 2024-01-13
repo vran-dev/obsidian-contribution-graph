@@ -6,11 +6,12 @@ import { GraphProcessError } from "./graphProcessError";
 import { CompositeDataSourceQuery } from "src/query/compositeDataSourceQuery";
 import { YamlGraphConfig } from "./types";
 import { YamlConfigReconciler } from "./yamlConfigReconciler";
+import { getAPI } from "obsidian-dataview";
 
 export class CodeBlockProcessor {
 	dataSourceQuery: CompositeDataSourceQuery = new CompositeDataSourceQuery();
 
-	renderFromCodeBlock(
+	async renderFromCodeBlock(
 		code: string,
 		el: HTMLElement,
 		ctx: MarkdownPostProcessorContext,
@@ -18,7 +19,7 @@ export class CodeBlockProcessor {
 	) {
 		try {
 			const graphConfig: YamlGraphConfig = this.loadYamlConfig(el, code);
-			this.renderFromYaml(graphConfig, el, app);
+			await this.renderFromYaml(graphConfig, el, app);
 		} catch (e) {
 			if (e instanceof GraphProcessError) {
 				Renders.renderErrorTips(el, e.summary, e.recommends);
@@ -30,35 +31,53 @@ export class CodeBlockProcessor {
 		}
 	}
 
-	renderFromYaml(graphConfig: YamlGraphConfig, el: HTMLElement, app: App) {
-		try {
-			// validate
-			YamlGraphConfig.validate(graphConfig);
-			const data = this.dataSourceQuery.query(
-				graphConfig.dataSource,
-				app
-			);
+	async renderFromYaml(graphConfig: YamlGraphConfig, el: HTMLElement, app: App) {
+		const renderCallback = () => {
+			try {
+				// validate
+				YamlGraphConfig.validate(graphConfig);
+				const data = this.dataSourceQuery.query(
+					graphConfig.dataSource,
+					app
+				);
 
-			const aggregatedData = [];
-			if (graphConfig.data) {
-				aggregatedData.push(...graphConfig.data);
-			}
-			aggregatedData.push(...data);
-			graphConfig.data = aggregatedData;
+				const aggregatedData = [];
+				if (graphConfig.data) {
+					aggregatedData.push(...graphConfig.data);
+				}
+				aggregatedData.push(...data);
+				graphConfig.data = aggregatedData;
 
-			// render
-			Renders.render(
-				el,
-				YamlGraphConfig.toContributionGraphConfig(graphConfig)
-			);
-		} catch (e) {
-			if (e instanceof GraphProcessError) {
-				Renders.renderErrorTips(el, e.summary, e.recommends);
-			} else {
-				console.error(e);
-				const notice = "unexpected error: " + e.message;
-				Renders.renderErrorTips(el, notice);
+				// render
+				Renders.render(
+					el,
+					YamlGraphConfig.toContributionGraphConfig(graphConfig)
+				);
+			} catch (e) {
+				if (e instanceof GraphProcessError) {
+					Renders.renderErrorTips(el, e.summary, e.recommends);
+				} else {
+					console.error(e);
+					const notice = "unexpected error: " + e.message;
+					Renders.renderErrorTips(el, notice);
+				}
 			}
+		}
+
+		const dv = getAPI(app);
+		if (!dv) {
+			throw new GraphProcessError({
+				summary: "Initialize Dataview failed",
+				recommends: ["Please install Dataview plugin"],
+			});
+		}
+		if (dv.index.initialized) {
+			renderCallback();
+		} else {
+			// @ts-ignore
+			app.metadataCache.on("dataview:index-ready", () => {
+				renderCallback();
+			})
 		}
 	}
 

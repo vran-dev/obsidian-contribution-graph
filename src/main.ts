@@ -14,7 +14,7 @@ export default class ContributionGraph extends Plugin {
 		this.registerContextMenu();
 	}
 
-	onunload() {}
+	onunload() { }
 
 	registerContextMenu() {
 		this.registerEvent(

@@ -26,7 +26,7 @@ export abstract class BaseDataviewDataSourceQuery {
 		if (unsatisfiedData.length > 0) {
 			console.warn(
 				unsatisfiedData.length +
-					" data can't be converted to date, please check the date field format",
+				" data can't be converted to date, please check the date field format",
 				unsatisfiedData
 			);
 		}
@@ -172,9 +172,9 @@ export abstract class BaseDataviewDataSourceQuery {
 		if (typeof date !== "string") {
 			console.warn(
 				"can't parse date, it's a valid format? " +
-					date +
-					" in page " +
-					page
+				date +
+				" in page " +
+				page
 			);
 			return undefined;
 		}
@@ -214,9 +214,9 @@ export abstract class BaseDataviewDataSourceQuery {
 		} catch (e) {
 			console.warn(
 				"can't parse date, it's a valid format? " +
-					date +
-					" in page " +
-					page
+				date +
+				" in page " +
+				page
 			);
 		}
 		return undefined;
