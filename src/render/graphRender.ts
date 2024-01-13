@@ -104,6 +104,16 @@ export abstract class BaseGraphRender implements GraphRender {
 	) {
 		contaienr.empty();
 
+		const closeButton = createEl("button", {
+			cls: "close-button",
+			text: 'x',
+			parent: contaienr,
+		})
+
+		closeButton.onclick = () => {
+			contaienr.empty();
+		}
+
 		let summary;
 		if (cellData.value > 0) {
 			summary = Locals.get().you_have_contributed_to
