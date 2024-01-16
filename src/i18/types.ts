@@ -69,6 +69,9 @@ export interface Local {
 	form_count_field_count_field_type_page_prop: string;
 
 	form_count_field_count_field_type_task_prop: string;
+	form_title_font_size_label: string;
+	form_number_input_min_warning: string;
+	form_number_input_max_warning: string;
 	form_fill_the_screen_label: string;
 	form_show_cell_indicators: string;
 	form_cell_shape: string;

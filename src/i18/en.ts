@@ -72,6 +72,9 @@ export class En implements Local {
     form_count_field_count_field_type_page_prop = "Page Property";
 
     form_count_field_count_field_type_task_prop = "Task Property";
+    form_title_font_size_label = "Title font Size";
+    form_number_input_min_warning = "allow min value is {value}";
+	form_number_input_max_warning = "allow max value is {value}";
     form_fill_the_screen_label = "Fill The Screen";
     form_show_cell_indicators = "Show Cell Indicators";
     form_cell_shape = "Cell Shape";

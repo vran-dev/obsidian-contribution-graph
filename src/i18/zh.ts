@@ -71,6 +71,9 @@ export class Zh implements Local {
     form_count_field_count_field_type_page_prop = "文档属性";
 
     form_count_field_count_field_type_task_prop = "任务属性";
+    form_title_font_size_label = "标题字体大小";
+    form_number_input_min_warning = "允许的最小值为 {value}";
+	form_number_input_max_warning = "允许的最大值为 {value}";
     form_fill_the_screen_label = "充满屏幕";
     form_show_cell_indicators = "显示单元格指示器";
     form_cell_shape = "单元格形状";
