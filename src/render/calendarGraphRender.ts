@@ -179,11 +179,12 @@ export class CalendarGraphRender extends BaseGraphRender {
 			} else if (item.value == 0) {
 				cellEl.className = "cell empty";
 				this.applyCellGlobalStyle(cellEl, graphConfig);
+				this.applyCellStyleRule(cellEl, item, cellRules);
 				this.bindCellAttribute(cellEl, item);
 			} else {
 				cellEl.className = "cell";
 				this.applyCellGlobalStyle(cellEl, graphConfig);
-				this.applyCellStyleRule(cellEl, item, cellRules);
+				this.applyCellStyleRule(cellEl, item, cellRules, () => cellRules[0]);
 				this.bindCellAttribute(cellEl, item);
 				this.bindCellClickEvent(cellEl, item, graphConfig, activityContainer);
 				this.bindCellTips(cellEl, item);

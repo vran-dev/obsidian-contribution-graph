@@ -128,11 +128,12 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 			monthDataRowEl?.appendChild(cellEl);
 			if (contributionItem.value == 0) {
 				cellEl.className = "cell empty";
+				this.applyCellStyleRule(cellEl, contributionItem, cellRules);
 				this.bindCellAttribute(cellEl, contributionItem);
 			} else {
 				cellEl.className = "cell";
 
-				this.applyCellStyleRule(cellEl, contributionItem, cellRules);
+				this.applyCellStyleRule(cellEl, contributionItem, cellRules, () => cellRules[0]);
 				this.bindCellAttribute(cellEl, contributionItem);
 				this.bindCellClickEvent(cellEl, contributionItem, graphConfig, activityContainer);
 				this.bindCellTips(cellEl, contributionItem);
