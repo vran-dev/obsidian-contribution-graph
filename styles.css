@@ -847,3 +847,18 @@
 	text-decoration: none;
 	padding: 0.4rem 0.6rem;
 }
+
+.contribution-graph .activity-container .close-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: var(--text-faint);
+  box-shadow: none;
+  border-width: 0px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.contribution-graph .activity-container .close-button:hover {
+  color: var(--text-accent);
+}
