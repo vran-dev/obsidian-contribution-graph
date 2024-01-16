@@ -14,7 +14,7 @@ export default class ContributionGraph extends Plugin {
 		this.registerContextMenu();
 	}
 
-	onunload() { }
+	onunload() {}
 
 	registerContextMenu() {
 		this.registerEvent(
@@ -47,7 +47,7 @@ export default class ContributionGraph extends Plugin {
 				const processor = new CodeBlockProcessor();
 				processor.renderFromCodeBlock(code, el, ctx, this.app);
 				if (el.parentElement) {
-					mountEditButtonToCodeblock(code, el.parentElement);
+					mountEditButtonToCodeblock(this.app, code, el.parentElement);
 				}
 			}
 		);

@@ -1,7 +1,8 @@
-import { MarkdownView, getIcon } from "obsidian";
+import { App, MarkdownView, Notice, getIcon } from "obsidian";
 import { ContributionGraphCreateModal } from "../form/GraphFormModal";
 
 export function mountEditButtonToCodeblock(
+	app: App,
 	code: string,
 	codeblockDom: HTMLElement
 ) {
@@ -12,8 +13,11 @@ export function mountEditButtonToCodeblock(
 		formEditButton.appendChild(iconEl);
 	}
 	codeblockDom.addEventListener("mouseover", () => {
-		formEditButton.style.opacity = "1";
-		justifyTop(codeblockDom, formEditButton);
+		const markdownView = app.workspace.getActiveViewOfType(MarkdownView);
+		if (markdownView && markdownView.getMode() !== "preview") {
+			formEditButton.style.opacity = "1";
+			justifyTop(codeblockDom, formEditButton);
+		}
 	});
 	codeblockDom.addEventListener("mouseout", () => {
 		formEditButton.style.opacity = "0";
@@ -24,7 +28,7 @@ export function mountEditButtonToCodeblock(
 			const markdownView =
 				this.app.workspace.getActiveViewOfType(MarkdownView);
 			if (!markdownView) {
-				console.error("markdownView is null");
+				new Notice("No markdown view is active");
 				return;
 			}
 			const editor = markdownView.editor;
