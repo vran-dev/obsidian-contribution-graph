@@ -19,13 +19,13 @@ export function mapBy<T, R>(
 	return map;
 }
 
-export function matchCellStyleRule(value: number, rules: CellStyleRule[]): CellStyleRule {
+export function matchCellStyleRule(value: number, rules: CellStyleRule[]): CellStyleRule | null {
 	for (let i = 0; i < rules.length; i++) {
 		if (value >= rules[i].min && value < rules[i].max) {
 			return rules[i];
 		}
 	}
-	return rules[0];
+	return null;
 }
 
 export function parseNumberOption(str: string): number | null {

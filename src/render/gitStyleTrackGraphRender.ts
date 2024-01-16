@@ -117,6 +117,7 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 				if (contributionItem.date != "$HOLE$") {
 					cellEl.className = "cell empty";
 					this.applyCellGlobalStyle(cellEl, graphConfig);
+					this.applyCellStyleRule(cellEl, contributionItem, cellRules);
 					this.bindCellAttribute(cellEl, contributionItem);
 				} else {
 					cellEl.className = "cell";
@@ -124,7 +125,7 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 			} else {
 				cellEl.className = "cell";
 				this.applyCellGlobalStyle(cellEl, graphConfig);
-				this.applyCellStyleRule(cellEl, contributionItem, cellRules);
+				this.applyCellStyleRule(cellEl, contributionItem, cellRules, () => cellRules[0]);
 				this.bindCellAttribute(cellEl, contributionItem);
 				this.bindCellClickEvent(cellEl, contributionItem, graphConfig, activityContainer);
 				this.bindCellTips(cellEl, contributionItem);

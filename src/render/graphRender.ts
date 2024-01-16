@@ -219,14 +219,25 @@ export abstract class BaseGraphRender implements GraphRender {
 	applyCellStyleRule(
 		cellEl: HTMLElement,
 		contributionItem: ContributionCellData,
-		cellRules: CellStyleRule[]
+		cellRules: CellStyleRule[],
+		defaultCellStyleRule?: () => CellStyleRule
 	) {
 		const cellStyleRule = matchCellStyleRule(
 			contributionItem.value,
 			cellRules
 		);
-		cellEl.style.backgroundColor = cellStyleRule.color;
-		cellEl.innerText = cellStyleRule.text || "";
+		if (cellStyleRule != null) {
+			cellEl.style.backgroundColor = cellStyleRule.color;
+			cellEl.innerText = cellStyleRule.text || "";
+			return;
+		}
+
+		if (defaultCellStyleRule) {
+			const defaultRule = defaultCellStyleRule();
+			cellEl.style.backgroundColor = defaultRule.color;
+			cellEl.innerText = defaultRule.text || "";
+		}
+		
 	}
 
 	bindCellAttribute(
