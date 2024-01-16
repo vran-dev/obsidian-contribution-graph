@@ -17,6 +17,7 @@ import {
 import { DataSourceFormItem } from "./DataSourceFormItem";
 import { DateRangeType, YamlGraphConfig } from "src/processor/types";
 import { Tab } from "../tab/Tab";
+import NumberInput from "../number-input";
 
 export function CreateContributionGraphForm(props: {
 	yamlConfig: YamlGraphConfig;
@@ -100,6 +101,14 @@ export function CreateContributionGraphForm(props: {
 				props.app
 			);
 		}
+	};
+
+	const getTitleFontSize = () => {
+		if (formData.titleStyle && formData.titleStyle.fontSize) {
+			const fontSize = formData.titleStyle.fontSize;
+			return parseInt(fontSize.replace(/[^0-9]/, ""));
+		}
+		return 16;
 	};
 
 	return (
@@ -316,6 +325,28 @@ export function CreateContributionGraphForm(props: {
 						children: (
 							<div className="contribution-graph-modal-form">
 								<div className="form-group">
+									<div className="form-item">
+										<span className="label">
+											{local.form_title_font_size_label}
+										</span>
+										<div className="form-content">
+											<NumberInput
+												defaultValue={getTitleFontSize()}
+												onChange={(value) => {
+													changeFormData(
+														"titleStyle",
+														{
+															...formData.titleStyle,
+															fontSize:
+																value + "px",
+														}
+													);
+												}}
+												min={1}
+												max={128}
+											/>
+										</div>
+									</div>
 									<div className="form-item">
 										<span className="label">
 											{local.form_fill_the_screen_label}
