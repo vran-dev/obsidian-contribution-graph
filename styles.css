@@ -517,7 +517,6 @@
 /* edit button */
 .contribution-graph-codeblock-edit-button {
 	padding: var(--size-2-2) var(--size-2-3);
-	background-color: var(--background-primary);
 	position: absolute;
 	top: var(--size-2-2);
 	right: calc(var(--size-2-2) + 40px);
