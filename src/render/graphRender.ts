@@ -30,6 +30,31 @@ export abstract class BaseGraphRender implements GraphRender {
 
 	abstract graphType(): string;
 
+	createGraphEl(root: HTMLElement): HTMLDivElement {
+		return createDiv({
+			cls: "contribution-graph",
+			parent: root,
+		});
+	}
+
+	createMainEl(
+		parent: HTMLElement,
+		graphConfig: ContributionGraphConfig
+	): HTMLDivElement {
+		let cls = "main";
+		if (graphConfig.fillTheScreen && this.graphType() != "calendar") {
+			cls = `main ${graphConfig.fillTheScreen ? "fill-the-screen" : ""}`;
+		}
+		const main = createDiv({
+			cls: cls,
+			parent: parent,
+		});
+		if (graphConfig.mainContainerStyle) {
+			Object.assign(main.style, graphConfig.mainContainerStyle);
+		}
+		return main;
+	}
+
 	renderTitle(
 		graphConfig: ContributionGraphConfig,
 		parent: HTMLElement
@@ -106,22 +131,22 @@ export abstract class BaseGraphRender implements GraphRender {
 
 		const closeButton = createEl("button", {
 			cls: "close-button",
-			text: 'x',
+			text: "x",
 			parent: contaienr,
-		})
+		});
 
 		closeButton.onclick = () => {
 			contaienr.empty();
-		}
+		};
 
 		let summary;
 		if (cellData.value > 0) {
-			summary = Locals.get().you_have_contributed_to
-				.replace("{date}", cellData.date)
+			summary = Locals.get()
+				.you_have_contributed_to.replace("{date}", cellData.date)
 				.replace("{value}", cellData.value.toString());
 		} else {
-			summary = Locals.get().you_have_no_contributions_on
-				.replace("{date}", cellData.date)
+			summary = Locals.get()
+				.you_have_no_contributions_on.replace("{date}", cellData.date)
 				.replace("{value}", "0");
 		}
 		createDiv({
@@ -237,7 +262,6 @@ export abstract class BaseGraphRender implements GraphRender {
 			cellEl.style.backgroundColor = defaultRule.color;
 			cellEl.innerText = defaultRule.text || "";
 		}
-		
 	}
 
 	bindCellAttribute(

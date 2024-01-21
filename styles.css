@@ -2,6 +2,7 @@
 	margin-bottom: 6px;
 	position: relative;
 	width: 100%;
+	padding: 2px;
 }
 
 .contribution-graph .center {
@@ -10,11 +11,11 @@
 }
 
 .contribution-graph .main {
-	padding: 2px;
 	line-height: normal;
 	display: grid;
 	margin-top: 26px;
 	justify-content: center;
+	border-radius: 8px;
 }
 
 .contribution-graph .main.fill-the-screen {
@@ -806,7 +807,6 @@
 	flex-wrap: wrap;
 	gap: 0.6rem;
 	padding: 0.4rem;
-	margin-top: 1rem;
 	position: relative;
 }
 

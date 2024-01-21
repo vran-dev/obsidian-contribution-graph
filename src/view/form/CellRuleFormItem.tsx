@@ -64,12 +64,6 @@ export function CellRuleItem(props: {
 					onChange={(e) => changeRule("max", e.target.value)}
 				/>
 				<span>=</span>
-				{/* <input
-				type="color"
-				defaultValue={props.rule.color}
-				className="cell-rule-color"
-				onChange={(e) => changeRule("color", e.target.value)}
-			/> */}
 				<span
 					className="color-indicator"
 					style={{

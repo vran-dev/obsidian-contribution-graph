@@ -21,8 +21,10 @@ import {
 } from "src/util/dateUtils";
 
 export class YamlGraphConfig {
+	/**
+	 * basic settings
+	 */
 	title?: string;
-	titleStyle: Partial<CSSStyleDeclaration>;
 	graphType: string;
 	dataSource: DataSource;
 	dateRangeValue?: number;
@@ -30,11 +32,18 @@ export class YamlGraphConfig {
 	fromDate?: string;
 	toDate?: string;
 	data: Contribution[];
+
+	/**
+	 * style settings
+	 */
+	titleStyle: Partial<CSSStyleDeclaration>;
+	fillTheScreen: boolean;
 	startOfWeek: number;
+	enableMainContainerShadow?: boolean;
+	showCellRuleIndicators: boolean;
+	mainContainerStyle?: Partial<CSSStyleDeclaration>;
 	cellStyle?: Partial<CSSStyleDeclaration>;
 	cellStyleRules?: CellStyleRule[];
-	showCellRuleIndicators: boolean;
-	fillTheScreen: boolean;
 
 	// deprecated
 	days?: number;
@@ -60,6 +69,7 @@ export class YamlGraphConfig {
 			dateField: {},
 		} as DataSource;
 		this.fillTheScreen = false;
+		this.enableMainContainerShadow = false;
 
 		// deprecated
 		this.query = undefined;
@@ -73,7 +83,7 @@ export class YamlGraphConfig {
 	): ContributionGraphConfig {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { query, dateField, ...rest } = config;
-
+		
 		if (config.dateRangeType != "FIXED_DATE_RANGE") {
 			if (config.dateRangeType == "LATEST_DAYS") {
 				return {
