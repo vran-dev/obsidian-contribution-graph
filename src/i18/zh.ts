@@ -75,6 +75,8 @@ export class Zh implements Local {
     form_number_input_min_warning = "允许的最小值为 {value}";
 	form_number_input_max_warning = "允许的最大值为 {value}";
     form_fill_the_screen_label = "充满屏幕";
+    form_main_container_bg_color = "背景颜色";
+	form_enable_main_container_shadow = "启用阴影";
     form_show_cell_indicators = "显示单元格指示器";
     form_cell_shape = "单元格形状";
     form_cell_shape_circle = "圆形";

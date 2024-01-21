@@ -18,6 +18,7 @@ import { DataSourceFormItem } from "./DataSourceFormItem";
 import { DateRangeType, YamlGraphConfig } from "src/processor/types";
 import { Tab } from "../tab/Tab";
 import NumberInput from "../number-input";
+import { ColorPicker } from "./ColorPicker";
 
 export function CreateContributionGraphForm(props: {
 	yamlConfig: YamlGraphConfig;
@@ -406,6 +407,71 @@ export function CreateContributionGraphForm(props: {
 											</div>
 										</div>
 									)}
+
+									<div className="form-item">
+										<span className="label">
+											{local.form_main_container_bg_color}
+										</span>
+										<div className="form-content">
+											<ColorPicker
+												color={
+													formData.mainContainerStyle
+														?.backgroundColor
+												}
+												onChange={(color) => {
+													changeFormData(
+														"mainContainerStyle",
+														{
+															...formData.mainContainerStyle,
+															backgroundColor:
+																color,
+														}
+													);
+												}}
+											/>
+										</div>
+									</div>
+
+									<div className="form-item">
+										<span className="label">
+											{
+												local.form_enable_main_container_shadow
+											}
+										</span>
+										<div className="form-content">
+											<input
+												name="enableMainContainerShadow"
+												type="checkbox"
+												className="checkbox"
+												defaultChecked={
+													formData.mainContainerStyle
+														?.boxShadow != undefined
+												}
+												onChange={(e) => {
+													if (e.target.checked) {
+														changeFormData(
+															"mainContainerStyle",
+															{
+																...formData.mainContainerStyle,
+																boxShadow:
+																	"rgba(0, 0, 0, 0.16) 0px 1px 4px",
+															}
+														);
+													} else {
+														changeFormData(
+															"mainContainerStyle",
+															{
+																...formData.mainContainerStyle,
+																boxShadow:
+																	undefined,
+															}
+														);
+													}
+												}}
+											/>
+										</div>
+									</div>
+
 									<div className="form-item">
 										<span className="label">
 											{local.form_show_cell_indicators}

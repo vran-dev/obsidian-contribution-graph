@@ -73,6 +73,8 @@ export interface Local {
 	form_number_input_min_warning: string;
 	form_number_input_max_warning: string;
 	form_fill_the_screen_label: string;
+	form_main_container_bg_color: string;
+	form_enable_main_container_shadow: string;
 	form_show_cell_indicators: string;
 	form_cell_shape: string;
 	form_cell_shape_circle: string;

@@ -76,6 +76,8 @@ export class En implements Local {
     form_number_input_min_warning = "allow min value is {value}";
 	form_number_input_max_warning = "allow max value is {value}";
     form_fill_the_screen_label = "Fill The Screen";
+    form_main_container_bg_color = "Background Color";
+	form_enable_main_container_shadow = "Enable Shadow";
     form_show_cell_indicators = "Show Cell Indicators";
     form_cell_shape = "Cell Shape";
     form_cell_shape_circle = "Circle";

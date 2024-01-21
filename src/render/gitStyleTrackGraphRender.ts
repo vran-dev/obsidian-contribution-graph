@@ -17,16 +17,10 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 	}
 
 	render(root: HTMLElement, graphConfig: ContributionGraphConfig): void {
-		const graphEl = createDiv({
-			cls: "contribution-graph",
-			parent: root,
-		});
+		const graphEl = this.createGraphEl(root)
 
 		// main
-		const main = createDiv({
-			cls: `main ${graphConfig.fillTheScreen ? "fill-the-screen" : ""}`,
-			parent: graphEl,
-		});
+		const main = this.createMainEl(graphEl, graphConfig)
 
 		// title
 		if (graphConfig.title && graphConfig.title.trim() != "") {

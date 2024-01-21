@@ -12,6 +12,11 @@ export class ContributionGraphConfig {
 	titleStyle: Partial<CSSStyleDeclaration> = {};
 
 	/**
+	 * the style of the main container
+	 */
+	mainContainerStyle: Partial<CSSStyleDeclaration> = {};
+
+	/**
 	 * recent days to show
 	 */
 	days?: number | undefined;
