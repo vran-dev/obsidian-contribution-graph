@@ -46,6 +46,9 @@ export function DataSourceFormItem(props: {
 	const changeFilter = (id: string, name: string, value: any) => {
 		const newFilters = dataSource.filters?.map((f) => {
 			if (f.id == id) {
+				if (name == "type" && value == 'STATUS_IS') {
+					return { ...f, [name]: value, value: 'COMPLETED' };
+				}
 				return { ...f, [name]: value };
 			}
 			return f;
@@ -159,7 +162,7 @@ export function DataSourceFormItem(props: {
 								<>
 									<div className="form-content" key={filter.id}>
 										<select
-											defaultValue={filter.type || "NONE"}
+											value={filter.type || "NONE"}
 											onChange={(e) => {
 												changeFilter(
 													filter.id,
@@ -185,7 +188,7 @@ export function DataSourceFormItem(props: {
 										{filter.type == "STATUS_IS" && (
 											<select
 												defaultValue={
-													filter?.type || "NONE"
+													filter?.value || 'NONE'
 												}
 												onChange={(e) => {
 													changeFilter(
