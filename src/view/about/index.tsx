@@ -1,6 +1,5 @@
 import { Locals } from "src/i18/messages";
 import "./index.css";
-import { title } from "process";
 import { Tab } from "../tab/Tab";
 
 export function About() {
@@ -8,8 +7,11 @@ export function About() {
 	return (
 		<div className="about-container">
 			<div className="about-item">
-				<div className="label">{local.form_author}</div>
-				<div>vran</div>
+				<div className="label">{local.form_contact_me}</div>
+				<a href="https://mp.weixin.qq.com/s/k5usslOZwWNFT5rlq3lAPA">
+					微信公众号
+				</a>
+				<a href="https://github.com/vran-dev">Github</a>
 			</div>
 
 			<div className="about-item">
