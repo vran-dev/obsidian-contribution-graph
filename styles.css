@@ -271,17 +271,17 @@
 }
 
 .color-indicator {
-  height: 18px;
-  width: 18px;
-  border-radius: 50%;
-  border-width: 1px;
-  border-color: var(--background-modifier-border);
-  border-style: solid;
+	height: 18px;
+	width: 18px;
+	border-radius: 50%;
+	border-width: 1px;
+	border-color: var(--background-modifier-border);
+	border-style: solid;
 }
 
 .color-indicator:hover {
-  border-color: var(--interactive-accent);
-  opacity: 0.6;
+	border-color: var(--interactive-accent);
+	opacity: 0.6;
 }
 
 /* default cell rule indicator */
@@ -748,6 +748,7 @@
 	flex-wrap: nowrap;
 	overflow-x: scroll;
 	gap: 6px;
+	width: 100%;
 }
 
 .tab-container .tab-titles {
@@ -864,16 +865,44 @@
 }
 
 .contribution-graph .activity-container .close-button {
-  position: absolute;
-  right: 0;
-  top: 0;
-  color: var(--text-faint);
-  box-shadow: none;
-  border-width: 0px;
-  background-color: transparent;
-  cursor: pointer;
+	position: absolute;
+	right: 0;
+	top: 0;
+	color: var(--text-faint);
+	box-shadow: none;
+	border-width: 0px;
+	background-color: transparent;
+	cursor: pointer;
 }
 
 .contribution-graph .activity-container .close-button:hover {
-  color: var(--text-accent);
+	color: var(--text-accent);
+}
+
+/* about */
+.about-container {
+	display: flex;
+	flex-direction: column;
+	align-items: baseline;
+	gap: 1rem;
+}
+
+.about-container .about-item {
+	display: flex;
+	flex-direction: row;
+	gap: 0.8rem;
+	width: 100%;
+}
+
+.about-container .about-item .label {
+	min-width: 88px;
+}
+
+.about-container .about-item.center {
+	justify-content: center;
+}
+
+.about-container .about-item img {
+	max-width: 200px;
+	width: 200px;
 }
