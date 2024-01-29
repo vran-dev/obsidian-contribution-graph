@@ -19,6 +19,7 @@ import { DateRangeType, YamlGraphConfig } from "src/processor/types";
 import { Tab } from "../tab/Tab";
 import NumberInput from "../number-input";
 import { ColorPicker } from "./ColorPicker";
+import { About } from "../about";
 
 export function CreateContributionGraphForm(props: {
 	yamlConfig: YamlGraphConfig;
@@ -590,6 +591,10 @@ export function CreateContributionGraphForm(props: {
 								</div>
 							</div>
 						),
+					},
+					{
+						title: local.form_about,
+						children: <About />,
 					},
 				]}
 			></Tab>

@@ -11,6 +11,10 @@ export class En implements Local {
      */
     form_basic_settings = "Basic Settings";
     form_style_settings = "Style Settings";
+    form_about = "About";
+    form_contact_me = "Contact me";
+	form_project_url = "Project";
+	form_sponsor = "Sponsor";
     form_title = "Title";
     form_title_placeholder = "Input title";
     form_graph_type = "Graph Type";

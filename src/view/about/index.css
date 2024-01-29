@@ -1,0 +1,26 @@
+.about-container {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.about-container .about-item {
+  display: flex;
+  flex-direction: row;
+  gap: 0.8rem;
+	width: 100%;
+}
+
+.about-container .about-item .label {
+	min-width: 88px;
+}
+
+.about-container .about-item.center {
+	justify-content: center;
+}
+
+.about-container .about-item img {
+	max-width: 200px;
+  width: 200px;
+}

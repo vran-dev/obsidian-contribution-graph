@@ -11,6 +11,10 @@ export class Zh implements Local {
      */
     form_basic_settings = "基础设置";
     form_style_settings = "样式设置";
+    form_about = "关于";
+    form_contact_me = "联系我";
+	form_project_url = "项目地址";
+	form_sponsor = "赞助";
     form_title = "标题";
     form_title_placeholder = "输入标题";
     form_graph_type = "图表类型";

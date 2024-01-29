@@ -10,6 +10,10 @@ export interface Local {
 	 */
 	form_basic_settings: string;
 	form_style_settings: string;
+	form_about: string;
+	form_contact_me: string;
+	form_project_url: string;
+	form_sponsor: string;
 	form_title: string;
 	form_title_placeholder: string;
 	form_graph_type: string;
