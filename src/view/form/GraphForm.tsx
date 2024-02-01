@@ -21,7 +21,7 @@ import NumberInput from "../number-input";
 import { ColorPicker } from "./ColorPicker";
 import { About } from "../about";
 
-export function CreateContributionGraphForm(props: {
+export function GraphForm(props: {
 	yamlConfig: YamlGraphConfig;
 	onSubmit: (yamlGraphConfig: YamlGraphConfig) => void;
 	app: App;
@@ -111,6 +111,17 @@ export function CreateContributionGraphForm(props: {
 			return parseInt(fontSize.replace(/[^0-9]/, ""));
 		}
 		return 16;
+	};
+
+	const parseNumberFromPrefix = (
+		str: string | undefined,
+		defaultValue: number
+	): number => {
+		if (!str) {
+			return 0;
+		}
+		const numberStr = str.replace(/[^0-9]/, "") || "0";
+		return parseInt(numberStr);
 	};
 
 	return (
@@ -513,6 +524,97 @@ export function CreateContributionGraphForm(props: {
 													</option>
 												))}
 											</select>
+										</div>
+									</div>
+									<div className="form-item">
+										<span className="label">
+											{local.form_cell_min_width}
+										</span>
+										<div className="form-content">
+											<input
+												type="range"
+												min={4}
+												max={64}
+												defaultValue={parseNumberFromPrefix(
+													formData.cellStyle
+														?.minWidth,
+													8
+												)}
+												onChange={(e) => {
+													changeFormData(
+														"cellStyle",
+														{
+															...formData.cellStyle,
+															minWidth:
+																e.target.value +
+																"px",
+														}
+													);
+												}}
+											/>
+											<span
+												className="input-range-value-label"
+												onClick={(e) => {
+													changeFormData(
+														"cellStyle",
+														{
+															...formData.cellStyle,
+															minWidth: undefined,
+														}
+													);
+												}}
+											>
+												{formData.cellStyle?.minWidth
+													? formData.cellStyle
+															?.minWidth
+													: local.default}
+											</span>
+										</div>
+									</div>
+									<div className="form-item">
+										<span className="label">
+											{local.form_cell_min_height}
+										</span>
+										<div className="form-content">
+											<input
+												type="range"
+												min={4}
+												max={64}
+												defaultValue={parseNumberFromPrefix(
+													formData.cellStyle
+														?.minHeight,
+													8
+												)}
+												onChange={(e) => {
+													changeFormData(
+														"cellStyle",
+														{
+															...formData.cellStyle,
+															minHeight:
+																e.target.value +
+																"px",
+														}
+													);
+												}}
+											/>
+											<span
+												className="input-range-value-label"
+												onClick={(e) => {
+													changeFormData(
+														"cellStyle",
+														{
+															...formData.cellStyle,
+															minHeight:
+																undefined,
+														}
+													);
+												}}
+											>
+												{formData.cellStyle?.minHeight
+													? formData.cellStyle
+															?.minHeight
+													: local.default}
+											</span>
 										</div>
 									</div>
 									<div className="form-item">

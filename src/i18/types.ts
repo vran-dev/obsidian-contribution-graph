@@ -1,5 +1,8 @@
 
 export interface Local {
+
+	default: string;
+	click_to_reset: string;
 	/**
 	 * context menu
 	 */
@@ -84,6 +87,8 @@ export interface Local {
 	form_cell_shape_circle: string;
 	form_cell_shape_square: string;
 	form_cell_shape_rounded: string;
+	form_cell_min_height: string;
+	form_cell_min_width: string;
 
 	form_datasource_type_page: string;
 	form_datasource_type_all_task: string;

@@ -64,7 +64,6 @@
 	align-items: flex-start;
 	flex-wrap: nowrap;
 	justify-content: flex-start;
-
 }
 
 .contribution-graph .main .charts.default .column {
@@ -215,7 +214,11 @@
 	justify-content: center;
 }
 
-.contribution-graph .calendar .month-container .week-indicator-container .cell.week-indicator {
+.contribution-graph
+	.calendar
+	.month-container
+	.week-indicator-container
+	.cell.week-indicator {
 	font-size: 0.6rem;
 	line-height: 1.5;
 	text-align: center;
@@ -402,7 +405,10 @@
 	gap: 8px;
 }
 
-.contribution-graph-modal-form .form-item .form-vertical-content>input[type="text"] {
+.contribution-graph-modal-form
+	.form-item
+	.form-vertical-content
+	> input[type="text"] {
 	flex-grow: 1;
 	border-width: 0px 0px 1px 0px;
 	padding: 3px;
@@ -839,13 +845,22 @@
 	color: var(--text-muted);
 }
 
-.contribution-graph .activity-container .activity-content .activity-list .activity-item {
+.contribution-graph
+	.activity-container
+	.activity-content
+	.activity-list
+	.activity-item {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 }
 
-.contribution-graph .activity-container .activity-content .activity-list .activity-item .label {
+.contribution-graph
+	.activity-container
+	.activity-content
+	.activity-list
+	.activity-item
+	.label {
 	color: var(--text-muted);
 	padding: 0.4rem 0.6rem;
 }
@@ -858,7 +873,11 @@
 	width: 100%;
 }
 
-.contribution-graph .activity-container .activity-content .activity-navigation a {
+.contribution-graph
+	.activity-container
+	.activity-content
+	.activity-navigation
+	a {
 	color: var(--text-muted);
 	text-decoration: none;
 	padding: 0.4rem 0.6rem;
@@ -905,4 +924,17 @@
 .about-container .about-item img {
 	max-width: 200px;
 	width: 200px;
+}
+
+.input-range-value-label {
+	font-size: 0.8rem;
+	color: var(--text-muted);
+	cursor: pointer;
+	padding: 4px;
+	border-radius: 4px;
+}
+
+.input-range-value-label:hover {
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
 }
