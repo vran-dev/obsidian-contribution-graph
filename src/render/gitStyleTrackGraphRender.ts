@@ -115,6 +115,7 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 					this.bindCellAttribute(cellEl, contributionItem);
 				} else {
 					cellEl.className = "cell";
+					this.applyCellGlobalStylePartial(cellEl, graphConfig, ['minWidth', 'minHeight']);
 				}
 			} else {
 				cellEl.className = "cell";

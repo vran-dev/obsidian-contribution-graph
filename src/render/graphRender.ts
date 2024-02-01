@@ -22,7 +22,7 @@ export interface GraphRender {
 }
 
 export abstract class BaseGraphRender implements GraphRender {
-	constructor() {}
+	constructor() { }
 
 	render(container: HTMLElement, graphConfig: ContributionGraphConfig): void {
 		throw new Error("Method not implemented.");
@@ -221,9 +221,8 @@ export abstract class BaseGraphRender implements GraphRender {
 		contributionItem: ContributionCellData,
 		contributionMapByYearMonth: Map<string, number>
 	) {
-		const yearMonth = `${contributionItem.year}-${
-			contributionItem.month + 1
-		}`;
+		const yearMonth = `${contributionItem.year}-${contributionItem.month + 1
+			}`;
 		const yearMonthValue = contributionMapByYearMonth.get(yearMonth) || 0;
 		// tips event
 		setTooltip(
@@ -238,6 +237,21 @@ export abstract class BaseGraphRender implements GraphRender {
 	) {
 		if (graphConfig.cellStyle) {
 			Object.assign(cellEl.style, graphConfig.cellStyle);
+		}
+	}
+
+	applyCellGlobalStylePartial(
+		cellEl: HTMLElement,
+		graphConfig: ContributionGraphConfig,
+		props: string[]
+	) {
+		if (graphConfig.cellStyle) {
+			const partialStyle = props.reduce((acc, cur) => {
+				// @ts-ignore
+				acc[cur] = graphConfig.cellStyle[cur];
+				return acc;
+			}, {});
+			Object.assign(cellEl.style, partialStyle);
 		}
 	}
 

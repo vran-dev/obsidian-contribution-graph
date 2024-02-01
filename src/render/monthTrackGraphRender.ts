@@ -46,10 +46,10 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 				text: "",
 			})
 		);
-		this.renderMonthDateIndicator(dateIndicatorRow);
+		this.renderMonthDateIndicator(dateIndicatorRow, graphConfig);
 
-		const activityContainer= this.renderActivityContainer(graphConfig, main);
-		
+		const activityContainer = this.renderActivityContainer(graphConfig, main);
+
 		const contributionData = this.generateContributionData(
 			graphConfig
 		).filter((item) => item.date != "$HOLE$");
@@ -75,6 +75,7 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 					for (let j = 0; j < fillMax; j++) {
 						const cellEl = document.createElement("div");
 						cellEl.className = "cell";
+						this.applyCellGlobalStylePartial(cellEl, graphConfig, ['minWidth', 'minHeight']);
 						monthDataRowEl?.appendChild(cellEl);
 					}
 				}
@@ -91,9 +92,9 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 				monthIndicator.innerText =
 					contributionItem.month == 0
 						? localizedYearMonthMapping(
-								contributionItem.year,
-								contributionItem.month
-						  )
+							contributionItem.year,
+							contributionItem.month
+						)
 						: localizedMonthMapping(contributionItem.month);
 
 				this.bindMonthTips(
@@ -112,6 +113,7 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 					const cellEl = document.createElement("div");
 					cellEl.className = "cell";
 					cellEl.innerText = "···";
+					this.applyCellGlobalStylePartial(cellEl, graphConfig, ['minWidth', 'minHeight']);
 					monthDataRowEl?.appendChild(cellEl);
 				}
 			}
@@ -141,15 +143,17 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 			for (let j = 0; j < fillMax; j++) {
 				const cellEl = document.createElement("div");
 				cellEl.className = "cell";
+				this.applyCellGlobalStylePartial(cellEl, graphConfig, ['minWidth', 'minHeight']);
 				monthDataRowEl?.appendChild(cellEl);
 			}
 		}
 	}
 
-	renderMonthDateIndicator(dateIndicatorRow: HTMLDivElement) {
+	renderMonthDateIndicator(dateIndicatorRow: HTMLDivElement, graphConfig: ContributionGraphConfig) {
 		for (let i = 0; i < 31; i++) {
 			const dateIndicatorCell = document.createElement("div");
 			dateIndicatorCell.className = "cell date-indicator";
+			this.applyCellGlobalStylePartial(dateIndicatorCell, graphConfig, ['minWidth', 'minHeight']);
 			dateIndicatorCell.innerText = `${i + 1}`;
 			dateIndicatorRow.appendChild(dateIndicatorCell);
 		}
