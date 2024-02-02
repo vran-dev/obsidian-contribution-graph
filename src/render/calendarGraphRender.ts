@@ -41,7 +41,7 @@ export class CalendarGraphRender extends BaseGraphRender {
 
 		this.renderCellRuleIndicator(graphConfig, main);
 
-		const activityContainer= this.renderActivityContainer(graphConfig, main);
+		const activityContainer = this.renderActivityContainer(graphConfig, main);
 
 		const contributionData = this.generateContributionData(
 			graphConfig
@@ -130,6 +130,7 @@ export class CalendarGraphRender extends BaseGraphRender {
 				for (let i = 0; i < 7; i++) {
 					const dateIndicatorCell = document.createElement("div");
 					dateIndicatorCell.className = "cell week-indicator";
+					this.applyCellGlobalStylePartial(dateIndicatorCell, graphConfig, ['minWidth', 'minHeight']);
 					const weekText = localizedWeekDayMapping(
 						((graphConfig.startOfWeek || 0) + 7 + i) % 7,
 						2
@@ -150,6 +151,7 @@ export class CalendarGraphRender extends BaseGraphRender {
 				for (let j = 0; j < distance; j++) {
 					const cellEl = document.createElement("div");
 					cellEl.className = "cell";
+					this.applyCellGlobalStylePartial(cellEl, graphConfig, ['minWidth', 'minHeight']);
 					rowContainer?.appendChild(cellEl);
 				}
 			}
@@ -170,6 +172,7 @@ export class CalendarGraphRender extends BaseGraphRender {
 			if (item.date == "$HOLE$") {
 				cellEl.innerText = "···";
 				cellEl.className = "cell";
+				this.applyCellGlobalStylePartial(cellEl, graphConfig, ['minWidth', 'minHeight']);
 			} else if (item.value == 0) {
 				cellEl.className = "cell empty";
 				this.applyCellGlobalStyle(cellEl, graphConfig);
@@ -194,6 +197,7 @@ export class CalendarGraphRender extends BaseGraphRender {
 					for (let j = 0; j < distance; j++) {
 						const cellEl = document.createElement("div");
 						cellEl.className = "cell";
+						this.applyCellGlobalStylePartial(cellEl, graphConfig, ['minWidth', 'minHeight']);
 						rowContainer?.appendChild(cellEl);
 					}
 				}
@@ -205,6 +209,7 @@ export class CalendarGraphRender extends BaseGraphRender {
 				for (let j = 0; j < distance; j++) {
 					const cellEl = document.createElement("div");
 					cellEl.className = "cell";
+					this.applyCellGlobalStylePartial(cellEl, graphConfig, ['minWidth', 'minHeight']);
 					rowContainer?.appendChild(cellEl);
 				}
 			}

@@ -1,7 +1,7 @@
 import { Modal, App, MarkdownView, parseYaml, stringifyYaml } from "obsidian";
 import { StrictMode } from "react";
 import { Root, createRoot } from "react-dom/client";
-import { CreateContributionGraphForm } from "./GraphForm";
+import { GraphForm } from "./GraphForm";
 import { YamlGraphConfig } from "src/processor/types";
 import { YamlConfigReconciler } from "src/processor/yamlConfigReconciler";
 
@@ -76,7 +76,7 @@ export class ContributionGraphCreateModal extends Modal {
 		this.root = createRoot(rootContainer);
 		this.root.render(
 			<StrictMode>
-				<CreateContributionGraphForm
+				<GraphForm
 					yamlConfig={yamlConfig}
 					onSubmit={onSubmit}
 					app={this.app}

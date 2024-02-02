@@ -1,6 +1,8 @@
 import { Local } from "./types";
 
 export class Zh implements Local {
+	default = "默认";
+	click_to_reset = "点击重置";
     /**
      * context menu
      */
@@ -86,6 +88,8 @@ export class Zh implements Local {
     form_cell_shape_circle = "圆形";
     form_cell_shape_square = "方块";
     form_cell_shape_rounded = "圆角";
+    form_cell_min_height = "单元格最小高度";
+	form_cell_min_width = "单元格最小宽度";
 
     form_datasource_type_page = "文档";
     form_datasource_type_all_task = "所有任务";

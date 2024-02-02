@@ -1,6 +1,9 @@
 import { Local } from "./types";
 
 export class En implements Local {
+    default = "default";
+	click_to_reset = "click to reset";
+
     /**
      * context menu
      */
@@ -13,8 +16,8 @@ export class En implements Local {
     form_style_settings = "Style Settings";
     form_about = "About";
     form_contact_me = "Contact me";
-	form_project_url = "Project";
-	form_sponsor = "Sponsor";
+    form_project_url = "Project";
+    form_sponsor = "Sponsor";
     form_title = "Title";
     form_title_placeholder = "Input title";
     form_graph_type = "Graph Type";
@@ -24,7 +27,7 @@ export class En implements Local {
     form_date_range = "Date Range";
     form_date_range_latest_days = "Latest Days";
     form_date_range_latest_month = "Latest Whole Month";
-	form_date_range_latest_year = "Latest Whole Year";
+    form_date_range_latest_year = "Latest Whole Year";
     form_date_range_latest_days_placeholder = "Input days";
     form_date_range_fixed_date = "Fixed Date";
     form_date_range_start_date = "Start Date";
@@ -78,15 +81,17 @@ export class En implements Local {
     form_count_field_count_field_type_task_prop = "Task Property";
     form_title_font_size_label = "Title font Size";
     form_number_input_min_warning = "allow min value is {value}";
-	form_number_input_max_warning = "allow max value is {value}";
+    form_number_input_max_warning = "allow max value is {value}";
     form_fill_the_screen_label = "Fill The Screen";
     form_main_container_bg_color = "Background Color";
-	form_enable_main_container_shadow = "Enable Shadow";
+    form_enable_main_container_shadow = "Enable Shadow";
     form_show_cell_indicators = "Show Cell Indicators";
     form_cell_shape = "Cell Shape";
     form_cell_shape_circle = "Circle";
     form_cell_shape_square = "Square";
     form_cell_shape_rounded = "Rounded";
+    form_cell_min_height = "Min Height";
+    form_cell_min_width = "Min Width";
 
     form_datasource_type_page = "Page";
     form_datasource_type_all_task = "All Task";
