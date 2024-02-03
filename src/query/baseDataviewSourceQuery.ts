@@ -104,7 +104,7 @@ export abstract class BaseDataviewDataSourceQuery {
 		data: DataArray<Record<string, Literal>>,
 		source: DataSource
 	): DataArray<Data<Record<string, Literal>>> {
-		if (source.dateField && source.dateField.value) {
+		if (source.dateField && source.dateField.type) {
 			const dateFieldName = source.dateField.value;
 			const dateFieldType = source.dateField.type;
 			const dateFieldFormat = source.dateField.format;
@@ -142,7 +142,7 @@ export abstract class BaseDataviewDataSourceQuery {
 						const fieldValue = this.getValueByCustomizeProperty(
 							item,
 							propertySource,
-							dateFieldName
+							dateFieldName || ""
 						);
 						if (isLuxonDateTime(fieldValue)) {
 							return new Data(item, fieldValue as DateTime);

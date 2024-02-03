@@ -46,8 +46,8 @@ export function DataSourceFormItem(props: {
 	const changeFilter = (id: string, name: string, value: any) => {
 		const newFilters = dataSource.filters?.map((f) => {
 			if (f.id == id) {
-				if (name == "type" && value == 'STATUS_IS') {
-					return { ...f, [name]: value, value: 'COMPLETED' };
+				if (name == "type" && value == "STATUS_IS") {
+					return { ...f, [name]: value, value: "COMPLETED" };
 				}
 				return { ...f, [name]: value };
 			}
@@ -113,13 +113,11 @@ export function DataSourceFormItem(props: {
 		"TASK_IN_SPECIFIC_PAGE",
 	];
 
-	const local = Locals.get()
+	const local = Locals.get();
 	return (
 		<Fragment>
 			<div className="form-item">
-				<span className="label">
-					{local.form_data_source_value}
-				</span>
+				<span className="label">{local.form_data_source_value}</span>
 				<div className="form-content">
 					<select
 						defaultValue={dataSource.type || "PAGE"}
@@ -159,21 +157,19 @@ export function DataSourceFormItem(props: {
 					<div className="form-vertical-content">
 						{dataSource.filters?.map((filter, index) => {
 							return (
-								<>
-									<div className="form-content" key={filter.id}>
-										<select
-											value={filter.type || "NONE"}
-											onChange={(e) => {
-												changeFilter(
-													filter.id,
-													"type",
-													e.target.value
-												);
-											}}
-										>
-											{getDataSourceFilterOptions(
-												"TASK"
-											).map((op) => {
+								<div className="form-content" key={filter.id}>
+									<select
+										value={filter.type || "NONE"}
+										onChange={(e) => {
+											changeFilter(
+												filter.id,
+												"type",
+												e.target.value
+											);
+										}}
+									>
+										{getDataSourceFilterOptions("TASK").map(
+											(op) => {
 												return (
 													<option
 														value={op.value}
@@ -182,89 +178,86 @@ export function DataSourceFormItem(props: {
 														{op.label}
 													</option>
 												);
+											}
+										)}
+									</select>
+
+									{filter.type == "STATUS_IS" && (
+										<select
+											defaultValue={
+												filter?.value || "NONE"
+											}
+											onChange={(e) => {
+												changeFilter(
+													filter.id,
+													"value",
+													e.target.value
+												);
+											}}
+										>
+											{taskStatusOptions.map((option) => {
+												return (
+													<option
+														value={option.value}
+														key={option.value}
+													>
+														{option.label}
+													</option>
+												);
 											})}
 										</select>
+									)}
 
-										{filter.type == "STATUS_IS" && (
-											<select
-												defaultValue={
-													filter?.value || 'NONE'
+									{filter?.type == "CONTAINS_ANY_TAG" ? (
+										<InputTags
+											tags={getTagsFromDataSource(filter)}
+											onChange={(tags) => {
+												changeFilter(
+													filter.id,
+													"value",
+													tags.map((t) => {
+														return t.value;
+													})
+												);
+											}}
+											onRemove={(tag) => {
+												if (
+													filter?.value instanceof
+													Array
+												) {
+													changeFilter(
+														filter.id,
+														"value",
+														filter?.value?.filter(
+															(t) => {
+																return (
+																	t !=
+																	tag.value
+																);
+															}
+														)
+													);
 												}
-												onChange={(e) => {
-													changeFilter(
-														filter.id,
-														"value",
-														e.target.value
-													);
-												}}
-											>
-												{taskStatusOptions.map(
-													(option) => {
-														return (
-															<option
-																value={
-																	option.value
-																}
-																key={
-																	option.value
-																}
-															>
-																{option.label}
-															</option>
-														);
-													}
-												)}
-											</select>
-										)}
+											}}
+											getItems={(query) => {
+												return getTagOptions(
+													query,
+													props.app
+												);
+											}}
+											inputPlaceholder={
+												local.form_datasource_filter_contains_tag_input_placeholder
+											}
+										/>
+									) : null}
 
-										{filter?.type == "CONTAINS_ANY_TAG" ? (
-											<InputTags
-												tags={getTagsFromDataSource(
-													filter
-												)}
-												onChange={(tags) => {
-													changeFilter(
-														filter.id,
-														"value",
-														tags.map((t) => {
-															return t.value;
-														})
-													);
-												}}
-												onRemove={(tag) => {
-													if (
-														filter?.value instanceof
-														Array
-													) {
-														changeFilter(
-															filter.id,
-															"value",
-															filter?.value?.filter(
-																(t) => {
-																	return (
-																		t !=
-																		tag.value
-																	);
-																}
-															)
-														);
-													}
-												}}
-												getItems={(query) => {
-													return getTagOptions(
-														query,
-														props.app
-													);
-												}}
-												inputPlaceholder={local.form_datasource_filter_contains_tag_input_placeholder}
-											/>
-										) : null}
-
-										<button className="list-remove-button" onClick={e => removeFilter(filter.id)}>
-											x
-										</button>
-									</div>
-								</>
+									<button
+										className="list-remove-button"
+										onClick={(e) => removeFilter(filter.id)}
+									>
+										x
+									</button>
+								</div>
 							);
 						})}
 						<div className="form-content">
@@ -340,9 +333,7 @@ export function DataSourceFormItem(props: {
 			</div>
 
 			<div className="form-item">
-				<span className="label">
-					{local.form_date_field_format}
-				</span>
+				<span className="label">{local.form_date_field_format}</span>
 				<div className="form-vertical-content">
 					<select
 						defaultValue={dateFormatType}
@@ -368,7 +359,9 @@ export function DataSourceFormItem(props: {
 									dataSource.dateField?.format || ""
 								}
 								name="dateFieldFormat"
-								placeholder={local.form_date_field_format_placeholder}
+								placeholder={
+									local.form_date_field_format_placeholder
+								}
 								onChange={(e) => {
 									changeDateField("format", e.target.value);
 								}}
@@ -378,9 +371,7 @@ export function DataSourceFormItem(props: {
 								<a href="https://moment.github.io/luxon/#/formatting?id=table-of-tokens">
 									Luxon Format
 								</a>
-								{" " +
-									local.form_date_field_format_sample}
-								:
+								{" " + local.form_date_field_format_sample}:
 								{" " +
 									DateTime.fromJSDate(
 										new Date("2024-01-01 00:00:00")
@@ -422,7 +413,9 @@ export function DataSourceFormItem(props: {
 							onInputChange={(newValue) => {
 								changeCountField("value", newValue);
 							}}
-							inputPlaceholder={local.form_count_field_count_field_input_placeholder}
+							inputPlaceholder={
+								local.form_count_field_count_field_input_placeholder
+							}
 							getItems={(query) => {
 								return getAllProperties(query, props.app).map(
 									(p, index) => {

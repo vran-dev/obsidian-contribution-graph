@@ -39,7 +39,6 @@ export class DataviewTaskDataSourceQuery extends BaseDataviewDataSourceQuery {
 		if (!source.filters || source.filters.length === 0) {
 			return taskData;
 		}
-
 		return taskData.filter((task) => {
 			if (!source.filters) {
 				return true;
@@ -47,7 +46,7 @@ export class DataviewTaskDataSourceQuery extends BaseDataviewDataSourceQuery {
 			return source.filters.every((filter) => {
 				switch (filter.type) {
 					case "NONE":
-						return task;
+						return true;
 					case "STATUS_IS":
 						return this.filterByStatusIs(filter, task);
 					case "CONTAINS_ANY_TAG":
