@@ -2,12 +2,6 @@ import { CellStyleRule } from "./types";
 
 export const DEFAULT_RULES: CellStyleRule[] = [
 	{
-		id: "default_a",
-		color: "#ebedf0",
-		min: 0,
-		max: 1,
-	},
-	{
 		id: "default_b",
 		color: "#9be9a8",
 		min: 1,
