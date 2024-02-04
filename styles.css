@@ -16,6 +16,7 @@
 	margin-top: 26px;
 	justify-content: center;
 	border-radius: 8px;
+	background-color: var(--background-primary-alt);
 }
 
 .contribution-graph .main.fill-the-screen {
