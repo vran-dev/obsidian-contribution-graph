@@ -155,6 +155,10 @@ export abstract class BaseGraphRender implements GraphRender {
 			text: summary,
 		});
 
+		if ((cellData.items || []).length === 0) {
+			return;
+		}
+
 		const content = createDiv({
 			cls: "activity-content",
 			parent: contaienr,
