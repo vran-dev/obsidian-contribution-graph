@@ -440,6 +440,16 @@ export function GraphForm(props: {
 														}
 													);
 												}}
+												onReset={(color) => {
+													changeFormData(
+														"mainContainerStyle",
+														{
+															...formData.mainContainerStyle,
+															backgroundColor:
+																color,
+														}
+													);
+												}}
 											/>
 										</div>
 									</div>

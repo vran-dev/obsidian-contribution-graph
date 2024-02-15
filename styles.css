@@ -288,6 +288,25 @@
 	opacity: 0.6;
 }
 
+.color-label {
+	display: flex;
+	gap: 6px;
+	background-color: hsl(var(--interactive-accent-hsl), 0.2);
+	color: hsl(var(--interactive-accent-hsl), 0.8);
+	align-items: center;
+	border-radius: 6px;
+	padding: 4px 8px;
+}
+
+.color-label:hover {
+	background-color: hsl(var(--interactive-accent-hsl), 0.8);
+	color: var(--text-on-accent);
+}
+
+.color-reset-button:hover {
+	color: var(--text-normal);
+}
+
 /* default cell rule indicator */
 .contribution-graph .cell-rule-indicator-container {
 	position: relative;
