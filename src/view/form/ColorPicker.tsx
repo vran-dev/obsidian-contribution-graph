@@ -13,7 +13,9 @@ import { useState } from "react";
 
 export function ColorPicker(props: {
 	color?: string;
-	onChange: (color: string) => void;
+	defaultColor?: string;
+	onChange: (color?: string) => void;
+	onReset?: (color?: string) => void;
 }): JSX.Element {
 	const [showColorPicker, setShowColorPicker] = useState(false);
 	const { refs, floatingStyles, context } = useFloating({
@@ -35,6 +37,20 @@ export function ColorPicker(props: {
 				}}
 				onClick={() => setShowColorPicker(!showColorPicker)}
 			></span>
+			{props.color && (
+				<div className="color-label">
+					<span>{props.color ?? ""}</span>
+					<span className="color-reset-button" onClick={() => {
+						if (props.onReset) {
+							props.onReset(props.defaultColor);
+						} else {
+							props.onChange(props.defaultColor);
+						}
+					}}>
+						x
+					</span>
+				</div>
+			)}
 			{showColorPicker ? (
 				<div
 					ref={refs.setFloating}
