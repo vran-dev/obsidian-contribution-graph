@@ -40,13 +40,16 @@ export function ColorPicker(props: {
 			{props.color && (
 				<div className="color-label">
 					<span>{props.color ?? ""}</span>
-					<span className="color-reset-button" onClick={() => {
-						if (props.onReset) {
-							props.onReset(props.defaultColor);
-						} else {
-							props.onChange(props.defaultColor);
-						}
-					}}>
+					<span
+						className="color-reset-button"
+						onClick={() => {
+							if (props.onReset) {
+								props.onReset(props.defaultColor);
+							} else {
+								props.onChange(props.defaultColor);
+							}
+						}}
+					>
 						x
 					</span>
 				</div>
@@ -60,7 +63,7 @@ export function ColorPicker(props: {
 					{...getFloatingProps()}
 				>
 					<Chrome
-						color={props.color}
+						color={props.color || "#FFFFFF"}
 						onChange={(color: ColorResult) => {
 							props.onChange(color.hexa);
 						}}
