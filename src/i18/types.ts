@@ -27,7 +27,7 @@ export interface Local {
 	form_date_range_latest_days: string;
 	form_date_range_latest_month: string;
 	form_date_range_latest_year: string;
-	form_date_range_latest_days_placeholder: string;
+	form_date_range_input_placeholder: string;
 	form_date_range_fixed_date: string;
 	form_date_range_start_date: string;
 

@@ -274,7 +274,7 @@ export function GraphForm(props: {
 														}
 														min={1}
 														placeholder={
-															local.form_date_range_latest_days_placeholder
+															local.form_date_range_input_placeholder
 														}
 														onChange={(e) =>
 															changeFormData(

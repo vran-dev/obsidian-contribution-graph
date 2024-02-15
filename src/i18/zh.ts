@@ -27,7 +27,7 @@ export class Zh implements Local {
     form_date_range_latest_days = "最近几天";
     form_date_range_latest_month = "最近几个整月";
 	form_date_range_latest_year = "最近几个整年";
-    form_date_range_latest_days_placeholder = "输入天数";
+    form_date_range_input_placeholder = "在这里输入数值";
     form_date_range_fixed_date = "固定日期";
     form_date_range_start_date = "开始日期";
 
