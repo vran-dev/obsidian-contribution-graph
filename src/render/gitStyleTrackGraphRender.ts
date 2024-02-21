@@ -41,7 +41,7 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 			cls: "column",
 			parent: chartsEl,
 		});
-		this.renderWeekIndicator(weekTextColumns, graphConfig.startOfWeek || 0);
+		this.renderWeekIndicator(weekTextColumns, graphConfig);
 
 		const contributionData: ContributionCellData[] =
 			this.generateContributionData(graphConfig);
@@ -128,10 +128,12 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 		}
 	}
 
-	renderWeekIndicator(weekdayContainer: HTMLDivElement, startOfWeek = 0) {
+	renderWeekIndicator(weekdayContainer: HTMLDivElement,graphConfig: ContributionGraphConfig) {
+		const startOfWeek = graphConfig.startOfWeek || 0;
 		for (let i = 0; i < 7; i++) {
 			const weekdayCell = document.createElement("div");
 			weekdayCell.className = "cell week-indicator";
+			this.applyCellGlobalStyle(weekdayCell, graphConfig);
 			switch (i) {
 				case 1:
 				case 3:
