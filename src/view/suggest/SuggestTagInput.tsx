@@ -75,6 +75,7 @@ export function InputTags(props: {
 					ref={inputRef}
 					className="input"
 					placeholder={props.inputPlaceholder}
+					onFocus={() => setShowSuggest(true)}
 					onKeyDown={(e) => handleInputKeyDown(e)}
 					onChange={(e) => {
 						setValue(e.target.value);
@@ -95,12 +96,12 @@ export function InputTags(props: {
 						return [];
 					}}
 					onSelected={(item, index) => {
-						if (showSuggest) {
-							setShowSuggest(false);
-						}
 						if (index >= 0) {
 							appendTag(item.value);
 							inputRef.current!.value = "";
+						}
+						if (showSuggest) {
+							setShowSuggest(false);
 						}
 					}}
 					onSelectChange={(item, index) => {

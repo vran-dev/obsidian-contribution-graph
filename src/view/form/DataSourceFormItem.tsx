@@ -93,7 +93,7 @@ export function DataSourceFormItem(props: {
 	};
 
 	const getTagsFromDataSource = (filter: DataFilter): TagOption[] => {
-		if (filter.type != "CONTAINS_ANY_TAG") {
+		if (filter.type != "CONTAINS_ANY_TAG" && filter.type != 'STATUS_IN') {
 			return [];
 		}
 		if (!(filter.value instanceof Array)) {
@@ -244,6 +244,77 @@ export function DataSourceFormItem(props: {
 													query,
 													props.app
 												);
+											}}
+											inputPlaceholder={
+												local.form_datasource_filter_contains_tag_input_placeholder
+											}
+										/>
+									) : null}
+
+									{filter?.type == "STATUS_IN" ? (
+										<InputTags
+											tags={getTagsFromDataSource(filter)}
+											onChange={(values) => {
+												changeFilter(
+													filter.id,
+													"value",
+													values.map((t) => {
+														return t.value;
+													})
+												);
+											}}
+											onRemove={(tag) => {
+												if (
+													filter?.value instanceof
+													Array
+												) {
+													changeFilter(
+														filter.id,
+														"value",
+														filter?.value?.filter(
+															(t) => {
+																return (
+																	t !=
+																	tag.value
+																);
+															}
+														)
+													);
+												}
+											}}
+											getItems={(query) => {
+												return [
+													{
+														id: "CANCELED",
+														label: local.form_datasource_filter_task_status_canceled,
+														value: "CANCELED",
+														icon: Icons.CODE,
+													},
+													{
+														id: "COMPLETED",
+														label: local.form_datasource_filter_task_status_completed,
+														value: "COMPLETED",
+														icon: Icons.CODE,
+													},
+													{
+														id: "INCOMPLETE",
+														label: local.form_datasource_filter_task_status_incomplete,
+														value: "INCOMPLETE",
+														icon: Icons.CODE,
+													},
+													{
+														id: "ANY",
+														label: local.form_datasource_filter_task_status_any,
+														value: "ANY",
+														icon: Icons.CODE,
+													},
+													{
+														id: "FULLY_COMPLETED",
+														label: local.form_datasource_filter_task_status_fully_completed,
+														value: "FULLY_COMPLETED",
+														icon: Icons.CODE,
+													},
+												];
 											}}
 											inputPlaceholder={
 												local.form_datasource_filter_contains_tag_input_placeholder
