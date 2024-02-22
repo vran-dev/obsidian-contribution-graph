@@ -8,7 +8,40 @@
 
 Contribution Graph is a plugin for [obsidian.md](https://obsidian.md/) which could generate interactive heatmap graphs like GitHub to track your notes, habits, activity, history, and so on.
 
-[![Buy me a coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://www.buymeacoffee.com/vran)
+
+<a href="https://www.buymeacoffee.com/vran">
+  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="buy me a coffee" width="200px"/>
+</a>
+
+
+## Use cases
+
+- Habit Tracker: Count the number of tasks you complete every day. Different numbers will be marked in different colors.
+- Note Tracker: Count the number of note you create every day. Different numbers will be marked in different colors.
+- Review Report: Count your notes or tasks for a certain period of time and generate a heat map for a more intuitive review
+- and more...
+
+## Quick Start
+
+- create empty note, then right-click
+- select **Add Heatmap** options
+- click the `save` button, and then a heatmap will be created in note.
+
+![Alt text](attachment/contribution-graph-create.gif)
+
+## Theme
+
+- Git Style
+
+![alt text](attachment/image-1.png)
+
+- Month Track
+
+![alt text](attachment/image-2.png)
+
+- Calendar
+
+![alt text](attachment/image.png)
 
 ## Features
 
@@ -19,14 +52,6 @@ Contribution Graph is a plugin for [obsidian.md](https://obsidian.md/) which cou
 - simply integrate with DataviewJS, use contribution graph's api to dynamically render charts 
 
 ![](attachment/74103317de5336b5283338c56171f268.png)
-
-## Quick Start
-
-- ctrl+p (or command+p on mac) to open the command select panel
-- write `contribution` to search and click `create contribution graph` command
-- click the `save` button, and then a heatmap will be created.
-
-![Alt text](attachment/contribution-graph-create.gif)
 
 
 ### How to modify graph?
