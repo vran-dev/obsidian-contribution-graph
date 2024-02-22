@@ -2,7 +2,11 @@ import { DateTime } from "luxon";
 
 export type DataSourceType = "PAGE" | "ALL_TASK" | "TASK_IN_SPECIFIC_PAGE";
 
-export type DataSourceFilterType = "NONE" | "STATUS_IS" | "CONTAINS_ANY_TAG";
+export type DataSourceFilterType =
+	| "NONE"
+	| "STATUS_IS"
+	| "CONTAINS_ANY_TAG"
+	| "STATUS_IN";
 
 export class DataSource {
 	type: DataSourceType;
@@ -46,7 +50,12 @@ export type CountFieldType = "DEFAULT" | "PAGE_PROPERTY" | "TASK_PROPERTY";
 
 export type PropertySource = "UNKNOWN" | "PAGE" | "TASK";
 
-export type TaskStatus = "COMPLETED" | "INCOMPLETE" | "FULLY_COMPLETED" | "ANY";
+export type TaskStatus =
+	| "COMPLETED"
+	| "INCOMPLETE"
+	| "FULLY_COMPLETED"
+	| "CANCELED"
+	| "ANY";
 
 export class ConvertFailData {
 	source: string;

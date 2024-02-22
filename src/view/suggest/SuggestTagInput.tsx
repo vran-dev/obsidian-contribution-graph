@@ -75,6 +75,8 @@ export function InputTags(props: {
 					ref={inputRef}
 					className="input"
 					placeholder={props.inputPlaceholder}
+					onFocus={() => setShowSuggest(true)}
+					onBlur={() => setShowSuggest(false)}
 					onKeyDown={(e) => handleInputKeyDown(e)}
 					onChange={(e) => {
 						setValue(e.target.value);

@@ -49,12 +49,36 @@ export class DataviewTaskDataSourceQuery extends BaseDataviewDataSourceQuery {
 						return true;
 					case "STATUS_IS":
 						return this.filterByStatusIs(filter, task);
+					case "STATUS_IN":
+						return this.filterByStatusIn(filter, task);
 					case "CONTAINS_ANY_TAG":
 						return this.filterByContainsAnyTag(filter, task);
 					default:
 						return true;
 				}
 			});
+		});
+	}
+
+	filterByStatusIn(
+		filter: DataFilter,
+		data: Record<string, Literal>
+	): boolean {
+		const statusArr = filter.value as string[];
+		return statusArr.some((value) => {
+			if (value == "COMPLETED") {
+				return data.completed as boolean;
+			} else if (value == "INCOMPLETE") {
+				return data.status == " ";
+			} else if (value == "CANCELED") {
+				return data.status == "-";
+			} else if (value == "ANY") {
+				return true;
+			} else if (value == "FULLY_COMPLETED") {
+				return data.fullyCompleted as boolean;
+			} else {
+				return data.status === value;
+			}
 		});
 	}
 
@@ -65,13 +89,16 @@ export class DataviewTaskDataSourceQuery extends BaseDataviewDataSourceQuery {
 		if (filter.value == "COMPLETED") {
 			return data.completed as boolean;
 		} else if (filter.value == "INCOMPLETE") {
-			return !(data.completed as boolean);
+			return data.status == " ";
+		} else if (filter.value == "CANCELED") {
+			return data.status == "-";
 		} else if (filter.value == "ANY") {
 			return true;
 		} else if (filter.value == "FULLY_COMPLETED") {
 			return data.fullyCompleted as boolean;
+		} else {
+			return data.status === filter.value;
 		}
-		return true;
 	}
 
 	filterByContainsAnyTag(

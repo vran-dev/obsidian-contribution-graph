@@ -38,12 +38,14 @@ export interface Local {
 	form_datasource_filter_type_none: string;
 	form_datasource_filter_type_status_is: string;
 	form_datasource_filter_type_contains_any_tag: string;
+	form_datasource_filter_type_status_in: string;
 
 	form_datasource_filter_task_none: string;
 	form_datasource_filter_task_status_completed: string;
 	form_datasource_filter_task_status_fully_completed: string;
 	form_datasource_filter_task_status_any: string;
 	form_datasource_filter_task_status_incomplete: string;
+	form_datasource_filter_task_status_canceled: string;
 	form_datasource_filter_contains_tag: string;
 	form_datasource_filter_contains_tag_input_placeholder: string;
 
