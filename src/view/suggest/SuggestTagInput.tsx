@@ -96,7 +96,6 @@ export function InputTags(props: {
 						return [];
 					}}
 					onSelected={(item, index) => {
-						console.log('on selected', item, index)
 						if (index >= 0) {
 							appendTag(item.value);
 							inputRef.current!.value = "";
