@@ -126,6 +126,10 @@ export function getDataSourceFilterOptions(
 				value: "STATUS_IS",
 			},
 			{
+				label: Locals.get().form_datasource_filter_type_status_in,
+				value: "STATUS_IN",
+			},
+			{
 				label: Locals.get()
 					.form_datasource_filter_type_contains_any_tag,
 				value: "CONTAINS_ANY_TAG",
@@ -205,6 +209,10 @@ export const taskStatusOptions: SelectOption<TaskStatus>[] = [
 	{
 		label: Locals.get().form_datasource_filter_task_status_incomplete,
 		value: "INCOMPLETE",
+	},
+	{
+		label: Locals.get().form_datasource_filter_task_status_canceled,
+		value: "CANCELED",
 	},
 	{
 		label: Locals.get().form_datasource_filter_task_status_any,

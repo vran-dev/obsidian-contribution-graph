@@ -39,12 +39,14 @@ export class En implements Local {
     form_datasource_filter_type_none = "None";
     form_datasource_filter_type_status_is = "Status Is";
     form_datasource_filter_type_contains_any_tag = "Contains Any Tag";
+	form_datasource_filter_type_status_in = "Status In";
 
     form_datasource_filter_task_none = "None";
     form_datasource_filter_task_status_completed = "Completed";
     form_datasource_filter_task_status_fully_completed = "Fully completed";
     form_datasource_filter_task_status_any = "Any Status";
     form_datasource_filter_task_status_incomplete = "Incomplete";
+	form_datasource_filter_task_status_canceled = "Canceled";
     form_datasource_filter_contains_tag = "Contains Any Tag";
     form_datasource_filter_contains_tag_input_placeholder = "Please input tag, such as #todo";
     form_datasource_filter_customize = "Customize";

@@ -38,10 +38,12 @@ export class Zh implements Local {
     form_datasource_filter_type_none = "无";
     form_datasource_filter_type_status_is = "状态等于";
     form_datasource_filter_type_contains_any_tag = "包含任意标签";
+    form_datasource_filter_type_status_in = "包含任意一个状态";
 
     form_datasource_filter_task_none = "无";
     form_datasource_filter_task_status_completed = "已完成（不包含子任务）";
     form_datasource_filter_task_status_fully_completed = "已完成（包含子任务）";
+	form_datasource_filter_task_status_canceled = "已取消";
     form_datasource_filter_task_status_any = "任意状态";
     form_datasource_filter_task_status_incomplete = "未完成";
     form_datasource_filter_contains_tag = "包含任意一个标签";
