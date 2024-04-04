@@ -12,7 +12,6 @@ import {
 	generateByData,
 } from "./matrixDataGenerator";
 import { matchCellStyleRule } from "src/util/utils";
-import { setTooltip } from "obsidian";
 import { Locals } from "src/i18/messages";
 
 export interface GraphRender {
@@ -22,7 +21,7 @@ export interface GraphRender {
 }
 
 export abstract class BaseGraphRender implements GraphRender {
-	constructor() { }
+	constructor() {}
 
 	render(container: HTMLElement, graphConfig: ContributionGraphConfig): void {
 		throw new Error("Method not implemented.");
@@ -102,7 +101,7 @@ export abstract class BaseGraphRender implements GraphRender {
 
 				// bind tips event
 				const summary = `${rule.min} ≤ contributions ＜ ${rule.max}`;
-				setTooltip(cellEl, summary);
+				cellEl.ariaLabel = summary;
 			});
 		createDiv({
 			cls: "cell text",
@@ -225,14 +224,12 @@ export abstract class BaseGraphRender implements GraphRender {
 		contributionItem: ContributionCellData,
 		contributionMapByYearMonth: Map<string, number>
 	) {
-		const yearMonth = `${contributionItem.year}-${contributionItem.month + 1
-			}`;
+		const yearMonth = `${contributionItem.year}-${
+			contributionItem.month + 1
+		}`;
 		const yearMonthValue = contributionMapByYearMonth.get(yearMonth) || 0;
 		// tips event
-		setTooltip(
-			monthCell,
-			`${yearMonthValue} contributions on ${yearMonth}.`
-		);
+		monthCell.ariaLabel = `${yearMonthValue} contributions on ${yearMonth}.`;
 	}
 
 	applyCellGlobalStyle(
@@ -313,12 +310,10 @@ export abstract class BaseGraphRender implements GraphRender {
 	}
 
 	bindCellTips(cellEl: HTMLElement, contributionItem: ContributionCellData) {
-		cellEl.addEventListener("mouseenter", (event) => {
-			const summary = contributionItem.summary
-				? contributionItem.summary
-				: `${contributionItem.value} contributions on ${contributionItem.date}.`;
-			setTooltip(cellEl, summary);
-		});
+		const summary = contributionItem.summary
+			? contributionItem.summary
+			: `${contributionItem.value} contributions on ${contributionItem.date}.`;
+		cellEl.ariaLabel = summary;
 	}
 }
 

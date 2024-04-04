@@ -102,8 +102,15 @@ export interface Contribution {
 export interface ContributionItem {
 	label: string;
 	value: number;
-	link?: string;
+	link?: string | ContributionItemLink;
 	open?: (e: MouseEvent) => void;
+}
+
+export interface ContributionItemLink {
+	href: string;
+	target?: string;
+	className?: string;
+	rel?: string;
 }
 
 export interface CellStyleRule {
