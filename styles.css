@@ -1,8 +1,6 @@
 .contribution-graph {
-	margin-bottom: 6px;
 	position: relative;
 	width: 100%;
-	padding: 2px;
 }
 
 .contribution-graph .center {
@@ -13,10 +11,10 @@
 .contribution-graph .main {
 	line-height: normal;
 	display: grid;
-	margin-top: 26px;
 	justify-content: center;
-	border-radius: 8px;
+	border-radius: var(--radius-s);
 	background-color: var(--background-primary-alt);
+	padding: var(--size-4-2) var(--size-4-1);
 }
 
 .contribution-graph .main.fill-the-screen {
@@ -65,6 +63,8 @@
 	align-items: flex-start;
 	flex-wrap: nowrap;
 	justify-content: flex-start;
+	padding-left: var(--size-4-2);
+	padding-right: var(--size-4-2);
 }
 
 .contribution-graph .main .charts.default .column {
