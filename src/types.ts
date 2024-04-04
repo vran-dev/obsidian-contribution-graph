@@ -102,7 +102,7 @@ export interface Contribution {
 export interface ContributionItem {
 	label: string;
 	value: number;
-	link?: string | ContributionItemLink;
+	link?: ContributionItemLink;
 	open?: (e: MouseEvent) => void;
 }
 

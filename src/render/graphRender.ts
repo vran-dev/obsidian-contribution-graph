@@ -326,13 +326,19 @@ function renderActivityItem(items: ContributionItem[], listMain: HTMLElement) {
 
 		const linkEl = createEl("a", {
 			text: item.label,
-			href: "#",
 			parent: listItem,
-			cls: "label",
+			cls: `label ${item.link?.className || ""}`,
 		});
+		if (item.link) {
+			const link = item.link;
+			linkEl.setAttribute("data-href", link.href || "#");
+			linkEl.setAttribute("href", link.href || "#");
+			linkEl.setAttribute("target", link.target || "_blank");
+			linkEl.setAttribute("rel", link.rel || "noopener");
+		}
 		linkEl.onclick = (event) => {
-			event.preventDefault();
 			if (item.open) {
+				event.preventDefault();
 				item.open(event);
 			}
 		};

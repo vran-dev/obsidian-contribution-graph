@@ -64,6 +64,12 @@ export abstract class BaseDataviewDataSourceQuery {
 						return {
 							label: label,
 							value: value,
+							link: {
+								// @ts-ignore
+								href: item.raw.file.path,
+								className: "internal-link",
+								rel: 'noopener'
+							},
 							open: (e) => jump(e, source, item, app),
 						} as ContributionItem;
 					})
