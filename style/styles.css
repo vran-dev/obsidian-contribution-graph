@@ -1,6 +1,7 @@
 .contribution-graph {
 	position: relative;
 	width: 100%;
+	padding: var(--size-4-1);
 }
 
 .contribution-graph .center {
@@ -13,9 +14,23 @@
 	display: grid;
 	justify-content: center;
 	border-radius: var(--radius-s);
-	background-color: var(--background-primary-alt);
 	padding: var(--size-4-2) var(--size-4-1);
 	cursor: auto;
+}
+
+.contribution-graph .main.shadow {
+	box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.theme-dark .contribution-graph .main.shadow {
+	box-shadow: inset 0 0 0.5px 1px hsla(0, 0%,
+			100%, 0.075),
+		/* shadow ring 👇 */
+		0 0 0 1px hsla(0, 0%, 0%, 0.05),
+		/* multiple soft shadows 👇 */
+		0 0.3px 0.4px hsla(0, 0%, 0%, 0.02),
+		0 0.9px 1.5px hsla(0, 0%, 0%, 0.045),
+		0 3.5px 6px hsla(0, 0%, 0%, 0.09);
 }
 
 .contribution-graph .main.fill-the-screen {
@@ -216,11 +231,7 @@
 	justify-content: center;
 }
 
-.contribution-graph
-	.calendar
-	.month-container
-	.week-indicator-container
-	.cell.week-indicator {
+.contribution-graph .calendar .month-container .week-indicator-container .cell.week-indicator {
 	font-size: 0.6rem;
 	line-height: 1.5;
 	text-align: center;
@@ -426,10 +437,7 @@
 	gap: 8px;
 }
 
-.contribution-graph-modal-form
-	.form-item
-	.form-vertical-content
-	> input[type="text"] {
+.contribution-graph-modal-form .form-item .form-vertical-content>input[type="text"] {
 	flex-grow: 1;
 	border-width: 0px 0px 1px 0px;
 	padding: 3px;
@@ -828,11 +836,9 @@
 }
 
 /* activity contriner */
-
 .contribution-graph .activity-container {
 	display: flex;
 	flex-direction: row;
-	flex-wrap: wrap;
 	gap: 0.6rem;
 	padding: 0.4rem;
 	position: relative;
@@ -854,6 +860,7 @@
 	align-items: baseline;
 	gap: 0.4rem;
 	min-width: 50%;
+	max-width: 300px;
 }
 
 .contribution-graph .activity-container .activity-content .activity-list {
@@ -866,24 +873,21 @@
 	color: var(--text-muted);
 }
 
-.contribution-graph
-	.activity-container
-	.activity-content
-	.activity-list
-	.activity-item {
+.contribution-graph .activity-container .activity-content .activity-list .activity-item {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 }
 
-.contribution-graph
-	.activity-container
-	.activity-content
-	.activity-list
-	.activity-item
-	.label {
+.contribution-graph .activity-container .activity-content .activity-list .activity-item .label {
 	color: var(--text-muted);
 	padding: 0.4rem 0.6rem;
+	white-space: wrap;
+	word-break: break-all;
+}
+
+.contribution-graph .activity-container .activity-content .activity-list .activity-item .label:hover {
+	background-color: var(--background-modifier-hover);
 }
 
 .contribution-graph .activity-container .activity-content .activity-navigation {
@@ -894,14 +898,14 @@
 	width: 100%;
 }
 
-.contribution-graph
-	.activity-container
-	.activity-content
-	.activity-navigation
-	a {
+.contribution-graph .activity-container .activity-content .activity-navigation a {
 	color: var(--text-muted);
 	text-decoration: none;
 	padding: 0.4rem 0.6rem;
+}
+
+.contribution-graph .activity-container .activity-content .activity-navigation a:hover {
+	background-color: var(--background-modifier-hover);
 }
 
 .contribution-graph .activity-container .close-button {

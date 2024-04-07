@@ -54,6 +54,13 @@ export class ContributionGraphConfig {
 	fillTheScreen = false;
 
 	/**
+	 * set true to add box-shadow to main container, default is false
+	 * 
+	 * notice: this would be override if mainContainerStyle's boxShadow is set
+	 */
+	enableMainContainerShadow = false;
+
+	/**
 	 * set false to hide rule indicators
 	 */
 	showCellRuleIndicators = true;

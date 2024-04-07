@@ -44,6 +44,11 @@ export abstract class BaseGraphRender implements GraphRender {
 		if (graphConfig.fillTheScreen && this.graphType() != "calendar") {
 			cls = `main ${graphConfig.fillTheScreen ? "fill-the-screen" : ""}`;
 		}
+
+		if (graphConfig.enableMainContainerShadow) {
+			cls += " shadow";
+		}
+
 		const main = createDiv({
 			cls: cls,
 			parent: parent,

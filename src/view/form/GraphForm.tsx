@@ -466,27 +466,18 @@ export function GraphForm(props: {
 												type="checkbox"
 												className="checkbox"
 												defaultChecked={
-													formData.mainContainerStyle
-														?.boxShadow != undefined
+													formData.enableMainContainerShadow
 												}
 												onChange={(e) => {
 													if (e.target.checked) {
 														changeFormData(
-															"mainContainerStyle",
-															{
-																...formData.mainContainerStyle,
-																boxShadow:
-																	"rgba(0, 0, 0, 0.16) 0px 1px 4px",
-															}
+															"enableMainContainerShadow",
+															true
 														);
 													} else {
 														changeFormData(
-															"mainContainerStyle",
-															{
-																...formData.mainContainerStyle,
-																boxShadow:
-																	undefined,
-															}
+															"enableMainContainerShadow",
+															false
 														);
 													}
 												}}
