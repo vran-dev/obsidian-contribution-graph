@@ -5,6 +5,7 @@ import { CodeBlockProcessor } from "./processor/codeBlockProcessor";
 import { ContributionGraphCreateModal } from "./view/form/GraphFormModal";
 import { mountEditButtonToCodeblock } from "./view/codeblock/CodeblockEditButtonMount";
 import { Locals } from "./i18/messages";
+import "../style/styles.css";
 
 export default class ContributionGraph extends Plugin {
 	async onload() {
@@ -50,7 +51,11 @@ export default class ContributionGraph extends Plugin {
 				const processor = new CodeBlockProcessor();
 				processor.renderFromCodeBlock(code, el, ctx, this.app);
 				if (el.parentElement) {
-					mountEditButtonToCodeblock(this.app, code, el.parentElement);
+					mountEditButtonToCodeblock(
+						this.app,
+						code,
+						el.parentElement
+					);
 				}
 			}
 		);

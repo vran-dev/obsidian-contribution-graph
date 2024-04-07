@@ -1,0 +1,961 @@
+.contribution-graph {
+	position: relative;
+	width: 100%;
+}
+
+.contribution-graph .center {
+	justify-content: center;
+	text-align: center;
+}
+
+.contribution-graph .main {
+	line-height: normal;
+	display: grid;
+	justify-content: center;
+	border-radius: var(--radius-s);
+	background-color: var(--background-primary-alt);
+	padding: var(--size-4-2) var(--size-4-1);
+	cursor: auto;
+}
+
+.contribution-graph .main.fill-the-screen {
+	justify-content: unset;
+}
+
+.contribution-graph .main .title {
+	font-size: 14px;
+	margin-bottom: 36px;
+	justify-content: flex-start;
+}
+
+.contribution-graph .main .charts {
+	width: 100%;
+	display: flex;
+	overflow-x: hidden;
+}
+
+.contribution-graph .main .charts:hover {
+	overflow-x: auto;
+}
+
+.contribution-graph .main .charts .column {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.contribution-graph .main .charts .row {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	flex-grow: 1;
+	align-items: flex-start;
+	justify-content: space-between;
+	margin-bottom: 6px;
+	width: 100%;
+}
+
+/**
+*  default charts
+*/
+.contribution-graph .main .charts.default {
+	flex-direction: row;
+	align-items: flex-start;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	padding-left: var(--size-4-2);
+	padding-right: var(--size-4-2);
+}
+
+.contribution-graph .main .charts.default .column {
+	margin-top: 1.6rem;
+	/* override default flex-grow */
+	flex-grow: 0;
+}
+
+.contribution-graph .fill-the-screen.main .charts.default .column {
+	margin-top: 1.6rem;
+	flex-grow: 1;
+}
+
+.contribution-graph .default .week-indicator {
+	background-color: transparent;
+	font-size: 10px;
+	min-width: 18px;
+	text-wrap: nowrap;
+	height: 8px;
+	margin-right: 8px;
+	margin-top: 1.5px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.contribution-graph .default .month-indicator {
+	position: absolute;
+	top: -24px;
+	text-wrap: nowrap;
+	font-size: 10px;
+	min-width: 20px;
+	cursor: pointer;
+}
+
+/**
+* month-track charts
+*/
+.contribution-graph .main .charts.month-track {
+	flex-direction: column;
+	align-items: flex-start;
+	padding-right: 12px;
+	width: 100%;
+}
+
+.contribution-graph .month-track .cell.date-indicator {
+	font-size: 8px;
+	width: auto;
+	border-radius: 2px;
+	margin-right: 2px;
+	flex-grow: 1;
+}
+
+.contribution-graph .main .charts.month-track .row {
+	width: auto;
+	align-items: flex-start;
+	margin-bottom: 8px;
+	gap: 1px;
+}
+
+.contribution-graph .main.fill-the-screen .charts.month-track .row {
+	width: 100%;
+	align-items: flex-start;
+	margin-bottom: 8px;
+	gap: 1px;
+}
+
+.contribution-graph .month-track .cell {
+	min-height: 13px;
+	min-width: 13px;
+	font-size: 10px;
+	border-radius: 3px;
+}
+
+@media (max-width: 720px) {
+	.contribution-graph .month-track .cell {
+		height: 10px;
+		min-height: 10px;
+		min-width: 10px;
+		font-size: 10px;
+		border-radius: 3px;
+	}
+}
+
+.contribution-graph .month-track .month-indicator {
+	background-color: transparent;
+	font-size: 12px;
+	height: 22px;
+	min-width: 77px;
+	margin-right: 12px;
+	text-align: right;
+	cursor: pointer;
+	top: auto;
+	position: relative;
+	color: var(--text-normal);
+}
+
+/* calendar charts */
+.contribution-graph .main .charts.calendar {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	padding: 0.5rem 1rem;
+	gap: 2rem;
+	overflow-x: auto;
+	max-width: 1000px;
+}
+
+.contribution-graph .calendar .month-container {
+	min-width: calc(25% - 2rem);
+	padding: 0.2rem 0.33rem;
+	position: relative;
+	border-width: 1px;
+	border-style: solid;
+	border-color: transparent;
+	border-radius: 5px;
+	justify-content: space-between;
+}
+
+.contribution-graph .calendar .month-container:hover {
+	border: 1px solid var(--background-modifier-border-hover);
+	border-color: transparent;
+	background-color: rgba(244, 244, 244, 0.6);
+}
+
+.theme-dark .contribution-graph .calendar .month-container:hover {
+	border: 1px solid var(--background-modifier-border-hover);
+	background-color: rgba(37, 35, 35, 0.3);
+}
+
+.contribution-graph .calendar .month-container .month-indicator {
+	width: 100%;
+	text-align: center;
+	cursor: pointer;
+	color: var(--text-normal);
+	font-size: 0.8rem;
+}
+
+.contribution-graph .calendar .month-container .month-indicator:hover {
+	opacity: 0.6;
+}
+
+.contribution-graph .calendar .month-container .week-indicator-container {
+	margin-top: 12px;
+}
+
+.contribution-graph .main .calendar .month-container .row {
+	gap: 0.6rem;
+	justify-content: center;
+}
+
+.contribution-graph
+	.calendar
+	.month-container
+	.week-indicator-container
+	.cell.week-indicator {
+	font-size: 0.6rem;
+	line-height: 1.5;
+	text-align: center;
+	color: var(--text-muted);
+}
+
+.contribution-graph .main .calendar .month-container .cell {
+	min-width: 8px;
+	min-height: 8px;
+	width: 8px;
+	height: 8px;
+	font-size: 8px;
+	border-radius: 2px;
+	margin-top: 0px;
+	margin-right: 0px;
+	flex-grow: 0;
+	display: flex;
+	align-items: center;
+}
+
+.contribution-graph .main.fill-the-screen .calendar .month-container .cell {
+	flex-grow: 1;
+}
+
+/* default cell */
+.contribution-graph .cell {
+	min-width: 8.8px;
+	min-height: 8.8px;
+	height: 8.8px;
+	font-size: 8px;
+	border-radius: 2px;
+	background-color: transparent;
+	margin-top: 2px;
+	margin-right: 2px;
+	flex-grow: 1;
+	cursor: pointer;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.contribution-graph .cell:hover {
+	opacity: 0.6;
+}
+
+.contribution-graph .cell.empty {
+	background-color: rgba(235, 237, 240, 0.85);
+}
+
+.theme-dark .contribution-graph .cell.empty {
+	background: rgba(71, 71, 71, 0.6);
+}
+
+.color-indicator {
+	height: 18px;
+	width: 18px;
+	border-radius: 50%;
+	border-width: 1px;
+	border-color: var(--background-modifier-border);
+	border-style: solid;
+}
+
+.color-indicator:hover {
+	border-color: var(--interactive-accent);
+	opacity: 0.6;
+}
+
+.color-label {
+	display: flex;
+	gap: 6px;
+	background-color: hsl(var(--interactive-accent-hsl), 0.2);
+	color: hsl(var(--interactive-accent-hsl), 0.8);
+	align-items: center;
+	border-radius: 6px;
+	padding: 4px 8px;
+}
+
+.color-label:hover {
+	background-color: hsl(var(--interactive-accent-hsl), 0.8);
+	color: var(--text-on-accent);
+}
+
+.color-reset-button:hover {
+	color: var(--text-normal);
+}
+
+/* default cell rule indicator */
+.contribution-graph .cell-rule-indicator-container {
+	position: relative;
+	width: calc(100% - 12px);
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+	margin-top: 12px;
+	margin-bottom: 6px;
+}
+
+.contribution-graph .cell-rule-indicator-container .cell {
+	max-width: 12px;
+	width: 10px;
+	height: 10px;
+	text-align: center;
+}
+
+.contribution-graph .cell-rule-indicator-container .cell.text {
+	height: 8px;
+	width: auto;
+	min-width: 20px;
+	margin-left: 6px;
+	margin-right: 6px;
+	color: var(--text-muted);
+}
+
+/* default error tips */
+.contribution-graph-render-error-container {
+	background-color: var(--background-secondary);
+	padding: 6px;
+	min-height: 12px;
+	border-radius: 6px;
+}
+
+.contribution-graph-render-error-container .summary {
+	text-align: left;
+	color: var(--text-error);
+	font-size: var(--font-ui-larger);
+}
+
+.contribution-graph-render-error-container .recommend {
+	text-align: left;
+}
+
+/* graph modal */
+.contribution-graph-modal {
+	display: flex;
+	flex-direction: column;
+}
+
+.contribution-graph-modal-form {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.contribution-graph-modal-form .form-group {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	margin-bottom: 12px;
+	gap: 3px;
+}
+
+.contribution-graph-modal-form .form-item {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	margin-top: 12px;
+	gap: 6px;
+}
+
+.contribution-graph-modal-form .form-item .label {
+	display: inline-flex;
+	justify-content: flex-end;
+	flex: 0 0 auto;
+	line-height: 32px;
+	font-size: 14px;
+	padding: 0 12px 0 0;
+	box-sizing: border-box;
+	width: 150px;
+}
+
+.contribution-graph-modal-form .form-item .form-description {
+	line-height: 32px;
+	padding: 0 12px 0 0;
+	font-size: var(--font-ui-smaller);
+	color: var(--text-faint);
+}
+
+@media screen and (max-width: 768px) {
+	.contribution-graph-modal-form .form-item .label {
+		width: 100%;
+		justify-content: flex-start;
+	}
+}
+
+.contribution-graph-modal-form .form-item .form-content {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	flex: 1;
+}
+
+.contribution-graph-modal-form .form-item .form-vertical-content {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	flex: 1;
+	gap: 8px;
+}
+
+.contribution-graph-modal-form
+	.form-item
+	.form-vertical-content
+	> input[type="text"] {
+	flex-grow: 1;
+	border-width: 0px 0px 1px 0px;
+	padding: 3px;
+	border-color: var(--background-modifier-border);
+	color: var(--text-normal);
+	width: 100%;
+}
+
+.contribution-graph-modal-form .form-item .form-content input {
+	flex-grow: 1;
+	border-width: 0px 0px 1px 0px;
+	border-color: var(--background-modifier-border);
+	color: var(--text-normal);
+}
+
+.contribution-graph-modal-form .form-item .form-content input[type="text"] {
+	background: var(--background-modifier-form-field);
+}
+
+.contribution-graph-modal-form .form-item .form-content .checkbox {
+	border: 1px solid var(--background-modifier-border);
+	padding: 0px;
+	flex-grow: 0;
+}
+
+.contribution-graph-modal-form .form-item .form-content .color-picker {
+	height: 32px;
+	width: 32px;
+	clip-path: circle(50%);
+	inline-size: 32px;
+	block-size: 0px;
+	flex-grow: 0;
+	border-width: 0px;
+	padding: 0;
+}
+
+.contribution-graph-modal-form .form-item .form-content .color-picker:hover {
+	opacity: 0.5;
+}
+
+.contribution-graph-modal-form .form-item .form-content .number-input {
+	text-align: center;
+	box-shadow: none;
+	border-width: 0px 0px 1px 0px;
+	border-radius: 0px;
+}
+
+.contribution-graph-modal-form .form-item .form-content .number-input:focus {
+	box-shadow: none;
+}
+
+.contribution-graph-modal-form .form-item .form-content .button {
+	flex-grow: 1;
+	margin-right: 12px;
+	background-color: var(--interactive-normal);
+}
+
+.contribution-graph-modal-form .form-item .form-content .button:hover {
+	background-color: var(--interactive-accent);
+}
+
+/* cell rule form */
+.contribution-graph-modal-form .form-item .cell-rule-value {
+	text-align: center;
+	width: 38px;
+	border-radius: 0;
+}
+
+.contribution-graph-modal-form .form-item .cell-rule-color {
+	width: 16px;
+	height: 16px;
+	border-radius: 0;
+	inline-size: inherit;
+	block-size: inherit;
+}
+
+.contribution-graph-modal-form .form-item .cell-rule-text {
+	width: 48px;
+	background-color: transparent;
+	border: none;
+}
+
+.contribution-graph-modal-form .preview-content {
+	display: grid;
+	overflow-x: scroll;
+	max-width: 80vw;
+}
+
+.contribution-graph-modal-form .form-item .list-remove-button {
+	border: none;
+	border-width: 0px;
+	box-shadow: none;
+	background-color: transparent;
+}
+
+.contribution-graph-modal-form .form-item .list-remove-button:hover {
+	background-color: var(--interactive-accent-hover);
+	color: var(--text-on-accent);
+}
+
+.contribution-graph-modal-form .form-item .list-add-button {
+	border: none;
+	border-width: 0px;
+	box-shadow: none;
+	background-color: transparent;
+}
+
+.contribution-graph-modal-form .form-item .list-add-button:hover {
+	background-color: var(--interactive-accent-hover);
+	color: var(--text-on-accent);
+}
+
+/* edit button */
+.contribution-graph-codeblock-edit-button {
+	padding: var(--size-2-2) var(--size-2-3);
+	position: absolute;
+	top: var(--size-2-2);
+	right: calc(var(--size-2-2) + 40px);
+	display: flex;
+	opacity: 0;
+	color: var(--text-muted);
+	border-radius: var(--radius-s);
+	cursor: var(--cursor);
+}
+
+.contribution-graph-codeblock-edit-button:hover {
+	background-color: var(--background-modifier-hover);
+}
+
+/* contribution-graph-choose */
+
+.contribution-graph-choose {
+	display: flex;
+	flex-direction: row;
+	margin-left: 12px;
+	border-radius: 6px;
+	border: 1px solid var(--background-modifier-border);
+}
+
+.contribution-graph-choose:first-child {
+	margin-left: 2px;
+}
+
+.contribution-graph-choose .item {
+	display: flex;
+	flex-direction: row;
+	border-radius: 4px;
+	margin-right: 2px;
+}
+
+.contribution-graph-choose .item:hover {
+	background-color: var(--interactive-accent-hover);
+	color: var(--text-on-accent);
+}
+
+.contribution-graph-choose .item.choosed {
+	background-color: var(--interactive-accent);
+	color: var(--text-on-accent);
+}
+
+.contribution-graph-choose .item .icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+/* divier */
+.contribution-graph-divider {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-top: 12px;
+	margin-bottom: 12px;
+	gap: 8px;
+}
+
+.contribution-graph-divider div {
+	border-width: 0px 0px 1px 0px;
+	border-radius: 0px;
+	border-style: solid;
+	border-color: var(--background-modifier-border);
+	flex-grow: 1;
+}
+
+.contribution-graph-divider span {
+	color: var(--text-muted);
+	font-size: 12px;
+}
+
+/* suggest */
+.suggest-container {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	gap: 0.8rem;
+	max-height: 20rem;
+	min-width: 200px;
+	box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+	border-radius: 0.5rem;
+
+	background-color: var(--modal-background);
+	border-radius: var(--modal-radius);
+	border: var(--modal-border-width) solid var(--modal-border-color);
+	padding: var(--size-4-4);
+	overflow: auto;
+	max-width: 480px;
+	z-index: 99;
+}
+
+.suggest-container .suggest-item {
+	display: flex;
+	flex-direction: row;
+	gap: 0.8rem;
+	align-items: center;
+	padding: 0.3rem 0.4rem;
+	cursor: pointer;
+	border-radius: var(--radius-m);
+	min-width: 200px;
+}
+
+.suggest-container .suggest-item.selected {
+	/* background-color: var(--background-modifier-hover); */
+	background-color: var(--background-modifier-active-hover);
+}
+
+.suggest-container .suggest-item:hover {
+	/* background-color: var(--background-modifier-hover); */
+	background-color: var(--background-modifier-active-hover);
+}
+
+.suggest-container .suggest-item .suggest-icon {
+	min-width: 32px;
+	min-height: 32px;
+	max-height: 32px;
+	max-height: 32px;
+	width: 32px;
+	height: 32px;
+	border-color: var(--background-modifier-border);
+	border-width: 1px;
+	border-radius: var(--radius-s);
+	border-style: solid;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+.suggest-container .suggest-item .suggest-icon .lucide {
+	width: 16px;
+	height: 16px;
+	color: var(--text-normal);
+}
+
+.suggest-container .suggest-item .suggest-content {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+}
+
+.suggest-container .suggest-item .suggest-content .suggest-label {
+	font-weight: 500;
+	color: var(--text-muted);
+	font-size: var(--font-text-size);
+}
+
+.suggest-container .suggest-item .suggest-content .suggest-description {
+	color: var(--text-muted);
+	font-size: var(--font-smaller);
+	overflow-wrap: break-word;
+	word-break: break-all;
+}
+
+.suggest-input-tags {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	align-items: baseline;
+	justify-content: flex-start;
+	width: auto;
+	margin-top: 10px;
+}
+
+.suggest-input-tags .tags {
+	display: flex;
+	flex-direction: row;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.suggest-input-tags input.input {
+	width: 100%;
+	flex-grow: 1;
+}
+
+.suggest-input-tags input::placeholder {
+	color: var(--text-faint);
+	font-size: var(--font-ui-smaller);
+}
+
+.suggest-input-tags .tags .tag {
+	border-radius: var(--tag-radius);
+	padding-top: var(--tag-padding-y);
+	padding-bottom: var(--tag-padding-y);
+	padding-right: var(--tag-padding-x);
+	padding-left: var(--tag-padding-x);
+	font-size: var(--font-ui-smaller);
+	color: var(--tag-color);
+	background-color: var(--tag-background);
+	border: var(--tag-border-width) solid var(--tag-border-color);
+	display: flex;
+	gap: 6px;
+	align-items: center;
+}
+
+.suggest-input-tags .tags .tag .icon {
+	width: 12px;
+	height: 12px;
+}
+
+.suggest-input-tags .tags .tag .icon .lucide {
+	width: 100%;
+	height: 100%;
+}
+
+.suggest-input-tags .tags .tag:hover {
+	background-color: var(--interactive-accent);
+	color: var(--text-on-accent);
+}
+
+.suggest-input-tags .tags .tag .remove-button {
+	min-width: 24px;
+	text-align: center;
+}
+
+.suggest-input-tags .tags .tag .remove-button:hover {
+	color: var(--text-normal);
+}
+
+.tab-container {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	overflow-x: auto;
+	gap: 6px;
+	width: 100%;
+}
+
+.tab-container .tab-titles {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	gap: 6px;
+	padding: 3px 6px;
+}
+
+.tab-container .tab-titles .tab-item-title {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	gap: 6px;
+	border-radius: 3px;
+	cursor: pointer;
+	padding: 4.2px 6.5px;
+}
+
+.tab-container .tab-titles .tab-item-title.active {
+	color: var(--nav-item-color-active);
+	background-color: var(--nav-item-background-active);
+	font-weight: var(--nav-item-weight-active);
+}
+
+.tab-container .tab-titles .tab-item-title.active:hover {
+	color: var(--nav-item-color-active);
+	background-color: var(--nav-item-background-active);
+	font-weight: var(--nav-item-weight-active);
+}
+
+.tab-container .tab-titles .tab-item-title:not(.active):hover {
+	color: var(--nav-item-color-active);
+	background-color: var(--nav-item-background-active);
+	font-weight: var(--nav-item-weight-active);
+}
+
+.tab-container .tab-items .tab-item {
+	padding: 3px 6px;
+	display: none;
+}
+
+.tab-container .tab-items .tab-item.active {
+	display: block;
+}
+
+/* activity contriner */
+
+.contribution-graph .activity-container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	padding: 0.4rem;
+	position: relative;
+}
+
+.contribution-graph .activity-container .activity-summary {
+	flex-grow: 1;
+	padding-right: 0.4rem;
+	/* border-right: 1px solid var(--background-modifier-border); */
+	font-size: 0.8rem;
+}
+
+.contribution-graph .activity-container .activity-content {
+	border: 1px solid var(--background-modifier-border);
+	padding: 0.4rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: baseline;
+	align-items: baseline;
+	gap: 0.4rem;
+	min-width: 50%;
+}
+
+.contribution-graph .activity-container .activity-content .activity-list {
+	display: flex;
+	flex-direction: column;
+	justify-content: baseline;
+	align-items: flex-start;
+	gap: 0.4rem;
+	font-size: 0.7rem;
+	color: var(--text-muted);
+}
+
+.contribution-graph
+	.activity-container
+	.activity-content
+	.activity-list
+	.activity-item {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.contribution-graph
+	.activity-container
+	.activity-content
+	.activity-list
+	.activity-item
+	.label {
+	color: var(--text-muted);
+	padding: 0.4rem 0.6rem;
+}
+
+.contribution-graph .activity-container .activity-content .activity-navigation {
+	font-size: 0.65rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	width: 100%;
+}
+
+.contribution-graph
+	.activity-container
+	.activity-content
+	.activity-navigation
+	a {
+	color: var(--text-muted);
+	text-decoration: none;
+	padding: 0.4rem 0.6rem;
+}
+
+.contribution-graph .activity-container .close-button {
+	position: absolute;
+	right: 0;
+	top: 0;
+	color: var(--text-faint);
+	box-shadow: none;
+	border-width: 0px;
+	background-color: transparent;
+	cursor: pointer;
+}
+
+.contribution-graph .activity-container .close-button:hover {
+	color: var(--text-accent);
+}
+
+/* about */
+.about-container {
+	display: flex;
+	flex-direction: column;
+	align-items: baseline;
+	gap: 1rem;
+}
+
+.about-container .about-item {
+	display: flex;
+	flex-direction: row;
+	gap: 0.8rem;
+	width: 100%;
+}
+
+.about-container .about-item .label {
+	min-width: 88px;
+}
+
+.about-container .about-item.center {
+	justify-content: center;
+}
+
+.about-container .about-item img {
+	max-width: 200px;
+	width: 200px;
+}
+
+.input-range-value-label {
+	font-size: 0.8rem;
+	color: var(--text-muted);
+	cursor: pointer;
+	padding: 4px;
+	border-radius: 4px;
+}
+
+.input-range-value-label:hover {
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+}
