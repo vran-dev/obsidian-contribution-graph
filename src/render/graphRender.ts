@@ -329,6 +329,7 @@ function renderActivityItem(items: ContributionItem[], listMain: HTMLElement) {
 			parent: listItem,
 			cls: `label ${item.link?.className || ""}`,
 		});
+		linkEl.ariaLabel = item.label;
 		if (item.link) {
 			const link = item.link;
 			linkEl.setAttribute("data-href", link.href || "#");
