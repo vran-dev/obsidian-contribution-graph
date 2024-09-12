@@ -21,7 +21,7 @@ export interface GraphRender {
 }
 
 export abstract class BaseGraphRender implements GraphRender {
-	constructor() {}
+	constructor() { }
 
 	render(container: HTMLElement, graphConfig: ContributionGraphConfig): void {
 		throw new Error("Method not implemented.");
@@ -229,9 +229,8 @@ export abstract class BaseGraphRender implements GraphRender {
 		contributionItem: ContributionCellData,
 		contributionMapByYearMonth: Map<string, number>
 	) {
-		const yearMonth = `${contributionItem.year}-${
-			contributionItem.month + 1
-		}`;
+		const yearMonth = `${contributionItem.year}-${contributionItem.month + 1
+			}`;
 		const yearMonthValue = contributionMapByYearMonth.get(yearMonth) || 0;
 		// tips event
 		monthCell.ariaLabel = `${yearMonthValue} contributions on ${yearMonth}.`;

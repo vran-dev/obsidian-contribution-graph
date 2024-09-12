@@ -1,7 +1,5 @@
 import { ContributionGraphConfig } from "src/types";
 import {
-	getLastDayOfMonth,
-	toFormattedDate,
 	distanceBeforeTheStartOfWeek,
 	distanceBeforeTheEndOfWeek,
 } from "src/util/dateUtils";
@@ -12,6 +10,7 @@ import {
 	localizedWeekDayMapping,
 	localizedYearMonthMapping,
 } from "src/i18/messages";
+import { DateTime } from "luxon";
 
 export class CalendarGraphRender extends BaseGraphRender {
 	constructor() {
@@ -50,16 +49,16 @@ export class CalendarGraphRender extends BaseGraphRender {
 		// fill first month distance
 		if (contributionData.length > 0) {
 			const first = contributionData[0];
-			const distanceBeforeTheStartOfMonth = first.monthDate - 1;
-			const firstDate = new Date(first.date);
-			for (let j = 0; j < distanceBeforeTheStartOfMonth; j++) {
-				firstDate.setDate(firstDate.getDate() - 1);
+			const firstDateTime = DateTime.fromISO(first.date);
+			const startOfMonth = firstDateTime.startOf("month");
+			for (let i = firstDateTime.day - 1; i >= startOfMonth.day; i--) {
+				const current = startOfMonth.plus({ days: i - startOfMonth.day });
 				contributionData.unshift({
 					date: "$HOLE$",
-					weekDay: firstDate.getDay(),
-					month: firstDate.getMonth(),
-					monthDate: firstDate.getDate(),
-					year: firstDate.getFullYear(),
+					weekDay: current.weekday == 7 ? 0 : current.weekday,
+					month: current.month - 1,
+					monthDate: current.day,
+					year: current.year,
 					value: 0,
 				});
 			}
@@ -68,17 +67,17 @@ export class CalendarGraphRender extends BaseGraphRender {
 		// fill last month distance
 		if (contributionData.length > 0) {
 			const last = contributionData[contributionData.length - 1];
-			const lastDay = getLastDayOfMonth(last.year, last.month);
-			const distanceBeforeTheEndOfMonth = lastDay - last.monthDate;
-			const lastDate = new Date(last.date);
-			for (let j = 0; j < distanceBeforeTheEndOfMonth; j++) {
-				lastDate.setDate(lastDate.getDate() + 1);
+			const lastDateTime = DateTime.fromISO(last.date);
+			const endOfMonth = lastDateTime.endOf("month");
+
+			for (let i = lastDateTime.day + 1; i <= endOfMonth.day; i++) {
+				const current = lastDateTime.plus({ days: i - lastDateTime.day });
 				contributionData.push({
-					date: toFormattedDate(lastDate),
-					weekDay: lastDate.getDay(),
-					month: lastDate.getMonth(),
-					monthDate: lastDate.getDate(),
-					year: lastDate.getFullYear(),
+					date: "$HOLE$",
+					weekDay: current.weekday == 7 ? 0 : current.weekday,
+					month: current.month - 1,
+					monthDate: current.day,
+					year: current.year,
 					value: 0,
 				});
 			}

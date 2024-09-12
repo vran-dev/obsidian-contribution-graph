@@ -5,6 +5,7 @@ import {
 	localizedMonthMapping,
 	localizedYearMonthMapping,
 } from "src/i18/messages";
+import { DateTime } from "luxon";
 
 export class MonthTrackGraphRender extends BaseGraphRender {
 	constructor() {
@@ -139,8 +140,9 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 		// fill hole at last month, if last month date is not end of month
 		if (contributionData.length > 0) {
 			const last = contributionData[contributionData.length - 1];
-			const fillMax = 31 - last.monthDate;
-			for (let j = 0; j < fillMax; j++) {
+			const lastDateTime = DateTime.fromISO(last.date);
+			const endOfMonthDay = lastDateTime.endOf("month").day;
+			for (let j = lastDateTime.day; j < endOfMonthDay; j++) {
 				const cellEl = document.createElement("div");
 				cellEl.className = "cell";
 				this.applyCellGlobalStylePartial(cellEl, graphConfig, ['minWidth', 'minHeight']);

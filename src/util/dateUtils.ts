@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 export function parseDate(date: string | Date) {
 	if (typeof date === "string") {
 		return new Date(date);
@@ -7,9 +9,9 @@ export function parseDate(date: string | Date) {
 }
 
 export function diffDays(date1: Date, date2: Date) {
-	const diffTime = Math.abs(date2.getTime() - date1.getTime());
-	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-	return diffDays;
+	const from = DateTime.fromJSDate(date1);
+	const to = DateTime.fromJSDate(date2);
+	return to.diff(from, "days").days;
 }
 
 export function toFormattedDate(date: Date) {

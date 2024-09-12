@@ -1,5 +1,6 @@
-import { diffDays, toFormattedDate } from "../util/dateUtils";
+import { diffDays } from "../util/dateUtils";
 import { Contribution, ContributionCellData } from "../types";
+import { DateTime } from "luxon";
 
 export function generateByData(data: Contribution[]) {
 	if (!data || data.length === 0) {
@@ -38,18 +39,19 @@ export function generateByFixedDate(
 
 	const cellData: ContributionCellData[] = [];
 
+	const toDateTime = DateTime.fromJSDate(to);
 	// fill data
 	for (let i = 0; i < days; i++) {
-		const currentDateAtIndex = new Date(to);
-		currentDateAtIndex.setDate(currentDateAtIndex.getDate() - i);
-		const formattedDate = toFormattedDate(currentDateAtIndex);
-		const contribution = contributionMapByDate.get(formattedDate);
+		const currentDateAtIndex = toDateTime.minus({ days: i });
+		const isoDate = currentDateAtIndex.toFormat('yyyy-MM-dd');
+		const contribution = contributionMapByDate.get(isoDate);
+
 		cellData.unshift({
-			date: formattedDate,
-			weekDay: currentDateAtIndex.getDay(),
-			month: currentDateAtIndex.getMonth(),
-			monthDate: currentDateAtIndex.getDate(),
-			year: currentDateAtIndex.getFullYear(),
+			date: isoDate,
+			weekDay: currentDateAtIndex.weekday == 7 ? 0 : currentDateAtIndex.weekday,
+			month: currentDateAtIndex.month - 1,
+			monthDate: currentDateAtIndex.day,
+			year: currentDateAtIndex.year,
 			value: contribution ? contribution.value : 0,
 			summary: contribution ? contribution.summary : undefined,
 			items: contribution ? contribution.items || [] : [],
@@ -80,7 +82,7 @@ function contributionToMap(data: Contribution[]) {
 		if (typeof item.date === "string") {
 			key = item.date;
 		} else {
-			key = toFormattedDate(item.date);
+			key = DateTime.fromJSDate(item.date).toFormat('yyyy-MM-dd');
 		}
 		if (map.has(key)) {
 			const newItem = {
