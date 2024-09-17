@@ -113,7 +113,7 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 				for (let j = 0; j < fillMax; j++) {
 					const cellEl = document.createElement("div");
 					cellEl.className = "cell";
-					cellEl.innerText = "···";
+					cellEl.innerText = "";
 					this.applyCellGlobalStylePartial(cellEl, graphConfig, ['minWidth', 'minHeight']);
 					monthDataRowEl?.appendChild(cellEl);
 				}
@@ -141,7 +141,7 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 		if (contributionData.length > 0) {
 			const last = contributionData[contributionData.length - 1];
 			const lastDateTime = DateTime.fromISO(last.date);
-			const endOfMonthDay = lastDateTime.endOf("month").day;
+			const endOfMonthDay = 31
 			for (let j = lastDateTime.day; j < endOfMonthDay; j++) {
 				const cellEl = document.createElement("div");
 				cellEl.className = "cell";
