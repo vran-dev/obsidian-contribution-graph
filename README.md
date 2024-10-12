@@ -6,7 +6,7 @@
 
 ## What
 
-Contribution Graph is a plugin for [obsidian.md](https://obsidian.md/) which could generate interactive heatmap graphs like GitHub to track your notes, habits, activity, history, and so on.
+Contribution Graph is a plugin for [obsidian.md](https://obsidian.md/) which can generate interactive heatmap graphs like GitHub to track your notes, habits, activity, history, and so on.
 
 
 <a href="https://www.buymeacoffee.com/vran">
@@ -14,22 +14,22 @@ Contribution Graph is a plugin for [obsidian.md](https://obsidian.md/) which cou
 </a>
 
 
-## Use cases
+## Use Cases
 
 - Habit Tracker: Count the number of tasks you complete every day. Different numbers will be marked in different colors.
-- Note Tracker: Count the number of note you create every day. Different numbers will be marked in different colors.
+- Note Tracker: Count the number of notes you create every day. Different numbers will be marked in different colors.
 - Review Report: Count your notes or tasks for a certain period of time and generate a heat map for a more intuitive review
 - and more...
 
 ## Quick Start
 
-- create empty note, then right-click
-- select **Add Heatmap** options
-- click the `save` button, and then a heatmap will be created in note.
+- Create empty note, then right-click
+- Select **Add Heatmap** options
+- Click the `save` button, and then a heatmap will be created in note.
 
 ![Alt text](attachment/contribution-graph-create.gif)
 
-## Theme
+## Themes
 
 - Git Style
 
@@ -45,18 +45,18 @@ Contribution Graph is a plugin for [obsidian.md](https://obsidian.md/) which cou
 
 ## Features
 
-- diverse views, support week-track(default), month-track, and calendar view.
-- personalized style, you can configure different cell colors and fill cells with emojis.
-- use fixed date range or latest date to generate graph
-- interactive charts, you can customize cell click event, hover to show statistic data
-- simply integrate with DataviewJS, use contribution graph's api to dynamically render charts 
+- **Multiple graph types**, support week-track(default), month-track, and calendar view.
+- **Personalized style**, you can configure cell colors and fill cells with emojis.
+- **Customizable dates**,use fixed date range or latest date to generate graph
+- **Interactive charts**, you can customize cell click event, hover to show statistic data
+- **Integrate with DataviewJS**, use contribution graph's api to dynamically render charts 
 
 ![](attachment/74103317de5336b5283338c56171f268.png)
 
 
-### How to modify graph?
+### How to Modify Graph?
 
-Jut click the edit button at top right corner
+Just click the edit button at top right corner
 
 ![Alt text](attachment/contribution-graph-edit.gif)
 
@@ -75,7 +75,7 @@ Jut click the edit button at top right corner
 | showCellRuleIndicators | Control the display and hiding of cell rule indicator elements        | boolean                 | true       |            | false                                    |
 | cellStyleRules         | cell style rule                                                       | array                   |            |            | false                                    |
 
-## More Usage Guid
+## More Usage Guides
 
-- [API Usage, Integrate with DataviewJS ](README_ADVANCE.md)
-- [Codeblock Usage](README_BASE.md)
+- [API Usage, Integrate with DataviewJS ](README_ADVANCED.md)
+- [Basic Codeblock Usage](README_BASIC.md)

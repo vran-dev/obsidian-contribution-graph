@@ -1,10 +1,10 @@
-## The Sample of Week Track Graph 
+## Examples of Week Track Graph 
 
 The following shows how to render charts using dataviewjs
 
-### Create a week track graph for a fixed time period
+## Create a week track graph for a fixed time period
 
-- week track graph for fixed year
+### Week track graph for fixed year
 
 ![Alt text](attachment/advance-1.png)
 
@@ -44,7 +44,7 @@ renderContributionGraph(this.container, calendarData)
 ```
 
 
-- week track graph for current year
+### Week track graph for current year
 
 ![Alt text](attachment/advance-2.png)
 
@@ -70,7 +70,7 @@ const calendarData = {
 renderContributionGraph(this.container, calendarData)
 ```
 
-- week track graph for current month
+### Week track graph for current month
 
 ![Alt text](attachment/advance-3.png)
 
@@ -102,7 +102,7 @@ const calendarData = {
 renderContributionGraph(this.container, calendarData)
 ```
 
-- week track graph for current week
+### week track graph for current week
 
 ![Alt text](attachment/advance-4.png)
 
@@ -146,11 +146,11 @@ renderContributionGraph(this.container, calendarData)
 
 ```
 
-### Create a week track graph at recent time periods
+## Create a week track graph at relative time periods
 
-fixed dates, you can also use the days attribute to generate a chart of recent dates
+fixed dates, you can also use the days attribute to generate a chart of relative dates
 
-- week track graph in the lastest 365 days
+### Week track graph in the lastest 365 days
 
 ![Alt text](attachment/advance-5.png)
 
@@ -170,8 +170,8 @@ const calendarData = {
 }
 renderContributionGraph(this.container, calendarData)
 ```
-
-### Begin with Monday
+### Settings for the week track grapg
+#### Begin with Monday
 
 By default, the first row represents Sunday, you can change it by configuring `startOfWeek`, the allowable values is 0~6
 
@@ -200,7 +200,7 @@ const calendarData = {
 renderContributionGraph(this.container, calendarData)
 ```
 
-### Customize cell click event
+#### Customize cell click event
 
 By configuring the oncellclick attribute, you can set the cell click behavior you want.
 
@@ -230,7 +230,7 @@ const calendarData = {
 }
 renderContributionGraph(this.container, calendarData)
 ```
-### Customize Cells
+#### Customize Cells
 
 By configuring the cellStyleRules attribute, you can customize the cell's background color or inner text
 
@@ -292,7 +292,7 @@ const calendarData = {
 renderContributionGraph(this.container, calendarData)
 ```
 
-- customize inner text
+#### Customize inner text
 
 ![Alt text](attachment/advance-9.png)
 
