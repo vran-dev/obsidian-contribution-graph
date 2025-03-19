@@ -55,7 +55,7 @@ export class ContributionGraphConfig {
 
 	/**
 	 * set true to add box-shadow to main container, default is false
-	 * 
+	 *
 	 * notice: this would be override if mainContainerStyle's boxShadow is set
 	 */
 	enableMainContainerShadow = false;
@@ -85,7 +85,7 @@ export class ContributionGraphConfig {
 	 */
 	onCellClick?: (
 		cellData: ContributionCellData,
-		event: MouseEvent | undefined
+		event: MouseEvent | undefined,
 	) => void | undefined;
 }
 

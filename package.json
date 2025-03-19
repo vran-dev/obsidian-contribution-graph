@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-contribution-graph",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "generate gitxxx style contribution graph for obsidian, use it to track your goals, habits, or anything else you want to track.",
 	"main": "main.ts",
 	"scripts": {
@@ -26,6 +26,7 @@
 		"typescript": "4.7.4"
 	},
 	"dependencies": {
+		"@babel/runtime": "^7.26.10",
 		"@floating-ui/react": "^0.26.4",
 		"@uiw/react-color": "^2.0.6",
 		"luxon": "^3.4.4",

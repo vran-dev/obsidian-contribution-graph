@@ -21,7 +21,7 @@ export interface GraphRender {
 }
 
 export abstract class BaseGraphRender implements GraphRender {
-	constructor() { }
+	constructor() {}
 
 	render(container: HTMLElement, graphConfig: ContributionGraphConfig): void {
 		throw new Error("Method not implemented.");
@@ -38,7 +38,7 @@ export abstract class BaseGraphRender implements GraphRender {
 
 	createMainEl(
 		parent: HTMLElement,
-		graphConfig: ContributionGraphConfig
+		graphConfig: ContributionGraphConfig,
 	): HTMLDivElement {
 		let cls = "main";
 		if (graphConfig.fillTheScreen && this.graphType() != "calendar") {
@@ -61,7 +61,7 @@ export abstract class BaseGraphRender implements GraphRender {
 
 	renderTitle(
 		graphConfig: ContributionGraphConfig,
-		parent: HTMLElement
+		parent: HTMLElement,
 	): HTMLElement {
 		const titleEl = document.createElement("div");
 		titleEl.className = "title";
@@ -77,7 +77,7 @@ export abstract class BaseGraphRender implements GraphRender {
 
 	renderCellRuleIndicator(
 		graphConfig: ContributionGraphConfig,
-		parent: HTMLElement
+		parent: HTMLElement,
 	) {
 		if (graphConfig.showCellRuleIndicators === false) {
 			return;
@@ -117,7 +117,7 @@ export abstract class BaseGraphRender implements GraphRender {
 
 	renderActivityContainer(
 		graphConfig: ContributionGraphConfig,
-		parent: HTMLElement
+		parent: HTMLElement,
 	): HTMLElement {
 		const activityContainer = createDiv({
 			cls: "activity-container",
@@ -129,7 +129,7 @@ export abstract class BaseGraphRender implements GraphRender {
 	renderActivity(
 		graphConfig: ContributionGraphConfig,
 		cellData: ContributionCellData,
-		contaienr: HTMLElement
+		contaienr: HTMLElement,
 	) {
 		contaienr.empty();
 
@@ -194,10 +194,7 @@ export abstract class BaseGraphRender implements GraphRender {
 			loadMore.onclick = (event) => {
 				event.preventDefault();
 				page++;
-				renderActivityItem(
-					items.slice((page - 1) * size, page * size),
-					list
-				);
+				renderActivityItem(items.slice((page - 1) * size, page * size), list);
 				if (page * size >= items.length) {
 					loadMore.remove();
 				}
@@ -218,8 +215,7 @@ export abstract class BaseGraphRender implements GraphRender {
 	}
 
 	getCellRules(graphConfig: ContributionGraphConfig) {
-		return graphConfig.cellStyleRules &&
-			graphConfig.cellStyleRules.length > 0
+		return graphConfig.cellStyleRules && graphConfig.cellStyleRules.length > 0
 			? graphConfig.cellStyleRules
 			: DEFAULT_RULES;
 	}
@@ -227,10 +223,9 @@ export abstract class BaseGraphRender implements GraphRender {
 	bindMonthTips(
 		monthCell: HTMLElement,
 		contributionItem: ContributionCellData,
-		contributionMapByYearMonth: Map<string, number>
+		contributionMapByYearMonth: Map<string, number>,
 	) {
-		const yearMonth = `${contributionItem.year}-${contributionItem.month + 1
-			}`;
+		const yearMonth = `${contributionItem.year}-${contributionItem.month + 1}`;
 		const yearMonthValue = contributionMapByYearMonth.get(yearMonth) || 0;
 		// tips event
 		monthCell.ariaLabel = `${yearMonthValue} contributions on ${yearMonth}.`;
@@ -238,7 +233,7 @@ export abstract class BaseGraphRender implements GraphRender {
 
 	applyCellGlobalStyle(
 		cellEl: HTMLElement,
-		graphConfig: ContributionGraphConfig
+		graphConfig: ContributionGraphConfig,
 	) {
 		if (graphConfig.cellStyle) {
 			Object.assign(cellEl.style, graphConfig.cellStyle);
@@ -248,7 +243,7 @@ export abstract class BaseGraphRender implements GraphRender {
 	applyCellGlobalStylePartial(
 		cellEl: HTMLElement,
 		graphConfig: ContributionGraphConfig,
-		props: string[]
+		props: string[],
 	) {
 		if (graphConfig.cellStyle) {
 			const partialStyle = props.reduce((acc, cur) => {
@@ -264,12 +259,9 @@ export abstract class BaseGraphRender implements GraphRender {
 		cellEl: HTMLElement,
 		contributionItem: ContributionCellData,
 		cellRules: CellStyleRule[],
-		defaultCellStyleRule?: () => CellStyleRule
+		defaultCellStyleRule?: () => CellStyleRule,
 	) {
-		const cellStyleRule = matchCellStyleRule(
-			contributionItem.value,
-			cellRules
-		);
+		const cellStyleRule = matchCellStyleRule(contributionItem.value, cellRules);
 		if (cellStyleRule != null) {
 			cellEl.style.backgroundColor = cellStyleRule.color;
 			cellEl.innerText = cellStyleRule.text || "";
@@ -285,7 +277,7 @@ export abstract class BaseGraphRender implements GraphRender {
 
 	bindCellAttribute(
 		cellEl: HTMLElement,
-		contributionItem: ContributionCellData
+		contributionItem: ContributionCellData,
 	) {
 		cellEl.setAttribute("data-year", contributionItem.year.toString());
 		cellEl.setAttribute("data-month", contributionItem.month.toString());
@@ -296,7 +288,7 @@ export abstract class BaseGraphRender implements GraphRender {
 		cellEl: HTMLElement,
 		contributionItem: ContributionCellData,
 		graphConfig: ContributionGraphConfig,
-		activityContainer?: HTMLElement
+		activityContainer?: HTMLElement,
 	) {
 		cellEl.onclick = (event: MouseEvent) => {
 			if (graphConfig.onCellClick) {
@@ -304,11 +296,7 @@ export abstract class BaseGraphRender implements GraphRender {
 			}
 
 			if (activityContainer) {
-				this.renderActivity(
-					graphConfig,
-					contributionItem,
-					activityContainer
-				);
+				this.renderActivity(graphConfig, contributionItem, activityContainer);
 			}
 		};
 	}

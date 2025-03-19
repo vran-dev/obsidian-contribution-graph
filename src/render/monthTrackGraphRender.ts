@@ -17,10 +17,10 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 	}
 
 	render(root: HTMLElement, graphConfig: ContributionGraphConfig): void {
-		const graphEl = this.createGraphEl(root)
+		const graphEl = this.createGraphEl(root);
 
 		// main
-		const main = this.createMainEl(graphEl, graphConfig)
+		const main = this.createMainEl(graphEl, graphConfig);
 
 		// title
 		if (graphConfig.title && graphConfig.title.trim() != "") {
@@ -45,21 +45,21 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 			createDiv({
 				cls: "cell month-indicator",
 				text: "",
-			})
+			}),
 		);
 		this.renderMonthDateIndicator(dateIndicatorRow, graphConfig);
 
 		const activityContainer = this.renderActivityContainer(graphConfig, main);
 
-		const contributionData = this.generateContributionData(
-			graphConfig
-		).filter((item) => item.date != "$HOLE$");
+		const contributionData = this.generateContributionData(graphConfig).filter(
+			(item) => item.date != "$HOLE$",
+		);
 
 		const contributionMapByYearMonth = mapBy(
 			contributionData,
 			(item) => `${item.year}-${item.month + 1}`,
 			(item) => item.value,
-			(a, b) => a + b
+			(a, b) => a + b,
 		);
 		const cellRules = this.getCellRules(graphConfig);
 
@@ -76,7 +76,10 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 					for (let j = 0; j < fillMax; j++) {
 						const cellEl = document.createElement("div");
 						cellEl.className = "cell";
-						this.applyCellGlobalStylePartial(cellEl, graphConfig, ['minWidth', 'minHeight']);
+						this.applyCellGlobalStylePartial(cellEl, graphConfig, [
+							"minWidth",
+							"minHeight",
+						]);
 						monthDataRowEl?.appendChild(cellEl);
 					}
 				}
@@ -93,28 +96,35 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 				monthIndicator.innerText =
 					contributionItem.month == 0
 						? localizedYearMonthMapping(
-							contributionItem.year,
-							contributionItem.month
-						)
+								contributionItem.year,
+								contributionItem.month,
+							)
 						: localizedMonthMapping(contributionItem.month);
 
 				this.bindMonthTips(
 					monthIndicator,
 					contributionItem,
-					contributionMapByYearMonth
+					contributionMapByYearMonth,
 				);
 				monthDataRowEl.appendChild(monthIndicator);
 			}
 
 			// fill hole at start month, if start month date is not 1
 			if (i == 0) {
-				const startDate = new Date(contributionItem.date).getDate();
+				const startDate = new Date(
+					contributionItem.year,
+					contributionItem.month,
+					contributionItem.monthDate,
+				).getDate(); // Is there a reason for this method instead of const startDate = contributionItem.monthDate ?
 				const fillMax = startDate - 1;
 				for (let j = 0; j < fillMax; j++) {
 					const cellEl = document.createElement("div");
 					cellEl.className = "cell";
 					cellEl.innerText = "";
-					this.applyCellGlobalStylePartial(cellEl, graphConfig, ['minWidth', 'minHeight']);
+					this.applyCellGlobalStylePartial(cellEl, graphConfig, [
+						"minWidth",
+						"minHeight",
+					]);
 					monthDataRowEl?.appendChild(cellEl);
 				}
 			}
@@ -130,9 +140,19 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 			} else {
 				cellEl.className = "cell";
 
-				this.applyCellStyleRule(cellEl, contributionItem, cellRules, () => cellRules[0]);
+				this.applyCellStyleRule(
+					cellEl,
+					contributionItem,
+					cellRules,
+					() => cellRules[0],
+				);
 				this.bindCellAttribute(cellEl, contributionItem);
-				this.bindCellClickEvent(cellEl, contributionItem, graphConfig, activityContainer);
+				this.bindCellClickEvent(
+					cellEl,
+					contributionItem,
+					graphConfig,
+					activityContainer,
+				);
 				this.bindCellTips(cellEl, contributionItem);
 			}
 		}
@@ -141,21 +161,30 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 		if (contributionData.length > 0) {
 			const last = contributionData[contributionData.length - 1];
 			const lastDateTime = DateTime.fromISO(last.date);
-			const endOfMonthDay = 31
+			const endOfMonthDay = 31;
 			for (let j = lastDateTime.day; j < endOfMonthDay; j++) {
 				const cellEl = document.createElement("div");
 				cellEl.className = "cell";
-				this.applyCellGlobalStylePartial(cellEl, graphConfig, ['minWidth', 'minHeight']);
+				this.applyCellGlobalStylePartial(cellEl, graphConfig, [
+					"minWidth",
+					"minHeight",
+				]);
 				monthDataRowEl?.appendChild(cellEl);
 			}
 		}
 	}
 
-	renderMonthDateIndicator(dateIndicatorRow: HTMLDivElement, graphConfig: ContributionGraphConfig) {
+	renderMonthDateIndicator(
+		dateIndicatorRow: HTMLDivElement,
+		graphConfig: ContributionGraphConfig,
+	) {
 		for (let i = 0; i < 31; i++) {
 			const dateIndicatorCell = document.createElement("div");
 			dateIndicatorCell.className = "cell date-indicator";
-			this.applyCellGlobalStylePartial(dateIndicatorCell, graphConfig, ['minWidth', 'minHeight']);
+			this.applyCellGlobalStylePartial(dateIndicatorCell, graphConfig, [
+				"minWidth",
+				"minHeight",
+			]);
 			dateIndicatorCell.innerText = `${i + 1}`;
 			dateIndicatorRow.appendChild(dateIndicatorCell);
 		}
