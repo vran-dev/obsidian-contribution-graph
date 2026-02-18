@@ -19,7 +19,9 @@ export class YamlConfigReconciler {
 					format: yamlConfig.dateFieldFormat,
 				},
 				countField: {
-					type: "DEFAULT",
+					type: yamlConfig.countQueryInstances
+						? "QUERY_INSTANCES"
+						: "DEFAULT",
 				},
 			};
 		}
@@ -39,6 +41,7 @@ export class YamlConfigReconciler {
 		yamlConfig.query = undefined;
 		yamlConfig.dateField = undefined;
 		yamlConfig.dateFieldFormat = undefined;
+		yamlConfig.countQueryInstances = undefined;
 		return yamlConfig;
 	}
 }
