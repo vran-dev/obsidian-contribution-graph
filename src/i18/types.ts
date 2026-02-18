@@ -78,6 +78,7 @@ export interface Local {
 	form_count_field_count_field_type_page_prop: string;
 
 	form_count_field_count_field_type_task_prop: string;
+	form_count_field_count_field_type_query_instances: string;
 	form_title_font_size_label: string;
 	form_number_input_min_warning: string;
 	form_number_input_max_warning: string;

@@ -17,11 +17,18 @@ import { dataviewDataFilterChain } from "./filter/dataviewDataFilter";
 export abstract class BaseDataviewDataSourceQuery {
 	abstract accept(source: DataSource): boolean;
 
-	query(source: DataSource, app: App): Contribution[] {
+	async query(source: DataSource, app: App): Promise<Contribution[]> {
 		this.reconcileSourceValueIfNotExists(source);
 		const dv = this.checkAndGetApi(app);
 		const data = this.doQuery(dv, source);
-		const queryData = this.mapToQueryData(data, source);
+		let queryData = this.mapToQueryData(data, source);
+		if (typeof (this as any).enrichQueryData === "function") {
+			queryData = await (this as any).enrichQueryData(
+				queryData,
+				source,
+				app
+			);
+		}
 		const unsatisfiedData = queryData.filter((item) => !item.date);
 		if (unsatisfiedData.length > 0) {
 			console.warn(
@@ -50,7 +57,7 @@ export abstract class BaseDataviewDataSourceQuery {
 							label = item.raw.text;
 						}
 
-						const value =
+						const itemValue =
 							this.getAndConvertValueByCustomizeProperty(
 								item,
 								source.countField?.type,
@@ -58,12 +65,15 @@ export abstract class BaseDataviewDataSourceQuery {
 							);
 
 						if (source.countField?.type == "PAGE_PROPERTY") {
-							label += ` [${source.countField?.value}:${value}]`;
+							label += ` [${source.countField?.value}:${itemValue}]`;
+						}
+						if (source.countField?.type == "QUERY_INSTANCES") {
+							label += ` [instances: ${itemValue}]`;
 						}
 
 						return {
 							label: label,
-							value: value,
+							value: itemValue,
 							link: {
 								// @ts-ignore
 								href: item.raw.file.path,
@@ -237,6 +247,19 @@ export abstract class BaseDataviewDataSourceQuery {
 			return groupData.length;
 		}
 
+		if (propertyType === "QUERY_INSTANCES") {
+			return groupData
+				.map((item) =>
+					this.getAndConvertValueByCustomizeProperty(
+						item,
+						"QUERY_INSTANCES",
+						"_instanceCount"
+					)
+				)
+				.array()
+				.reduce((a, b) => a + b, 0);
+		}
+
 		if (propertyName) {
 			return groupData
 				.map((item) => {
@@ -257,7 +280,10 @@ export abstract class BaseDataviewDataSourceQuery {
 		propertyType?: CountFieldType,
 		propertyName?: string
 	): number {
-		if (propertyName) {
+		const effectiveName =
+			propertyName ||
+			(propertyType === "QUERY_INSTANCES" ? "_instanceCount" : undefined);
+		if (effectiveName) {
 			let propertySource: PropertySource;
 			switch (propertyType) {
 				case "PAGE_PROPERTY":
@@ -265,6 +291,9 @@ export abstract class BaseDataviewDataSourceQuery {
 					break;
 				case "TASK_PROPERTY":
 					propertySource = "TASK";
+					break;
+				case "QUERY_INSTANCES":
+					propertySource = "PAGE";
 					break;
 				default:
 					propertySource = "UNKNOWN";
@@ -274,7 +303,7 @@ export abstract class BaseDataviewDataSourceQuery {
 			const r = this.getValueByCustomizeProperty(
 				item.raw,
 				propertySource,
-				propertyName
+				effectiveName
 			);
 			if (r == undefined || r == null) {
 				return 0;
@@ -317,6 +346,8 @@ export abstract class BaseDataviewDataSourceQuery {
 				return "PAGE";
 			case "TASK_PROPERTY":
 				return "TASK";
+			case "QUERY_INSTANCES":
+				return "PAGE";
 			default:
 				return "UNKNOWN";
 		}

@@ -46,7 +46,7 @@ export const FILE_MTIME_FIELD = "file.mtime";
 
 export const FILE_NAME = "file.name";
 
-export type CountFieldType = "DEFAULT" | "PAGE_PROPERTY" | "TASK_PROPERTY";
+export type CountFieldType = "DEFAULT" | "PAGE_PROPERTY" | "TASK_PROPERTY" | "QUERY_INSTANCES";
 
 export type PropertySource = "UNKNOWN" | "PAGE" | "TASK";
 

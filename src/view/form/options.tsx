@@ -152,6 +152,13 @@ export const countFieldTypes = (
 		},
 	];
 
+	if (source === "PAGE") {
+		options.push({
+			label: Locals.get().form_count_field_count_field_type_query_instances,
+			value: "QUERY_INSTANCES",
+		});
+	}
+
 	if (source === "ALL_TASK" || source === "TASK_IN_SPECIFIC_PAGE") {
 		options.push({
 			label: Locals.get().form_count_field_count_field_type_task_prop,

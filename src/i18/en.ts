@@ -81,6 +81,7 @@ export class En implements Local {
     form_count_field_count_field_type_page_prop = "Page Property";
 
     form_count_field_count_field_type_task_prop = "Task Property";
+    form_count_field_count_field_type_query_instances = "Query instances (count occurrences per page)";
     form_title_font_size_label = "Title font Size";
     form_number_input_min_warning = "allow min value is {value}";
     form_number_input_max_warning = "allow max value is {value}";

@@ -19,9 +19,9 @@
 		"@typescript-eslint/eslint-plugin": "5.29.0",
 		"@typescript-eslint/parser": "5.29.0",
 		"builtin-modules": "3.3.0",
-		"esbuild": "0.17.3",
+		"esbuild": "^0.27.3",
 		"obsidian": "latest",
-		"obsidian-dataview": "^0.5.64",
+		"obsidian-dataview": "^0.5.68",
 		"tslib": "2.4.0",
 		"typescript": "4.7.4"
 	},

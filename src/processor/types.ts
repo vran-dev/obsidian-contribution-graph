@@ -44,6 +44,7 @@ export class YamlGraphConfig {
 	mainContainerStyle?: Partial<CSSStyleDeclaration>;
 	cellStyle?: Partial<CSSStyleDeclaration>;
 	cellStyleRules?: CellStyleRule[];
+	countQueryInstances?: boolean; /** When true (and using default dataSource), count query occurrences per page instead of page count */
 
 	// deprecated
 	days?: number;
@@ -76,6 +77,7 @@ export class YamlGraphConfig {
 		this.dateFieldFormat = undefined;
 		this.dateField = undefined;
 		this.days = undefined;
+		this.countQueryInstances = undefined;
 	}
 
 	static toContributionGraphConfig(

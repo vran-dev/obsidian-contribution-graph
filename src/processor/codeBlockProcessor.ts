@@ -32,11 +32,11 @@ export class CodeBlockProcessor {
 	}
 
 	async renderFromYaml(graphConfig: YamlGraphConfig, el: HTMLElement, app: App) {
-		const renderCallback = () => {
+		const renderCallback = async () => {
 			try {
 				// validate
 				YamlGraphConfig.validate(graphConfig);
-				const data = this.dataSourceQuery.query(
+				const data = await this.dataSourceQuery.query(
 					graphConfig.dataSource,
 					app
 				);
@@ -72,12 +72,12 @@ export class CodeBlockProcessor {
 			});
 		}
 		if (dv.index.initialized) {
-			renderCallback();
+			await renderCallback();
 		} else {
 			// @ts-ignore
-			app.metadataCache.on("dataview:index-ready", () => {
-				renderCallback();
-			})
+			app.metadataCache.on("dataview:index-ready", async () => {
+				await renderCallback();
+			});
 		}
 	}
 

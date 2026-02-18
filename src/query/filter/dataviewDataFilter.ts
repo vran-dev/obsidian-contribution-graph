@@ -24,7 +24,10 @@ export class CountFieldDataViewDataFilter implements DataViewDataFilter {
 		if (!source.countField) {
 			return true;
 		}
-		if (source.countField.type == 'DEFAULT') {
+		if (source.countField.type == "DEFAULT") {
+			return true;
+		}
+		if (source.countField.type == "QUERY_INSTANCES") {
 			return true;
 		}
 		const propertyType = getPropertySourceByCountFieldType(
@@ -88,6 +91,8 @@ function getPropertySourceByCountFieldType(
 			return "PAGE";
 		case "TASK_PROPERTY":
 			return "TASK";
+		case "QUERY_INSTANCES":
+			return "PAGE";
 		default:
 			return "UNKNOWN";
 	}

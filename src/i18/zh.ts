@@ -79,6 +79,7 @@ export class Zh implements Local {
     form_count_field_count_field_type_page_prop = "文档属性";
 
     form_count_field_count_field_type_task_prop = "任务属性";
+    form_count_field_count_field_type_query_instances = "查询出现次数（每页统计）"; // Likely incorrect translation (I only know english)
     form_title_font_size_label = "标题字体大小";
     form_number_input_min_warning = "允许的最小值为 {value}";
 	form_number_input_max_warning = "允许的最大值为 {value}";
