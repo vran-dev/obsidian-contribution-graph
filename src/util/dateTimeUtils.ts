@@ -1,5 +1,6 @@
 import { moment } from "obsidian";
 import { Moment } from "moment";
+import { DateTime } from "luxon";
 
 /**
  * Dataview returns luxon `DateTime` values for date fields / file ctime / mtime,
@@ -35,43 +36,11 @@ export function luxonToMoment(value: any): Moment | undefined {
 }
 
 /**
- * Translate luxon format tokens (used by configs created before the moment
- * migration, e.g. `yyyy-MM-dd`) into the equivalent moment tokens so existing
- * user configurations keep working. Runs of the same letter are mapped as a
- * whole token, so a moment-style `ddd` the user may have written is left
- * intact while a luxon `dd` still becomes `DD`.
- */
-const LUXON_TO_MOMENT_RUNS: Record<string, Partial<Record<number | "*", string>>> = {
-	// years: any run longer than 2 means a full year
-	y: { 1: "YYYY", 2: "YY", "*": "YYYY" },
-	// days of month (runs of 3+ are already moment weekday tokens)
-	d: { 1: "D", 2: "DD" },
-	// luxon standalone weekdays -> moment names / ISO number
-	c: { 1: "E", 2: "E", 3: "ddd", 4: "dddd" },
-	E: { 3: "ddd", 4: "dddd" },
-	// luxon standalone months -> moment month tokens
-	L: { 1: "M", 2: "MM", 3: "MMM", 4: "MMMM" },
-};
-
-export function translateLuxonFormatToMoment(format: string): string {
-	return format.replace(/([A-Za-z])\1*/g, (run) => {
-		const byLength = LUXON_TO_MOMENT_RUNS[run[0]];
-		if (!byLength) {
-			return run;
-		}
-		return byLength[run.length] ?? byLength["*"] ?? run;
-	});
-}
-
-/**
  * Adapter layer for user-configured date formats.
  *
- * Configs written with moment tokens (e.g. `YYYY-MM-DD`, the same syntax the
- * Obsidian daily-notes plugin uses) are applied as-is. Configs written with
- * legacy luxon tokens (e.g. `yyyy-MM-dd`, saved before the moment migration)
- * are auto-translated and retried. Without a format, moment's lenient smart
- * detect handles ISO 8601 / RFC 2822 / `yyyy-MM-dd HH:mm` style values in the
- * local timezone.
+ * Custom formats remain Luxon formats for backward compatibility. Parsed
+ * values are reduced to their calendar date before conversion to Moment so
+ * timezone offsets cannot move a contribution to another day.
  */
 export function parseDateWithFormatAdapter(
 	date: string,
@@ -79,24 +48,23 @@ export function parseDateWithFormatAdapter(
 ): Moment | undefined {
 	try {
 		if (format) {
-			const byMomentTokens = moment(date, format, true);
-			if (byMomentTokens.isValid()) {
-				return byMomentTokens;
-			}
-
-			const byLuxonTokens = moment(
-				date,
-				translateLuxonFormatToMoment(format),
-				true
-			);
-			if (byLuxonTokens.isValid()) {
-				return byLuxonTokens;
+			const formatted = DateTime.fromFormat(date, format);
+			if (formatted.isValid) {
+				return luxonToMoment(formatted);
 			}
 		}
 
-		const smartDetected = moment(date);
-		if (smartDetected.isValid()) {
-			return smartDetected;
+		const parsers = [
+			DateTime.fromISO,
+			DateTime.fromRFC2822,
+			DateTime.fromHTTP,
+			DateTime.fromSQL,
+		];
+		for (const parse of parsers) {
+			const parsed = parse(date);
+			if (parsed.isValid) {
+				return luxonToMoment(parsed);
+			}
 		}
 	} catch (e) {
 		// invalid input, let the caller decide how to report it

@@ -64,7 +64,7 @@ export class Zh implements Local {
     form_date_field_format = "日期格式";
     form_date_field_format_sample = "示例值";
     form_date_field_format_description = "如果你的日期属性值不是标准的格式，需要指定该字段让系统知道如何识别你的日期格式";
-    form_date_field_format_placeholder = "比如 YYYY-MM-DD HH:mm:ss";
+    form_date_field_format_placeholder = "比如 yyyy-MM-dd HH:mm:ss";
 
     form_date_field_format_type_smart = "自动识别";
 
