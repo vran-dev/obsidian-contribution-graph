@@ -58,9 +58,12 @@ function justifyTop(codeblockDom: HTMLElement, formEditButton: HTMLDivElement) {
 		const obCodeblocButtonEl = obCodeblocButtonEls[0];
 		// @ts-ignore
 		top = obCodeblocButtonEl.computedStyleMap().get("top")?.toString();
+		if (top === "auto") {
+			top = `${obCodeblocButtonEl.getBoundingClientRect().top - codeblockDom.getBoundingClientRect().top}px`;
+		}
 	}
 
-	if (top) {
+	if (top && top !== "auto") {
 		formEditButton.style.top = top;
 	} else {
 		formEditButton.style.top = "0";
