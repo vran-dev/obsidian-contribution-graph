@@ -66,7 +66,9 @@ export class YamlGraphConfig {
 		this.dataSource = {
 			type: "PAGE",
 			value: "",
-			dateField: {},
+			dateField: {
+				formatType: "moment",
+			},
 		} as DataSource;
 		this.fillTheScreen = false;
 		this.enableMainContainerShadow = false;

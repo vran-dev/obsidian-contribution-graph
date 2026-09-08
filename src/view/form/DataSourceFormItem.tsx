@@ -1,4 +1,3 @@
-import { DateTime } from "luxon";
 import { Fragment, useState } from "react";
 import { Locals } from "src/i18/messages";
 import { DataFilter, DataSource, DataSourceType } from "src/query/types";
@@ -12,8 +11,17 @@ import {
 	getDataSourceFilterOptions,
 	taskStatusOptions,
 } from "./options";
-import { App } from "obsidian";
+import { App, moment } from "obsidian";
+import { DateTime } from "luxon";
+import type { DateFormatType } from "src/query/types";
 import { InputTags, TagOption } from "../suggest/SuggestTagInput";
+
+function previewDate(format: string, formatType: DateFormatType): string {
+	if (formatType === "moment") {
+		return moment("2024-01-01T00:00:00").format(format);
+	}
+	return DateTime.fromISO("2024-01-01T00:00:00").toFormat(format);
+}
 
 export function DataSourceFormItem(props: {
 	dataSource: DataSource;
@@ -78,6 +86,8 @@ export function DataSourceFormItem(props: {
 			if (newDataSource.dateField?.type === "TASK_PROPERTY") {
 				newDataSource.dateField = {
 					type: "FILE_CTIME",
+					formatType:
+						newDataSource.dateField.formatType,
 				};
 			}
 
@@ -424,6 +434,20 @@ export function DataSourceFormItem(props: {
 					</select>
 					{dateFormatType == "manual" ? (
 						<>
+							<select
+								value={
+									dataSource.dateField?.formatType || "luxon"
+								}
+								onChange={(e) => {
+									changeDateField(
+										"formatType",
+										e.target.value as DateFormatType
+									);
+								}}
+							>
+								<option value="luxon">Luxon</option>
+								<option value="moment">Moment</option>
+							</select>
 							<input
 								type="text"
 								defaultValue={
@@ -431,7 +455,9 @@ export function DataSourceFormItem(props: {
 								}
 								name="dateFieldFormat"
 								placeholder={
-									local.form_date_field_format_placeholder
+									dataSource.dateField?.formatType === "moment"
+										? "such as YYYY-MM-DD HH:mm:ss"
+										: local.form_date_field_format_placeholder
 								}
 								onChange={(e) => {
 									changeDateField("format", e.target.value);
@@ -439,16 +465,25 @@ export function DataSourceFormItem(props: {
 							/>
 
 							<div className="form-description">
-								<a href="https://moment.github.io/luxon/#/formatting?id=table-of-tokens">
-									Luxon Format
+								<a href={
+									dataSource.dateField?.formatType === "moment"
+										? "https://momentjs.com/docs/#/displaying/format/"
+										: "https://moment.github.io/luxon/#/formatting?id=table-of-tokens"
+								}>
+									{dataSource.dateField?.formatType ===
+									"moment"
+										? "Moment Format"
+										: "Luxon Format"}
 								</a>
 								{" " + local.form_date_field_format_sample}:
-								{" " +
-									DateTime.fromJSDate(
-										new Date("2024-01-01 00:00:00")
-									).toFormat(
+								{" " + previewDate(
 										dataSource.dateField?.format ||
-											"yyyy-MM-dd'T'HH:mm:ss"
+											(dataSource.dateField
+												?.formatType === "moment"
+												? "YYYY-MM-DD[T]HH:mm:ss"
+												: "yyyy-MM-dd'T'HH:mm:ss"),
+										dataSource.dateField?.formatType ||
+											"luxon"
 									)}
 							</div>
 						</>

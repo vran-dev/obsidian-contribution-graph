@@ -1,23 +1,48 @@
-import { DateTime } from "luxon";
+import { moment } from "obsidian";
+import { Moment } from "moment";
 
-export function parseDate(date: string | Date) {
-	if (typeof date === "string") {
-		return new Date(date);
-	} else {
-		return date;
+export const ISO_DATE_FORMAT = "YYYY-MM-DD";
+
+const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * Parse a date value into a moment.
+ *
+ * Date-only strings (yyyy-MM-dd) are parsed in the local timezone instead of
+ * UTC (which is what `new Date("yyyy-MM-dd")` does per the ECMAScript spec),
+ * so the calendar day never shifts for timezones behind UTC.
+ */
+export function toMomentDate(
+	date: string | Date | Moment | number | undefined | null
+): Moment | undefined {
+	if (date == null) {
+		return undefined;
 	}
+	if (moment.isMoment(date)) {
+		return (date as Moment).clone();
+	}
+	if (typeof date === "string") {
+		const trimmed = date.trim();
+		const parsed = ISO_DATE_REGEX.test(trimmed)
+			? moment(trimmed, ISO_DATE_FORMAT, true)
+			: moment(trimmed);
+		return parsed.isValid() ? parsed : undefined;
+	}
+	const parsed = moment(date);
+	return parsed.isValid() ? parsed : undefined;
 }
 
-export function diffDays(date1: Date, date2: Date) {
-	const from = DateTime.fromJSDate(date1);
-	const to = DateTime.fromJSDate(date2);
-	return to.diff(from, "days").days;
+export function diffDays(date1: Date | string, date2: Date | string) {
+	const from = toMomentDate(date1);
+	const to = toMomentDate(date2);
+	if (!from || !to) {
+		return NaN;
+	}
+	return to.diff(from, "days");
 }
 
-export function toFormattedDate(date: Date) {
-	return `${date.getFullYear()}-${
-		date.getMonth() < 9 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1
-	}-${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}`;
+export function toFormattedDate(date: Date | string | Moment) {
+	return toMomentDate(date)?.format(ISO_DATE_FORMAT);
 }
 
 export function toFormattedYearMonth(year: number, month: number) {
@@ -25,7 +50,11 @@ export function toFormattedYearMonth(year: number, month: number) {
 }
 
 export function getLastDayOfMonth(year: number, month: number) {
-	return new Date(year, month + 1, 0).getDate();
+	return moment()
+		.year(year)
+		.month(month)
+		.endOf("month")
+		.date();
 }
 
 export function distanceBeforeTheStartOfWeek(
@@ -42,13 +71,9 @@ export function distanceBeforeTheEndOfWeek(
 	return (startOfWeek - weekDate + 6) % 7;
 }
 
-export function isToday(date: Date) {
-	const today = new Date();
-	return (
-		date.getDate() === today.getDate() &&
-		date.getMonth() === today.getMonth() &&
-		date.getFullYear() === today.getFullYear()
-	);
+export function isToday(date: Date | string | Moment) {
+	const parsed = toMomentDate(date);
+	return parsed != undefined && parsed.isSame(moment(), "day");
 }
 
 /**
@@ -57,10 +82,11 @@ export function isToday(date: Date) {
  */
 
 export function getLatestYearAbsoluteFromAndEnd(years: number) {
-	const today = new Date();
 	const normalizedYear = years <= 1 ? 1 : years;
-	const start = new Date(today.getFullYear() - normalizedYear + 1, 0, 1);
-	const end = new Date(today.getFullYear(), 12, 0);
+	const start = moment()
+		.startOf("year")
+		.subtract(normalizedYear - 1, "years");
+	const end = moment().endOf("year").startOf("day");
 	return {
 		start,
 		end,
@@ -72,14 +98,11 @@ export function getLatestYearAbsoluteFromAndEnd(years: number) {
  * if months = 2, then return the first day of the last month and the last day of the current month
  */
 export function getLatestMonthAbsoluteFromAndEnd(months: number) {
-	const today = new Date();
 	const normalizedMonth = months <= 1 ? 1 : months;
-	const start = new Date(
-		today.getFullYear(),
-		today.getMonth() - normalizedMonth + 1,
-		1
-	);
-	const end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+	const start = moment()
+		.startOf("month")
+		.subtract(normalizedMonth - 1, "months");
+	const end = moment().endOf("month").startOf("day");
 	return {
 		start,
 		end,

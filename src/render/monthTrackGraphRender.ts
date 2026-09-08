@@ -1,11 +1,11 @@
 import { ContributionGraphConfig } from "src/types";
 import { mapBy } from "src/util/utils";
 import { BaseGraphRender } from "./graphRender";
+import { toMomentDate } from "src/util/dateUtils";
 import {
 	localizedMonthMapping,
 	localizedYearMonthMapping,
 } from "src/i18/messages";
-import { DateTime } from "luxon";
 
 export class MonthTrackGraphRender extends BaseGraphRender {
 	constructor() {
@@ -108,8 +108,8 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 
 			// fill hole at start month, if start month date is not 1
 			if (i == 0) {
-				const startDate = new Date(contributionItem.date).getDate();
-				const fillMax = startDate - 1;
+				const startDate = toMomentDate(contributionItem.date)?.date();
+				const fillMax = (startDate || 1) - 1;
 				for (let j = 0; j < fillMax; j++) {
 					const cellEl = document.createElement("div");
 					cellEl.className = "cell";
@@ -140,9 +140,10 @@ export class MonthTrackGraphRender extends BaseGraphRender {
 		// fill hole at last month, if last month date is not end of month
 		if (contributionData.length > 0) {
 			const last = contributionData[contributionData.length - 1];
-			const lastDateTime = DateTime.fromISO(last.date);
+			const lastDateTime = toMomentDate(last.date);
 			const endOfMonthDay = 31
-			for (let j = lastDateTime.day; j < endOfMonthDay; j++) {
+			const lastDay = lastDateTime ? lastDateTime.date() : endOfMonthDay;
+			for (let j = lastDay; j < endOfMonthDay; j++) {
 				const cellEl = document.createElement("div");
 				cellEl.className = "cell";
 				this.applyCellGlobalStylePartial(cellEl, graphConfig, ['minWidth', 'minHeight']);

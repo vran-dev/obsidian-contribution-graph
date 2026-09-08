@@ -1,57 +1,63 @@
-import { diffDays } from "../util/dateUtils";
+import { moment } from "obsidian";
+import { Moment } from "moment";
+import { ISO_DATE_FORMAT, toMomentDate } from "../util/dateUtils";
 import { Contribution, ContributionCellData } from "../types";
-import { DateTime } from "luxon";
 
 export function generateByData(data: Contribution[]) {
 	if (!data || data.length === 0) {
 		return [];
 	}
 
-	const dateData = data.map((item) => {
-		if (item.date instanceof Date) {
-			return {
-				...item,
-				timestamp: item.date.getTime(),
-			};
-		} else {
-			return {
-				...item,
-				date: new Date(item.date),
-				timestamp: new Date(item.date).getTime(),
-			};
-		}
-	});
+	const datedData = data
+		.map((item) => ({
+			item,
+			date: toMomentDate(item.date),
+		}))
+		.filter((entry) => entry.date != undefined)
+		.sort((a, b) => a.date!.valueOf() - b.date!.valueOf());
 
-	const sortedData = dateData.sort((a, b) => b.timestamp - a.timestamp);
-	const min = sortedData[sortedData.length - 1].timestamp;
-	const max = sortedData[0].timestamp;
-	return generateByFixedDate(new Date(min), new Date(max), data);
+	if (datedData.length === 0) {
+		return [];
+	}
+
+	const min = datedData[0].date!;
+	const max = datedData[datedData.length - 1].date!;
+	return generateByFixedDate(min, max, data);
 }
 
 export function generateByFixedDate(
-	from: Date,
-	to: Date,
+	from: Date | string | Moment,
+	to: Date | string | Moment,
 	data: Contribution[]
 ) {
-	const days = diffDays(from, to) + 1;
+	const fromMoment = toMomentDate(from)?.startOf("day");
+	const toMoment = toMomentDate(to)?.startOf("day");
+	if (!fromMoment || !toMoment) {
+		return [];
+	}
+
+	const days = toMoment.diff(fromMoment, "days") + 1;
+	if (days < 1) {
+		return [];
+	}
+
 	// convert contributions to map: date(yyyy-MM-dd) -> value(sum)
 	const contributionMapByDate = contributionToMap(data);
 
 	const cellData: ContributionCellData[] = [];
 
-	const toDateTime = DateTime.fromJSDate(to);
 	// fill data
 	for (let i = 0; i < days; i++) {
-		const currentDateAtIndex = toDateTime.minus({ days: i });
-		const isoDate = currentDateAtIndex.toFormat('yyyy-MM-dd');
+		const currentDateAtIndex = toMoment.clone().subtract(i, "days");
+		const isoDate = currentDateAtIndex.format(ISO_DATE_FORMAT);
 		const contribution = contributionMapByDate.get(isoDate);
 
 		cellData.unshift({
 			date: isoDate,
-			weekDay: currentDateAtIndex.weekday == 7 ? 0 : currentDateAtIndex.weekday,
-			month: currentDateAtIndex.month - 1,
-			monthDate: currentDateAtIndex.day,
-			year: currentDateAtIndex.year,
+			weekDay: currentDateAtIndex.day(),
+			month: currentDateAtIndex.month(),
+			monthDate: currentDateAtIndex.date(),
+			year: currentDateAtIndex.year(),
 			value: contribution ? contribution.value : 0,
 			summary: contribution ? contribution.summary : undefined,
 			items: contribution ? contribution.items || [] : [],
@@ -70,20 +76,18 @@ export function generateByLatestDays(
 	days: number,
 	data: Contribution[] = []
 ): ContributionCellData[] {
-	const fromDate = new Date();
-	fromDate.setDate(fromDate.getDate() - days + 1);
-	return generateByFixedDate(fromDate, new Date(), data);
+	const today = moment();
+	const fromDate = today.clone().startOf("day").subtract(days - 1, "days");
+	return generateByFixedDate(fromDate, today, data);
 }
 
 function contributionToMap(data: Contribution[]) {
 	const map = new Map<string, Contribution>();
 	for (const item of data) {
-		let key;
-		if (typeof item.date === "string") {
-			key = item.date;
-		} else {
-			key = DateTime.fromJSDate(item.date).toFormat('yyyy-MM-dd');
-		}
+		const dateMoment = toMomentDate(item.date);
+		const key = dateMoment
+			? dateMoment.format(ISO_DATE_FORMAT)
+			: String(item.date);
 		if (map.has(key)) {
 			const newItem = {
 				...item,

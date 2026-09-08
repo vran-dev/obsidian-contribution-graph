@@ -2,6 +2,7 @@ import { ContributionGraphConfig } from "src/types";
 import {
 	distanceBeforeTheStartOfWeek,
 	distanceBeforeTheEndOfWeek,
+	toMomentDate,
 } from "src/util/dateUtils";
 import { mapBy } from "src/util/utils";
 import { BaseGraphRender } from "./graphRender";
@@ -10,7 +11,6 @@ import {
 	localizedWeekDayMapping,
 	localizedYearMonthMapping,
 } from "src/i18/messages";
-import { DateTime } from "luxon";
 
 export class CalendarGraphRender extends BaseGraphRender {
 	constructor() {
@@ -49,37 +49,42 @@ export class CalendarGraphRender extends BaseGraphRender {
 		// fill first month distance
 		if (contributionData.length > 0) {
 			const first = contributionData[0];
-			const firstDateTime = DateTime.fromISO(first.date);
-			const startOfMonth = firstDateTime.startOf("month");
-			for (let i = firstDateTime.day - 1; i >= startOfMonth.day; i--) {
-				const current = startOfMonth.plus({ days: i - startOfMonth.day });
-				contributionData.unshift({
-					date: "$HOLE$",
-					weekDay: current.weekday == 7 ? 0 : current.weekday,
-					month: current.month - 1,
-					monthDate: current.day,
-					year: current.year,
-					value: 0,
-				});
+			const firstDateTime = toMomentDate(first.date);
+			if (firstDateTime) {
+				const startOfMonth = firstDateTime.clone().startOf("month");
+				for (let i = firstDateTime.date() - 1; i >= startOfMonth.date(); i--) {
+					const current = startOfMonth.clone().add(i - startOfMonth.date(), "days");
+					contributionData.unshift({
+						date: "$HOLE$",
+						weekDay: current.day(),
+						month: current.month(),
+						monthDate: current.date(),
+						year: current.year(),
+						value: 0,
+					});
+				}
 			}
 		}
 
 		// fill last month distance
 		if (contributionData.length > 0) {
 			const last = contributionData[contributionData.length - 1];
-			const lastDateTime = DateTime.fromISO(last.date);
-			const endOfMonth = lastDateTime.endOf("month");
-
-			for (let i = lastDateTime.day + 1; i <= endOfMonth.day; i++) {
-				const current = lastDateTime.plus({ days: i - lastDateTime.day });
-				contributionData.push({
-					date: "$HOLE$",
-					weekDay: current.weekday == 7 ? 0 : current.weekday,
-					month: current.month - 1,
-					monthDate: current.day,
-					year: current.year,
-					value: 0,
-				});
+			const lastDateTime = toMomentDate(last.date);
+			if (lastDateTime) {
+				const endOfMonthDay = lastDateTime.clone().endOf("month").date();
+				for (let i = lastDateTime.date() + 1; i <= endOfMonthDay; i++) {
+					const current = lastDateTime
+						.clone()
+						.add(i - lastDateTime.date(), "days");
+					contributionData.push({
+						date: "$HOLE$",
+						weekDay: current.day(),
+						month: current.month(),
+						monthDate: current.date(),
+						year: current.year(),
+						value: 0,
+					});
+				}
 			}
 		}
 
