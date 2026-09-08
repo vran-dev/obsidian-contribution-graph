@@ -1,7 +1,7 @@
 import { ContributionCellData, ContributionGraphConfig } from "src/types";
 import { mapBy } from "src/util/utils";
 import { BaseGraphRender } from "./graphRender";
-import { distanceBeforeTheStartOfWeek } from "src/util/dateUtils";
+import { distanceBeforeTheStartOfWeek, toMomentDate } from "src/util/dateUtils";
 import {
 	localizedMonthMapping,
 	localizedWeekDayMapping,
@@ -48,8 +48,10 @@ export class GitStyleTrackGraphRender extends BaseGraphRender {
 
 		// fill HOLE cell at the left most column if start date is not ${startOfWeek}
 		if (contributionData.length > 0) {
-			const from = new Date(contributionData[0].date);
-			const weekDayOfFromDate = from.getDay();
+			const fromDate = toMomentDate(contributionData[0].date);
+			const weekDayOfFromDate = fromDate
+				? fromDate.day()
+				: 0; // $HOLE$ placeholder, weekday is irrelevant
 			const firstHoleCount = distanceBeforeTheStartOfWeek(
 				graphConfig.startOfWeek || 0,
 				weekDayOfFromDate

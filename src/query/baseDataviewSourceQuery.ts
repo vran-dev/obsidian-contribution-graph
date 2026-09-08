@@ -8,9 +8,15 @@ import {
 	DateFieldType,
 	PropertySource,
 } from "./types";
-import { DateTime } from "luxon";
+import { Moment } from "moment";
+import { moment } from "obsidian";
 import { Contribution, ContributionItem } from "src/types";
-import { isLuxonDateTime } from "src/util/dateTimeUtils";
+import {
+	isLuxonDateTime,
+	luxonToMoment,
+	parseDateWithFormatAdapter,
+} from "src/util/dateTimeUtils";
+import { toMomentDate } from "src/util/dateUtils";
 import { parseNumberOption } from "src/util/utils";
 import { dataviewDataFilterChain } from "./filter/dataviewDataFilter";
 
@@ -32,7 +38,7 @@ export abstract class BaseDataviewDataSourceQuery {
 		}
 		const result = queryData
 			.filter((d) => d.date != undefined)
-			.groupBy((d) => d.date?.toFormat("yyyy-MM-dd"))
+			.groupBy((d) => d.date?.format("YYYY-MM-DD"))
 			.map((entry) => {
 				// performance optimization
 				const value = this.countSumValueByCustomizeProperty(
@@ -125,12 +131,12 @@ export abstract class BaseDataviewDataSourceQuery {
 					const fileName = item.file.name;
 					if (dateFieldType == "FILE_CTIME") {
 						// @ts-ignore
-						return new Data(item, item.file.ctime);
+						return new Data(item, this.toDateMoment(item.file.ctime));
 					} else if (dateFieldType == "FILE_MTIME") {
 						// @ts-ignore
-						return new Data(item, item.file.mtime);
+						return new Data(item, this.toDateMoment(item.file.mtime));
 					} else if (dateFieldType == "FILE_NAME") {
-						const dateTime = this.toDateTime(
+						const dateTime = this.toMoment(
 							fileName,
 							fileName,
 							dateFieldFormat
@@ -151,9 +157,9 @@ export abstract class BaseDataviewDataSourceQuery {
 							dateFieldName || ""
 						);
 						if (isLuxonDateTime(fieldValue)) {
-							return new Data(item, fieldValue as DateTime);
+							return new Data(item, luxonToMoment(fieldValue));
 						} else {
-							const dateTime = this.toDateTime(
+							const dateTime = this.toMoment(
 								fileName,
 								fieldValue as string,
 								dateFieldFormat
@@ -165,16 +171,27 @@ export abstract class BaseDataviewDataSourceQuery {
 		} else {
 			return data.map((item) => {
 				// @ts-ignore
-				return new Data(item, item.file.ctime);
+				return new Data(item, this.toDateMoment(item.file.ctime));
 			});
 		}
 	}
 
-	toDateTime(
+	/**
+	 * Convert a dataview date-ish value (luxon DateTime, epoch millis, or
+	 * date string) into a moment, preserving the local calendar date.
+	 */
+	toDateMoment(value: any): Moment | undefined {
+		if (isLuxonDateTime(value)) {
+			return luxonToMoment(value);
+		}
+		return toMomentDate(value);
+	}
+
+	toMoment(
 		page: string,
 		date: string,
 		dateFieldFormat?: string
-	): DateTime | undefined {
+	): Moment | undefined {
 		if (typeof date !== "string") {
 			console.warn(
 				"can't parse date, it's a valid format? " +
@@ -184,48 +201,17 @@ export abstract class BaseDataviewDataSourceQuery {
 			);
 			return undefined;
 		}
-		try {
-			let dateTime = null;
-			if (dateFieldFormat) {
-				dateTime = DateTime.fromFormat(date, dateFieldFormat);
-				if (dateTime.isValid) {
-					return dateTime;
-				}
-			}
-
-			dateTime = DateTime.fromISO(date);
-			if (dateTime.isValid) {
-				return dateTime;
-			}
-			dateTime = DateTime.fromRFC2822(date);
-			if (dateTime.isValid) {
-				return dateTime;
-			}
-			dateTime = DateTime.fromHTTP(date);
-			if (dateTime.isValid) {
-				return dateTime;
-			}
-			dateTime = DateTime.fromSQL(date);
-			if (dateTime.isValid) {
-				return dateTime;
-			}
-			dateTime = DateTime.fromFormat(date, "yyyy-MM-dd HH:mm");
-			if (dateTime.isValid) {
-				return dateTime;
-			}
-			dateTime = DateTime.fromFormat(date, "yyyy-MM-dd'T'HH:mm");
-			if (dateTime.isValid) {
-				return dateTime;
-			}
-		} catch (e) {
+		const parsed = parseDateWithFormatAdapter(date, dateFieldFormat);
+		if (!parsed) {
 			console.warn(
 				"can't parse date, it's a valid format? " +
 				date +
 				" in page " +
 				page
 			);
+			return undefined;
 		}
-		return undefined;
+		return parsed;
 	}
 
 	countSumValueByCustomizeProperty(

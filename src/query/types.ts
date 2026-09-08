@@ -1,4 +1,4 @@
-import { DateTime } from "luxon";
+import { Moment } from "moment";
 
 export type DataSourceType = "PAGE" | "ALL_TASK" | "TASK_IN_SPECIFIC_PAGE";
 
@@ -64,9 +64,9 @@ export class ConvertFailData {
 
 export class Data<T> {
 	raw: T;
-	date?: DateTime;
+	date?: Moment;
 
-	constructor(raw: T, date?: DateTime) {
+	constructor(raw: T, date?: Moment) {
 		this.date = date;
 		this.raw = raw;
 	}

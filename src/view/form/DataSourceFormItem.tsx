@@ -1,4 +1,3 @@
-import { DateTime } from "luxon";
 import { Fragment, useState } from "react";
 import { Locals } from "src/i18/messages";
 import { DataFilter, DataSource, DataSourceType } from "src/query/types";
@@ -12,8 +11,24 @@ import {
 	getDataSourceFilterOptions,
 	taskStatusOptions,
 } from "./options";
-import { App } from "obsidian";
+import { App, moment } from "obsidian";
+import { translateLuxonFormatToMoment } from "src/util/dateTimeUtils";
 import { InputTags, TagOption } from "../suggest/SuggestTagInput";
+
+/**
+ * Render the sample date with the configured format, mirroring the
+ * query-layer adapter: formats written with moment tokens are used as-is,
+ * legacy luxon token formats (e.g. `yyyy-MM-dd`) are auto-translated so the
+ * preview stays correct for configs created before the moment migration.
+ */
+function previewDate(format: string): string {
+	const sampleInput = "2024-01-01 00:00:00";
+	const sample = moment(sampleInput, "YYYY-MM-DD HH:mm:ss", true);
+	if (moment(sampleInput, format, true).isValid()) {
+		return sample.format(format);
+	}
+	return sample.format(translateLuxonFormatToMoment(format));
+}
 
 export function DataSourceFormItem(props: {
 	dataSource: DataSource;
@@ -439,16 +454,13 @@ export function DataSourceFormItem(props: {
 							/>
 
 							<div className="form-description">
-								<a href="https://moment.github.io/luxon/#/formatting?id=table-of-tokens">
-									Luxon Format
+								<a href="https://momentjs.com/docs/#/displaying/format/">
+									Moment Format
 								</a>
 								{" " + local.form_date_field_format_sample}:
-								{" " +
-									DateTime.fromJSDate(
-										new Date("2024-01-01 00:00:00")
-									).toFormat(
+								{" " + previewDate(
 										dataSource.dateField?.format ||
-											"yyyy-MM-dd'T'HH:mm:ss"
+											"YYYY-MM-DD[T]HH:mm:ss"
 									)}
 							</div>
 						</>

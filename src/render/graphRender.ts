@@ -5,7 +5,6 @@ import {
 	CellStyleRule,
 	ContributionItem,
 } from "src/types";
-import { parseDate } from "src/util/dateUtils";
 import {
 	generateByLatestDays,
 	generateByFixedDate,
@@ -209,9 +208,11 @@ export abstract class BaseGraphRender implements GraphRender {
 		if (graphConfig.days) {
 			return generateByLatestDays(graphConfig.days, graphConfig.data);
 		} else if (graphConfig.fromDate && graphConfig.toDate) {
-			const fromDate = parseDate(graphConfig.fromDate);
-			const toDate = parseDate(graphConfig.toDate);
-			return generateByFixedDate(fromDate, toDate, graphConfig.data);
+			return generateByFixedDate(
+				graphConfig.fromDate,
+				graphConfig.toDate,
+				graphConfig.data
+			);
 		} else {
 			return generateByData(graphConfig.data);
 		}

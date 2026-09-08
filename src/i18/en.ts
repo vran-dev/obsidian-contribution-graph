@@ -66,7 +66,7 @@ export class En implements Local {
     form_date_field_format_sample = "Sample";
     form_date_field_format_description =
         "If your date property value is not a standard format, you need to specify this field so that the system knows how to recognize your date format";
-    form_date_field_format_placeholder = "such as yyyy-MM-dd HH:mm:ss";
+    form_date_field_format_placeholder = "such as YYYY-MM-DD HH:mm:ss";
 
     form_date_field_format_type_smart = "Auto Detect";
 
