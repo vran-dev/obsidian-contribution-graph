@@ -1,6 +1,7 @@
 import { moment } from "obsidian";
 import { Moment } from "moment";
 import { DateTime } from "luxon";
+import type { DateFormatType } from "src/query/types";
 
 /**
  * Dataview returns luxon `DateTime` values for date fields / file ctime / mtime,
@@ -44,13 +45,23 @@ export function luxonToMoment(value: any): Moment | undefined {
  */
 export function parseDateWithFormatAdapter(
 	date: string,
-	format?: string
+	format?: string,
+	formatType?: DateFormatType
 ): Moment | undefined {
 	try {
 		if (format) {
-			const formatted = DateTime.fromFormat(date, format);
-			if (formatted.isValid) {
-				return luxonToMoment(formatted);
+			if (formatType === "moment") {
+				const formatted = moment(date, format, true);
+				if (formatted.isValid()) {
+					return formatted;
+				}
+			}
+
+			if (formatType !== "moment") {
+				const formatted = DateTime.fromFormat(date, format);
+				if (formatted.isValid) {
+					return luxonToMoment(formatted);
+				}
 			}
 		}
 

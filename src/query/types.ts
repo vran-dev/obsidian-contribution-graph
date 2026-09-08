@@ -26,7 +26,10 @@ export class DateField {
 	type: DateFieldType;
 	value?: string;
 	format?: string;
+	formatType?: DateFormatType;
 }
+
+export type DateFormatType = "luxon" | "moment";
 
 export class CountField {
 	type: CountFieldType;

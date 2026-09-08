@@ -5,6 +5,7 @@ import {
 	CountFieldType,
 	Data,
 	DataSource,
+	DateFormatType,
 	DateFieldType,
 	PropertySource,
 } from "./types";
@@ -120,6 +121,7 @@ export abstract class BaseDataviewDataSourceQuery {
 			const dateFieldName = source.dateField.value;
 			const dateFieldType = source.dateField.type;
 			const dateFieldFormat = source.dateField.format;
+			const dateFieldFormatType = source.dateField.formatType;
 			return data
 				.filter((item) => {
 					return dataviewDataFilterChain.every((filter) =>
@@ -139,7 +141,8 @@ export abstract class BaseDataviewDataSourceQuery {
 						const dateTime = this.toMoment(
 							fileName,
 							fileName,
-							dateFieldFormat
+							dateFieldFormat,
+							dateFieldFormatType
 						);
 						if (dateTime) {
 							return new Data(item, dateTime);
@@ -162,7 +165,8 @@ export abstract class BaseDataviewDataSourceQuery {
 							const dateTime = this.toMoment(
 								fileName,
 								fieldValue as string,
-								dateFieldFormat
+								dateFieldFormat,
+								dateFieldFormatType
 							);
 							return new Data(item, dateTime);
 						}
@@ -190,7 +194,8 @@ export abstract class BaseDataviewDataSourceQuery {
 	toMoment(
 		page: string,
 		date: string,
-		dateFieldFormat?: string
+		dateFieldFormat?: string,
+		dateFieldFormatType?: DateFormatType
 	): Moment | undefined {
 		if (typeof date !== "string") {
 			console.warn(
@@ -201,7 +206,11 @@ export abstract class BaseDataviewDataSourceQuery {
 			);
 			return undefined;
 		}
-		const parsed = parseDateWithFormatAdapter(date, dateFieldFormat);
+		const parsed = parseDateWithFormatAdapter(
+			date,
+			dateFieldFormat,
+			dateFieldFormatType
+		);
 		if (!parsed) {
 			console.warn(
 				"can't parse date, it's a valid format? " +
