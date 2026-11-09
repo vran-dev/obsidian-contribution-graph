@@ -1,4 +1,4 @@
-import { App, MarkdownPostProcessorContext, parseYaml } from "obsidian";
+import { App, Component, MarkdownPostProcessorContext, parseYaml } from "obsidian";
 import { Renders } from "src/render/renders";
 
 import { MISS_CONFIG } from "./bizErrors";
@@ -17,9 +17,13 @@ export class CodeBlockProcessor {
 		ctx: MarkdownPostProcessorContext,
 		app: App
 	) {
+		await this.renderFromConfig(code, el, app);
+	}
+
+	async renderFromConfig(code: string, el: HTMLElement, app: App, scope?: Component) {
 		try {
 			const graphConfig: YamlGraphConfig = this.loadYamlConfig(el, code);
-			await this.renderFromYaml(graphConfig, el, app);
+			await this.renderFromYaml(graphConfig, el, app, scope);
 		} catch (e) {
 			if (e instanceof GraphProcessError) {
 				Renders.renderErrorTips(el, e.summary, e.recommends);
@@ -31,7 +35,7 @@ export class CodeBlockProcessor {
 		}
 	}
 
-	async renderFromYaml(graphConfig: YamlGraphConfig, el: HTMLElement, app: App) {
+	async renderFromYaml(graphConfig: YamlGraphConfig, el: HTMLElement, app: App, scope?: Component) {
 		const renderCallback = () => {
 			try {
 				// validate
@@ -75,9 +79,11 @@ export class CodeBlockProcessor {
 			renderCallback();
 		} else {
 			// @ts-ignore
-			app.metadataCache.on("dataview:index-ready", () => {
+			const event = app.metadataCache.on("dataview:index-ready", () => {
+				app.metadataCache.offref(event);
 				renderCallback();
-			})
+			});
+			scope?.registerEvent(event);
 		}
 	}
 

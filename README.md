@@ -29,6 +29,10 @@ Contribution Graph is a plugin for [obsidian.md](https://obsidian.md/) which can
 
 ![Alt text](attachment/contribution-graph-create.gif)
 
+### Right sidebar
+
+Run **Contribution Graph: Open contribution graph in right sidebar** from the command palette. The graph uses Dataview to count notes by creation date by default. Use **Configure graph** to change the data source, date range, or theme, and **Refresh graph** to query the latest data. Obsidian saves the graph configuration with the workspace layout.
+
 ## Themes
 
 - Git Style
