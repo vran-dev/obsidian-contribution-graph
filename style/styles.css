@@ -988,3 +988,42 @@
 	background: var(--interactive-accent);
 	color: var(--text-on-accent);
 }
+
+.contribution-graph-sidebar > button {
+	margin: 0 var(--size-4-1) var(--size-4-1) 0;
+}
+
+.contribution-graph-sidebar .contribution-graph .main {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.contribution-graph-sidebar .contribution-graph .main .title {
+	margin-bottom: var(--size-4-2);
+	overflow-wrap: anywhere;
+}
+
+.contribution-graph-sidebar .contribution-graph .main .charts {
+	overflow-x: auto;
+}
+
+.contribution-graph-sidebar .contribution-graph .main .charts.calendar {
+	padding-inline: 0;
+	gap: var(--size-4-2);
+}
+
+.contribution-graph-sidebar .contribution-graph .main .calendar .row {
+	gap: var(--size-4-1);
+}
+
+.contribution-graph-sidebar .contribution-graph .cell-rule-indicator-container {
+	flex-wrap: wrap;
+}
+
+.contribution-graph-sidebar .contribution-graph .activity-container {
+	flex-direction: column;
+	overflow-wrap: anywhere;
+}
+
+.contribution-graph-sidebar .contribution-graph-render-error-container .recommend {
+	white-space: pre-wrap;
+}

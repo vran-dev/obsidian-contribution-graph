@@ -5,14 +5,40 @@ import { CodeBlockProcessor } from "./processor/codeBlockProcessor";
 import { ContributionGraphCreateModal } from "./view/form/GraphFormModal";
 import { mountEditButtonToCodeblock } from "./view/codeblock/CodeblockEditButtonMount";
 import { Locals } from "./i18/messages";
+import { CONTRIBUTION_GRAPH_SIDEBAR, ContributionGraphSidebar } from "./view/ContributionGraphSidebar";
 import "../style/styles.css";
 
 export default class ContributionGraph extends Plugin {
+	private openingSidebar = false;
+
 	async onload() {
+		this.registerView(CONTRIBUTION_GRAPH_SIDEBAR, (leaf) => new ContributionGraphSidebar(leaf));
+		this.addCommand({
+			id: "open-sidebar",
+			name: "Open contribution graph in right sidebar",
+			callback: () => this.openSidebar(),
+		});
 		this.registerGlobalRenderApi();
 		this.registerCodeblockProcessor();
 		this.registerContributionGraphCreateCommand();
 		this.registerContextMenu();
+	}
+
+	private async openSidebar(): Promise<void> {
+		if (this.openingSidebar) return;
+		this.openingSidebar = true;
+		try {
+			const workspace = this.app.workspace;
+			let leaf = workspace.getLeavesOfType(CONTRIBUTION_GRAPH_SIDEBAR)[0];
+			if (!leaf) {
+				leaf = workspace.getRightLeaf(false);
+				if (!leaf) return;
+				await leaf.setViewState({ type: CONTRIBUTION_GRAPH_SIDEBAR });
+			}
+			await workspace.revealLeaf(leaf);
+		} finally {
+			this.openingSidebar = false;
+		}
 	}
 
 	onunload() {
